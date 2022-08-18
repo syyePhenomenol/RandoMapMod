@@ -1,5 +1,4 @@
 ﻿using BenchRando.IC;
-using Benchwarp;
 using ItemChanger;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,10 @@ namespace RandoMapMod
 {
     internal class BenchRandoInterop
     {
-        internal static Dictionary<RmmBenchKey, string> GetBenchTransitions()
+        internal static Dictionary<RmmBenchKey, string> GetBenches()
         {
-            return BenchLookup.ToDictionary(kvp => new RmmBenchKey(kvp.Value.SceneName, kvp.Value.GetRespawnMarkerName()), kvp => kvp.Key);
+            BRLocalSettingsModule bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
+            return bsm.LS.Benches.ToDictionary(benchName => new RmmBenchKey(BenchLookup[benchName].SceneName, BenchLookup[benchName].GetRespawnMarkerName()), benchName => benchName);
         }
 
         internal static bool IsBenchRandoEnabled()

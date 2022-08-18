@@ -10,7 +10,7 @@ This version is the successor to MapModS, updated to work with the MapChanger li
 
 # Dependencies:
 - [Randomizer 4](https://github.com/homothetyhk/RandomizerMod) and all of its dependencies.
-- [MapChanger](https://github.com/syyePhenomenol/HollowKnight.MapChanger)
+- [MapChanger](https://github.com/syyePhenomenol/MapChanger)
 - [MagicUI](https://github.com/BadMagic100/HollowKnight.MagicUI)
 - [ConnectionMetadataInjector](https://github.com/BadMagic100/ConnectionMetadataInjector)
 
@@ -26,16 +26,17 @@ Optional and compatible:
 # Screenshots
 <details>
 <summary>Click to expand</summary>
-    <img src="./ReadmeAssets/worldmap.jpg" alt="World Map">
-    <img src="./ReadmeAssets/quickmap.jpg" alt="Quick Map">
-    <img src="./ReadmeAssets/transition.jpg" alt="Transition Mode">
-    <img src="./ReadmeAssets/pause.jpg" alt="Pause Menu">
+    <img src="./ReadmeAssets/Screenshots/WorldMap.jpg" alt="World Map">
+    <img src="./ReadmeAssets/Screenshots/QuickMap.jpg" alt="Quick Map">
+    <img src="./ReadmeAssets/Screenshots/Transition.jpg" alt="Transition Mode">
+    <img src="./ReadmeAssets/Screenshots/Pause.jpg" alt="Pause Menu">
 </details>
 
 # Quick Start Guide
 - Press `CTRL-M` during a game to enable the mod. Alternatively, click the red button when the game is paused.
-- [fireb0rn's quick MapModS guide (item randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1113s)
-- [fireb0rn's quick MapModS guide (transition randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1195s)
+- The following videos were originally made for MapModS but this mod functions very similarly.
+    - [fireb0rn's quick MapModS guide (item randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1113s)
+    - [fireb0rn's quick MapModS guide (transition randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1195s)
 
 # Features
 ## World Map / Quick Map
@@ -47,14 +48,14 @@ Optional and compatible:
 - ``CTRL-M``: Toggle map enabled/disabled
 - ``CTRL-T``: Toggle map mode
 - ``SHIFT``: Pan faster (same as right thumbstick on controller).
-- ``CTRL-K``: Toggle a panel for the map key for the pin and room colors.
+- ``CTRL-K``: Toggle a panel for the map key.
     - Check out the [Map Legend](./MAPLEGEND.md) for more details on each pin style.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
     - Press the indicated key/controller bind to lock and pan away from the current selection.
 - ``CTRL-S``: Toggle selector reticle on/off.
 - ``CTRL-W``: Toggle benchwarp pins on/off.
-    - You can press the indicated key/controller bind to warp to the selected bench.
+    - With pin selection on, you can press the indicated key/controller bind to warp to the selected bench.
 
 ## Pause Menu
 - "Mod Enabled/Disabled" `CTRL-M`: Toggle the mod on/off
@@ -84,7 +85,6 @@ Optional and compatible:
     - A compass arrow will point to the next transition you need to go to. The shown route gets updated after every transition.
     - The Quick Map also shows the list of unchecked/visited/vanilla transitions for the current room.
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
-- `CTRL-U`: Toggle a panel for unchecked/visited/vanilla transitions in the World Map on/off.
 - `CTRL-R`: Toggle the route to be displayed in-game to full/next transition only/off.
 - `CTRL-E`: Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
 - `CTRL-C`: Toggle the route compass on/off.
@@ -99,8 +99,8 @@ Optional and compatible:
 Use Scarab: https://github.com/fifty-six/Scarab
 
 Or, you can install manually:
-1. Download the latest release of `MapModS.zip`.
-2. Unzip and copy the folder 'MapModS' to `...\hollow_knight_Data\Managed\Mods`.
+1. Download the latest release of `RandoMapMod.zip`.
+2. Unzip and copy the folder 'RandoMapMod' to `...\hollow_knight_Data\Managed\Mods`.
 
 If you need any help, feel free to ask in any of the active Hollow Knight Discord servers.
 

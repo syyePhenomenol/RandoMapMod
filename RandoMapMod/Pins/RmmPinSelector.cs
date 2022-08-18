@@ -70,7 +70,7 @@ namespace RandoMapMod.Pins
                 attackHoldTimer.Reset();
             }
 
-            if (attackHoldTimer.ElapsedMilliseconds >= 500 && BenchwarpInterop.IsVisitedBench(SelectedObjectKey))
+            if (RandoMapMod.GS.ShowBenchwarpPins && attackHoldTimer.ElapsedMilliseconds >= 500 && BenchwarpInterop.IsVisitedBench(SelectedObjectKey))
             {
                 attackHoldTimer.Reset();
                 GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(SelectedObjectKey));
