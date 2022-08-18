@@ -1,0 +1,17 @@
+﻿[
+  {
+    "name": "GG_Waterways",
+    "old": "Warp-Godhome_to_Junk_Pit",
+    "replacement": "GG_Waterways[door_dreamReturn]"
+  },
+  {
+    "name": "GG_Atrium",
+    "old": "Warp-Junk_Pit_to_Godhome",
+    "replacement": "GG_Atrium[door_dreamEnter]"
+  },
+  {
+    "name": "GG_Atrium",
+    "old": "GG_Workshop",
+    "replacement": "GG_Atrium[Door_Workshop]"
+  }
+]

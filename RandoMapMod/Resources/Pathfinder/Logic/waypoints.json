@@ -1,0 +1,46 @@
+﻿[
+  {
+    "name": "Town_Door_Station_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Door_Sly_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Door_Jiji_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Door_Bretta_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Door_Divine_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Door_Grimm_Opened",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Town_Lift_Activated",
+    "logic": "FALSE"
+  },
+  {
+    "name": "City_Toll_Wall_Broken",
+    "logic": "FALSE"
+  },
+  {
+    "name": "City_Toll_Elevator_Up",
+    "logic": "FALSE"
+  },
+  {
+    "name": "City_Toll_Elevator_Down",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Broke_Waterways_Bench_Ceiling",
+    "logic": "FALSE"
+  }
+]

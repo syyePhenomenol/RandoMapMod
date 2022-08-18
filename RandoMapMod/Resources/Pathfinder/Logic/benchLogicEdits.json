@@ -1,0 +1,62 @@
+﻿[
+  {
+    "name": "Fungus1_31[bot1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus1_31[right1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus1_31[top1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus2_13",
+    "logic": "ORIG | Bench-Bretta + (RIGHTDASH | RIGHTSUPERDASH | LEFTCLAW | RIGHTCLAW | WINGS | ENEMYPOGOS | PRECISEMOVEMENT)"
+  },
+  {
+    "name": "Fungus2_13[left3]",
+    "logic": "ORIG | Bench-Bretta"
+  },
+  {
+    "name": "Fungus3_archive[bot1]",
+    "logic": "ORIG | Bench-Archives"
+  },
+  {
+    "name": "Fungus3_archive[left1]",
+    "logic": "ORIG | Bench-Archives"
+  },
+  {
+    "name": "Fungus2_31[left1]",
+    "logic": "ORIG | Bench-Mantis_Village + Defeated_Mantis_Lords"
+  },
+  {
+    "name": "Waterways_02",
+    "logic": "ORIG | Bench-Waterways"
+  },
+  {
+    "name": "Waterways_02[bot1]",
+    "logic": "ORIG | Bench-Waterways"
+  },
+  {
+    "name": "Waterways_02[bot2]",
+    "logic": "ORIG | Bench-Waterways + (LEFTCLAW | RIGHTCLAW | WINGS | RIGHTSUPERDASH | ENEMYPOGOS + SWIM | ENEMYPOGOS + DANGEROUSSKIPS + RIGHTDASH)"
+  },
+  {
+    "name": "Room_Colosseum_02[top1]",
+    "logic": "ORIG | Bench-Colosseum + (LEFTCLAW | RIGHTCLAW)"
+  },
+  {
+    "name": "Room_Colosseum_02[top2]",
+    "logic": "ORIG | Bench-Colosseum + (LEFTCLAW | RIGHTCLAW)"
+  },
+  {
+    "name": "White_Palace_06[top1]",
+    "logic": "ORIG | Bench-Palace_Balcony + (LEFTCLAW | WINGS)"
+  },
+  {
+    "name": "White_Palace_06[bot1]",
+    "logic": "ORIG | Bench-Palace_Balcony"
+  }
+]

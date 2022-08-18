@@ -1,0 +1,26 @@
+﻿[
+  {
+    "name": "GG_Waterways[warp]",
+    "logic": "GG_Waterways + Warp-Junk_Pit_to_Godhome"
+  },
+  {
+    "name": "GG_Atrium[door_dreamEnter]",
+    "logic": "FALSE"
+  },
+  {
+    "name": "GG_Atrium[warp]",
+    "logic": "GG_Atrium + (LEFTCLAW | WINGS)"
+  },
+  {
+    "name": "GG_Waterways[door_dreamReturn]",
+    "logic": "FALSE"
+  },
+  {
+    "name": "GG_Atrium[Door_Workshop]",
+    "logic": "GG_Atrium[Door_Workshop] | GG_Atrium"
+  },
+  {
+    "name": "GG_Workshop[left1]",
+    "logic": "GG_Workshop[left1] | GG_Workshop"
+  }
+]

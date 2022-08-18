@@ -1,0 +1,34 @@
+﻿[
+  {
+    "name": "Broke_Waterways_Bench_Floor",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Greenpath_Toll",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Bretta",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Archives",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Mantis_Village",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Waterways",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Colosseum",
+    "logic": "FALSE"
+  },
+  {
+    "name": "Bench-Palace_Balcony",
+    "logic": "FALSE"
+  }
+]

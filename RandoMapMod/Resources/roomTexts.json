@@ -1,0 +1,398 @@
+{
+  "Abyss_15": {
+    "Name": "Abyss_15",
+    "X": 7.0,
+    "Y": -20.9,
+    "MapZone": "ABYSS"
+  },
+  "Abyss_Lighthouse_room": {
+    "Name": "Abyss_Lighthouse_room",
+    "X": 13.3,
+    "Y": -17.1,
+    "MapZone": "ABYSS"
+  },
+  "Room_nailsmith": {
+    "Name": "Room_nailsmith",
+    "X": 1.5,
+    "Y": -3.6,
+    "MapZone": "CITY"
+  },
+  "Ruins_House_01": {
+    "Name": "Ruins_House_01",
+    "X": 14.2,
+    "Y": 2.9,
+    "MapZone": "CITY"
+  },
+  "Ruins_House_02": {
+    "Name": "Ruins_House_02",
+    "X": 14.2,
+    "Y": 2.0,
+    "MapZone": "CITY"
+  },
+  "Ruins_House_03": {
+    "Name": "Ruins_House_03",
+    "X": 14.2,
+    "Y": 1.1,
+    "MapZone": "CITY"
+  },
+  "Mines_35": {
+    "Name": "Mines_35",
+    "X": 16.0,
+    "Y": 9.6,
+    "MapZone": "MINES"
+  },
+  "Deepnest_45_v02": {
+    "Name": "Deepnest_45_v02",
+    "X": -17.3,
+    "Y": -8.1,
+    "MapZone": "DEEPNEST"
+  },
+  "Deepnest_Spider_Town": {
+    "Name": "Deepnest_Spider_Town",
+    "X": -26.8,
+    "Y": -4.5,
+    "MapZone": "DEEPNEST"
+  },
+  "Room_spider_small": {
+    "Name": "Room_spider_small",
+    "X": -26.8,
+    "Y": -5.4,
+    "MapZone": "DEEPNEST"
+  },
+  "Grimm_Divine": {
+    "Name": "Grimm_Divine",
+    "X": -7.4,
+    "Y": 13.1,
+    "MapZone": "TOWN"
+  },
+  "Grimm_Main_Tent": {
+    "Name": "Grimm_Main_Tent",
+    "X": -7.4,
+    "Y": 12.2,
+    "MapZone": "TOWN"
+  },
+  "Room_Bretta": {
+    "Name": "Room_Bretta",
+    "X": 1.0,
+    "Y": 12.2,
+    "MapZone": "TOWN"
+  },
+  "Room_mapper": {
+    "Name": "Room_mapper",
+    "X": 1.0,
+    "Y": 13.1,
+    "MapZone": "TOWN"
+  },
+  "Room_Ouiji": {
+    "Name": "Room_Ouiji",
+    "X": 4.1,
+    "Y": 13.1,
+    "MapZone": "TOWN"
+  },
+  "Room_shop": {
+    "Name": "Room_shop",
+    "X": -5.1,
+    "Y": 13.1,
+    "MapZone": "TOWN"
+  },
+  "Room_Town_Stag_Station": {
+    "Name": "Room_Town_Stag_Station",
+    "X": -2.0,
+    "Y": 13.1,
+    "MapZone": "TOWN"
+  },
+  "Fungus3_archive": {
+    "Name": "Fungus3_archive",
+    "X": -8.4,
+    "Y": 1.2,
+    "MapZone": "FOG_CANYON"
+  },
+  "Fungus3_archive_02": {
+    "Name": "Fungus3_archive_02",
+    "X": -8.4,
+    "Y": 0.3,
+    "MapZone": "FOG_CANYON"
+  },
+  "Room_Fungus_Shaman": {
+    "Name": "Room_Fungus_Shaman",
+    "X": -16.4,
+    "Y": 3.2,
+    "MapZone": "FOG_CANYON"
+  },
+  "Crossroads_ShamanTemple": {
+    "Name": "Crossroads_ShamanTemple",
+    "X": 3.0,
+    "Y": 4.1,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_Charm_Shop": {
+    "Name": "Room_Charm_Shop",
+    "X": 7.4,
+    "Y": 4.1,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_Mender_House": {
+    "Name": "Room_Mender_House",
+    "X": 7.4,
+    "Y": 3.2,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_ruinhouse": {
+    "Name": "Room_ruinhouse",
+    "X": 3.0,
+    "Y": 3.2,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_temple": {
+    "Name": "Room_temple",
+    "X": 2.6,
+    "Y": 10.3,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_Final_Boss_Atrium": {
+    "Name": "Room_Final_Boss_Atrium",
+    "X": 4.1,
+    "Y": 12.2,
+    "MapZone": "CROSSROADS"
+  },
+  "Fungus1_35": {
+    "Name": "Fungus1_35",
+    "X": -7.5,
+    "Y": 5.4,
+    "MapZone": "GREEN_PATH"
+  },
+  "Fungus1_36": {
+    "Name": "Fungus1_36",
+    "X": -9.1,
+    "Y": 3.9,
+    "MapZone": "GREEN_PATH"
+  },
+  "Room_nailmaster_02": {
+    "Name": "Room_nailmaster_02",
+    "X": -22.5,
+    "Y": 6.7,
+    "MapZone": "GREEN_PATH"
+  },
+  "Room_Slug_Shrine": {
+    "Name": "Room_Slug_Shrine",
+    "X": -22.5,
+    "Y": 7.5,
+    "MapZone": "GREEN_PATH"
+  },
+  "Cliffs_03": {
+    "Name": "Cliffs_03",
+    "X": -11.9,
+    "Y": 16.8,
+    "MapZone": "CLIFFS"
+  },
+  "Room_nailmaster": {
+    "Name": "Room_nailmaster",
+    "X": -11.9,
+    "Y": 16.0,
+    "MapZone": "CLIFFS"
+  },
+  "Deepnest_East_17": {
+    "Name": "Deepnest_East_17",
+    "X": 30.7,
+    "Y": -10.0,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_Colosseum_01": {
+    "Name": "Room_Colosseum_01",
+    "X": 19.6,
+    "Y": 3.8,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_Colosseum_02": {
+    "Name": "Room_Colosseum_02",
+    "X": 19.6,
+    "Y": 2.9,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_Colosseum_Spectate": {
+    "Name": "Room_Colosseum_Spectate",
+    "X": 23.6,
+    "Y": 3.8,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_nailmaster_03": {
+    "Name": "Room_nailmaster_03",
+    "X": 28.6,
+    "Y": -5.2,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_Wyrm": {
+    "Name": "Room_Wyrm",
+    "X": 28.6,
+    "Y": -4.4,
+    "MapZone": "OUTSKIRTS"
+  },
+  "Room_Queen": {
+    "Name": "Room_Queen",
+    "X": -24.2,
+    "Y": 4.2,
+    "MapZone": "ROYAL_GARDENS"
+  },
+  "RestingGrounds_07": {
+    "Name": "RestingGrounds_07",
+    "X": 16.0,
+    "Y": 7.8,
+    "MapZone": "RESTING_GROUNDS"
+  },
+  "Room_Mansion": {
+    "Name": "Room_Mansion",
+    "X": 23.1,
+    "Y": 6.1,
+    "MapZone": "RESTING_GROUNDS"
+  },
+  "Room_GG_Shortcut": {
+    "Name": "Room_GG_Shortcut",
+    "X": -0.6,
+    "Y": -7.3,
+    "MapZone": "WATERWAYS"
+  },
+  "White_Palace_01": {
+    "Name": "White_Palace_01",
+    "X": 14.2,
+    "Y": -13.3,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_02": {
+    "Name": "White_Palace_02",
+    "X": 17.3,
+    "Y": -13.3,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_03_hub": {
+    "Name": "White_Palace_03_hub",
+    "X": 20.3,
+    "Y": -13.3,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_04": {
+    "Name": "White_Palace_04",
+    "X": 23.3,
+    "Y": -13.3,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_05": {
+    "Name": "White_Palace_05",
+    "X": 26.4,
+    "Y": -13.3,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_06": {
+    "Name": "White_Palace_06",
+    "X": 14.2,
+    "Y": -14.2,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_07": {
+    "Name": "White_Palace_07",
+    "X": 17.3,
+    "Y": -14.2,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_08": {
+    "Name": "White_Palace_08",
+    "X": 20.3,
+    "Y": -14.2,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_09": {
+    "Name": "White_Palace_09",
+    "X": 23.3,
+    "Y": -14.2,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_11": {
+    "Name": "White_Palace_11",
+    "X": 11.2,
+    "Y": -14.6,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_12": {
+    "Name": "White_Palace_12",
+    "X": 26.4,
+    "Y": -14.2,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_13": {
+    "Name": "White_Palace_13",
+    "X": 14.2,
+    "Y": -15.1,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_14": {
+    "Name": "White_Palace_14",
+    "X": 17.3,
+    "Y": -15.1,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_15": {
+    "Name": "White_Palace_15",
+    "X": 20.3,
+    "Y": -15.1,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_16": {
+    "Name": "White_Palace_16",
+    "X": 23.3,
+    "Y": -15.1,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_17": {
+    "Name": "White_Palace_17",
+    "X": 26.4,
+    "Y": -15.1,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_18": {
+    "Name": "White_Palace_18",
+    "X": 14.2,
+    "Y": -16.0,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_19": {
+    "Name": "White_Palace_19",
+    "X": 17.3,
+    "Y": -16.0,
+    "MapZone": "ABYSS"
+  },
+  "White_Palace_20": {
+    "Name": "White_Palace_20",
+    "X": 20.3,
+    "Y": -16.0,
+    "MapZone": "ABYSS"
+  },
+  "GG_Atrium": {
+    "Name": "GG_Atrium",
+    "X": -9.1,
+    "Y": -8.3,
+    "MapZone": "WATERWAYS"
+  },
+  "GG_Workshop": {
+    "Name": "GG_Workshop",
+    "X": -6.8,
+    "Y": -8.3,
+    "MapZone": "WATERWAYS"
+  },
+  "GG_Atrium_Roof": {
+    "Name": "GG_Atrium_Roof",
+    "X": -4.1,
+    "Y": -8.3,
+    "MapZone": "WATERWAYS"
+  },
+  "Room_Tram_RG": {
+    "Name": "Room_Tram_RG",
+    "X": 8.1,
+    "Y": 6.0,
+    "MapZone": "CROSSROADS"
+  },
+  "Room_Tram": {
+    "Name": "Room_Tram",
+    "X": -1.9,
+    "Y": -10.5,
+    "MapZone": "ABYSS"
+  }
+}

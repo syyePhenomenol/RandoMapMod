@@ -1,0 +1,180 @@
+﻿{
+  //the special transitions to check logic for in that scene
+  "Room_Town_Stag_Station": [
+    "Stag-Crossroads",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Crossroads_47": [
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Fungus1_16_alt": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Fungus2_02": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Deepnest_09": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Abyss_22": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Ruins1_29": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Ruins2_08": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-Resting_Grounds",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "RestingGrounds_09": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Queen's_Gardens",
+    "Stag-Stag_Nest"
+  ],
+  "Fungus3_40": [
+    "Stag-Crossroads",
+    "Stag-Dirtmouth",
+    "Stag-Greenpath",
+    "Stag-Queen's_Station",
+    "Stag-Distant_Village",
+    "Stag-Hidden_Station",
+    "Stag-City_Storerooms",
+    "Stag-King's_Station",
+    "Stag-Resting_Grounds",
+    "Stag-Stag_Nest"
+  ],
+  "Crossroads_49b": [
+    "Left_Elevator-Up"
+  ],
+  "Crossroads_49": [
+    "Left_Elevator-Down"
+  ],
+  "Ruins2_10b": [
+    "Right_Elevator-Up"
+  ],
+  "Ruins2_10": [
+    "Right_Elevator-Down"
+  ],
+  "Crossroads_46": [
+    "Crossroads_46[door_tram]"
+  ],
+  "Crossroads_46b": [
+    "Crossroads_46b[door_tram]"
+  ],
+  "Abyss_03_b": [
+    "Abyss_03_b[door_tram]"
+  ],
+  "Abyss_03": [
+    "Abyss_03[door_tram]"
+  ],
+  "Abyss_03_c": [
+    "Abyss_03_c[door_tram]"
+  ],
+  "Room_Tram_RG": [
+    "Upper_Tram-Left",
+    "Upper_Tram-Right"
+  ],
+  "Room_Tram": [
+    "Lower_Tram-Left",
+    "Lower_Tram-Middle",
+    "Lower_Tram-Right"
+  ],
+  "Abyss_08": [
+    "Abyss_08[warp]"
+  ],
+  "Abyss_05": [
+    "Abyss_05[warp]"
+  ],
+  "White_Palace_11": [
+    "White_Palace_11[warp]"
+  ],
+  "White_Palace_03_hub": [
+    "White_Palace_03_hub[warp]"
+  ],
+  "White_Palace_20": [
+    "White_Palace_20[warp]"
+  ],
+  "Room_temple": [
+    "Room_temple[door1]"
+  ],
+  "Room_Final_Boss_Atrium": [
+    "Room_Final_Boss_Atrium[left1]"
+  ]
+}

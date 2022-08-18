@@ -1,0 +1,13 @@
+﻿{
+  //the scene that a special transition with a special name starts from
+
+  "Left_Elevator-Up": "Crossroads_49b",
+  "Left_Elevator-Down": "Crossroads_49",
+  "Right_Elevator-Up": "Ruins2_10b",
+  "Right_Elevator-Down": "Ruins2_10",
+  "Upper_Tram-Left": "Room_Tram_RG",
+  "Upper_Tram-Right": "Room_Tram_RG",
+  "Lower_Tram-Left": "Room_Tram",
+  "Lower_Tram-Middle": "Room_Tram",
+  "Lower_Tram-Right": "Room_Tram"
+}

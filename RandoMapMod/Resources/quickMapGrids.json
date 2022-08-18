@@ -1,0 +1,114 @@
+﻿{
+  "CROSSROADS": {
+    "MapZone": "CROSSROADS",
+    "OrientateVertical": true,
+    "GridBaseX": -7.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  },
+  "WATERWAYS": {
+    "MapZone": "WATERWAYS",
+    "OrientateVertical": false,
+    "GridBaseX": -6.0,
+    "GridBaseY": 2.0,
+    "RollOverCount": 10
+  },
+  "CLIFFS": {
+    "MapZone": "CLIFFS",
+    "OrientateVertical": true,
+    "GridBaseX": -6.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  },
+  "OUTSKIRTS": {
+    "MapZone": "OUTSKIRTS",
+    "OrientateVertical": true,
+    "GridBaseX": -2.5,
+    "GridBaseY": 1.5,
+    "RollOverCount": 5
+  },
+  "GREEN_PATH": {
+    "MapZone": "GREEN_PATH",
+    "OrientateVertical": false,
+    "GridBaseX": -7.0,
+    "GridBaseY": 3.0,
+    "RollOverCount": 10
+  },
+  "FOG_CANYON": {
+    "MapZone": "FOG_CANYON",
+    "OrientateVertical": false,
+    "GridBaseX": -5.0,
+    "GridBaseY": 2.0,
+    "RollOverCount": 10
+  },
+  "WASTES": {
+    "MapZone": "WASTES",
+    "OrientateVertical": false,
+    "GridBaseX": -7.0,
+    "GridBaseY": 1.5,
+    "RollOverCount": 10
+  },
+  "ROYAL_GARDENS": {
+    "MapZone": "ROYAL_GARDENS",
+    "OrientateVertical": true,
+    "GridBaseX": -7.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  },
+  "DEEPNEST": {
+    "MapZone": "DEEPNEST",
+    "OrientateVertical": false,
+    "GridBaseX": -5.0,
+    "GridBaseY": 2.5,
+    "RollOverCount": 10
+  },
+  "TOWN": {
+    "MapZone": "TOWN",
+    "OrientateVertical": true,
+    "GridBaseX": -7.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  },
+  "RESTING_GROUNDS": {
+    "MapZone": "RESTING_GROUNDS",
+    "OrientateVertical": false,
+    "GridBaseX": -5.0,
+    "GridBaseY": 1.5,
+    "RollOverCount": 10
+  },
+  "MINES": {
+    "MapZone": "MINES",
+    "OrientateVertical": false,
+    "GridBaseX": -5.5,
+    "GridBaseY": 1.5,
+    "RollOverCount": 10
+  },
+  "ABYSS": {
+    "MapZone": "ABYSS",
+    "OrientateVertical": true,
+    "GridBaseX": -6.5,
+    "GridBaseY": -2.0,
+    "RollOverCount": 5
+  },
+  "CITY": {
+    "MapZone": "CITY",
+    "OrientateVertical": true,
+    "GridBaseX": 5.0,
+    "GridBaseY": 2.5,
+    "RollOverCount": 5
+  },
+  "WHITE_PALACE": {
+    "MapZone": "WHITE_PALACE",
+    "OrientateVertical": true,
+    "GridBaseX": -7.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  },
+  "GODS_GLORY": {
+    "MapZone": "GODS_GLORY",
+    "OrientateVertical": true,
+    "GridBaseX": -5.0,
+    "GridBaseY": 1.0,
+    "RollOverCount": 5
+  }
+}
