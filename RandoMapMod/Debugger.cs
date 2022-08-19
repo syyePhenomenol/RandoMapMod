@@ -8,8 +8,6 @@ namespace RandoMapMod
     {
         internal static void LogMapPosition()
         {
-            //RandoMapMod.Instance.LogDebug($"Real world position: {HeroController.instance.transform.position.x}, {HeroController.instance.transform.position.y}");
-
             WorldMapPosition wmp = new(new MapLocation[]
             {
                 new()

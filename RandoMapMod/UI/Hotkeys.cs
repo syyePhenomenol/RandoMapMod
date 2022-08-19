@@ -52,14 +52,6 @@ namespace RandoMapMod.UI
                 UpdateSelectors();
             }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
 
-            //Root.ListenForHotkey(KeyCode.L, () =>
-            //{
-            //    RmmPinSelector.Instance.ToggleLockSelection();
-            //    BenchwarpRoomSelector.Instance.ToggleLockSelection();
-            //    TransitionRoomSelector.Instance.ToggleLockSelection();
-            //    MapUILayerUpdater.Update();
-            //}, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
-
             if (Interop.HasBenchwarp())
             {
                 Root.ListenForHotkey(KeyCode.B, () =>
@@ -133,7 +125,6 @@ namespace RandoMapMod.UI
         private void UpdateSelectors()
         {
             RmmPinSelector.Instance.MainUpdate();
-            //BenchwarpRoomSelector.Instance.MainUpdate();
             TransitionRoomSelector.Instance.MainUpdate();
             MapUILayerUpdater.Update();
         }

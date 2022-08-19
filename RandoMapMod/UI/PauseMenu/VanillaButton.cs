@@ -9,11 +9,9 @@ namespace RandoMapMod.UI
 {
     internal class VanillaButton : MainButton
     {
-        internal static VanillaButton Instance { get; private set; }
-
         internal VanillaButton() : base("Vanilla Pins", RandoMapMod.MOD, 0, 2)
         {
-            Instance = this;
+
         }
 
         protected override void OnClick()

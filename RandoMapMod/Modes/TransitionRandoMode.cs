@@ -11,14 +11,7 @@ namespace RandoMapMod.Modes
         {
             if (!TransitionData.IsTransitionRando()) return false;
 
-            if (RandoMapMod.GS.OverrideDefaultMode)
-            {
-                return ModeName == RandoMapMod.GS.TransitionRandoModeOverride.ToString().ToCleanName();
-            }
-            else
-            {
-                return ModeName == Settings.RmmMode.Transition_Normal.ToString().ToCleanName();
-            }
+            return ModeName == RandoMapMod.GS.DefaultTransitionRandoMode.ToString().ToCleanName();
         }
 
         public override bool DisableAreaNames => true;

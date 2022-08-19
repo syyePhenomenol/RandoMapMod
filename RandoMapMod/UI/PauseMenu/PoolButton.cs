@@ -1,5 +1,4 @@
 ﻿using MagicUI.Elements;
-using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Settings;
 
@@ -22,7 +21,6 @@ namespace RandoMapMod.UI
         public override void Update()
         {
             Button.Content = PoolGroup.Replace(" ", "\n");
-            //+ "\n" + RmmPinMaster.GetPoolGroupCounter(PoolGroup);
 
             Button.ContentColor = RandoMapMod.LS.GetPoolGroupSetting(PoolGroup) switch
             {

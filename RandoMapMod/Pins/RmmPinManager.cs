@@ -263,29 +263,7 @@ namespace RandoMapMod.Pins
             {
                 AllPoolGroups.Add(poolGroup);
             }
-
-            //foreach (string poolGroup in ActiveRandoPoolGroups)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Randomized Pool Group: {poolGroup}");
-            //}
-            //foreach (string poolGroup in ActiveVanillaPoolGroups)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Vanilla Pool Group: {poolGroup}");
-            //}
         }
-
-        //public static void ImportDefs()
-        //{
-        //    Dictionary<string, MapLocationDef> newDefs = JsonUtil.DeserializeFromExternalFile<Dictionary<string, MapLocationDef>>("locations.json");
-
-        //    foreach (MapLocationDef def in newDefs.Values)
-        //    {
-        //        if (Pins.TryGetValue(def.Name, out RmmPin pin))
-        //        {
-        //            pin.UpdatePosition(def.MapLocations);
-        //        }
-        //    }
-        //}
 
         private record QuickMapGridDef
         {

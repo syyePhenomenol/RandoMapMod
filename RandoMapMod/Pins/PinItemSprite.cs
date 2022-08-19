@@ -1,5 +1,4 @@
 ﻿using ItemChanger;
-using RandoMapMod.Settings;
 using UnityEngine;
 
 namespace RandoMapMod.Pins

@@ -58,8 +58,6 @@ namespace RandoMapMod.Pins
         {
             base.Initialize();
 
-            //RandoMapMod.Instance.LogDebug($"{name}: {SceneName}");
-
             ActiveModifiers.AddRange
             (
                 new Func<bool>[]

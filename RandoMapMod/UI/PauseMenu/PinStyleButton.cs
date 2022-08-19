@@ -1,5 +1,4 @@
 ﻿using MagicUI.Elements;
-using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Settings;
 using L = RandomizerMod.Localization;
@@ -8,11 +7,9 @@ namespace RandoMapMod.UI
 {
     internal class PinStyleButton : MainButton
     {
-        internal static PinStyleButton Instance { get; private set; }
-
         internal PinStyleButton() : base("Pin Style", RandoMapMod.MOD, 1, 1)
         {
-            Instance = this;
+
         }
 
         protected override void OnClick()

@@ -6,6 +6,7 @@ namespace RandoMapMod.UI
     {
         public RmmTitle() : base(RandoMapMod.MOD)
         {
+
         }
 
         public override void Update()

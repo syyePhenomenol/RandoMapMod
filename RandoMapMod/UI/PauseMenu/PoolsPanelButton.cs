@@ -6,8 +6,6 @@ namespace RandoMapMod.UI
 {
     internal class PoolsPanelButton : MainButton
     {
-        internal static PoolsPanelButton Instance { get; private set; }
-
         public PoolsPanelButton() : base("Pools Panel Button", RandoMapMod.MOD, 1, 3)
         {
 

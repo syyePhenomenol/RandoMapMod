@@ -405,7 +405,7 @@ namespace RandoMapMod.Transition
         /// </summary>
         public static void GetFullNetwork()
         {
-            RandoMapMod.Instance.LogDebug("Get Full Network");
+            RandoMapMod.Instance.LogDebug("Full pathfinder network:");
 
             foreach (Term term in localPm.lm.Terms)
             {

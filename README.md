@@ -34,7 +34,7 @@ Optional and compatible:
 
 # Quick Start Guide
 - Press `CTRL-M` during a game to enable the mod. Alternatively, click the red button when the game is paused.
-- The following videos were originally made for MapModS but this mod functions very similarly.
+- The following videos were originally made for MapModS, but this mod functions very similarly.
     - [fireb0rn's quick MapModS guide (item randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1113s)
     - [fireb0rn's quick MapModS guide (transition randomizer)](https://www.youtube.com/watch?v=z35cFvU0McQ&t=1195s)
 
@@ -58,7 +58,7 @@ Optional and compatible:
     - With pin selection on, you can press the indicated key/controller bind to warp to the selected bench.
 
 ## Pause Menu
-- "Mod Enabled/Disabled" `CTRL-M`: Toggle the mod on/off
+- "Map Mod Enabled/Disabled" `CTRL-M`: Toggle the mod on/off
 - "Spoilers" `CTRL-1`: Toggle pins between vanilla (non-spoiler) and spoiler item pools. For most gameplay, leave this setting off.
 - "Randomized" `CTRL-2`: Toggle all pins for randomized items on/off
 - "Vanilla" `CTRL-3`: Toggle all pins for non-randomized items on/off
@@ -85,7 +85,7 @@ Optional and compatible:
     - A compass arrow will point to the next transition you need to go to. The shown route gets updated after every transition.
     - The Quick Map also shows the list of unchecked/visited/vanilla transitions for the current room.
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
-- `CTRL-R`: Toggle the route to be displayed in-game to full/next transition only/off.
+- `CTRL-G`: Toggle the route to be displayed in-game to full/next transition only/off.
 - `CTRL-E`: Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
 - `CTRL-C`: Toggle the route compass on/off.
 

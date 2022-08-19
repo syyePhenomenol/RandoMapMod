@@ -64,11 +64,11 @@
   
 |Color|Example|Meaning|
 |--|--|--|
-|White|![](./LegendAssets/Pins/White.jpg)|Normal|
-|Green|![](./LegendAssets/Pins/Green.jpg)|Previewed|
-|Cyan|![](./LegendAssets/Pins/Cyan.jpg)|Persistent|
-|Red|![](./LegendAssets/Pins/Red.jpg)|Reachable by sequence break|
-|Magenta|![](./LegendAssets/Pins/Magenta.jpg)|Cleared|
+|White|![](./LegendAssets/Pins/White.png)|Normal|
+|Green|![](./LegendAssets/Pins/Green.png)|Previewed|
+|Cyan|![](./LegendAssets/Pins/Cyan.png)|Persistent|
+|Red|![](./LegendAssets/Pins/Red.png)|Reachable by sequence break|
+|Magenta|![](./LegendAssets/Pins/Magenta.png)|Cleared|
   
 </td><td>
 

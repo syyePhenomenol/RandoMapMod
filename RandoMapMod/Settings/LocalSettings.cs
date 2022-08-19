@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MapChanger;
 using RandoMapMod.Pins;
-using RandoMapMod.Transition;
 
 namespace RandoMapMod.Settings
 {
@@ -11,13 +9,12 @@ namespace RandoMapMod.Settings
     {
         public bool InitializedPreviously = false;
 
-        //public bool ModEnabled = false;
-        //public RmmMode Mode = RmmMode.Full_Map;
-        public bool ShowBenchPins = false;
         public bool SpoilerOn = false;
         public bool RandomizedOn = true;
         public bool VanillaOn = false;
+
         public Dictionary<string, PoolState> PoolSettings;
+
         public GroupBySetting GroupBy = GroupBySetting.Location;
 
         public void Initialize()
@@ -34,11 +31,6 @@ namespace RandoMapMod.Settings
         {
             GroupBy = (GroupBySetting)(((int)GroupBy + 1) % Enum.GetNames(typeof(GroupBySetting)).Length);
             ResetPoolSettings();
-        }
-
-        internal void ToggleBench()
-        {
-            ShowBenchPins = !ShowBenchPins;
         }
 
         internal void ToggleSpoilers()

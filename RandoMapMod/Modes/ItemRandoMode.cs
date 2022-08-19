@@ -11,14 +11,7 @@ namespace RandoMapMod.Modes
         {
             if (TransitionData.IsTransitionRando()) return false;
 
-            if (RandoMapMod.GS.OverrideDefaultMode)
-            {
-                return ModeName == RandoMapMod.GS.ItemRandoModeOverride.ToString().ToCleanName();
-            }
-            else
-            {
-                return ModeName == Settings.RmmMode.Full_Map.ToString().ToCleanName();
-            }
+            return ModeName == RandoMapMod.GS.DefaultItemRandoMode.ToString().ToCleanName();
         }
 
         public override Vector4? RoomColorOverride(RoomSprite roomSprite)

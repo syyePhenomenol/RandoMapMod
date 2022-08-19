@@ -97,6 +97,7 @@ namespace RandoMapMod.UI
                 lookupPanel.Visibility = Visibility.Collapsed;
             }
         }
+
         internal static void UpdateRoomPanel()
         {
             if (Conditions.TransitionRandoModeEnabled()

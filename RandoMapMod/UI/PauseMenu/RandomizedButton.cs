@@ -9,11 +9,9 @@ namespace RandoMapMod.UI
 {
     internal class RandomizedButton : MainButton
     {
-        internal RandomizedButton Instance { get; init; }
-
         internal RandomizedButton() : base("Randomized Pins", RandoMapMod.MOD, 0, 1)
         {
-            Instance = this;
+
         }
 
         protected override void OnClick()
