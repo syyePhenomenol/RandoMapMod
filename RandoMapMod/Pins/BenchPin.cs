@@ -2,7 +2,6 @@
 using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;
-using RandoMapMod.Modes;
 using UnityEngine;
 using L = RandomizerMod.Localization;
 
@@ -57,7 +56,7 @@ namespace RandoMapMod.Pins
 
         private protected override bool ActiveBySettings()
         {
-            return Conditions.ItemRandoModeEnabled() && RandoMapMod.GS.ShowBenchwarpPins;
+            return RandoMapMod.GS.ShowBenchwarpPins;
         }
 
         protected private override bool ActiveByProgress()
@@ -86,7 +85,7 @@ namespace RandoMapMod.Pins
 
         private protected override void UpdatePinColor()
         {
-            if (IsVisited())
+            if (IsVisitedBench())
             {
                 Color = UnityEngine.Color.white;
             }
@@ -109,7 +108,7 @@ namespace RandoMapMod.Pins
                 color = RmmColors.GetColor(RmmColorSetting.Pin_Normal);
             }
 
-            if (!IsVisited())
+            if (!IsVisitedBench())
             {
                 color.x *= UNREACHABLE_COLOR_MULTIPLIER;
                 color.y *= UNREACHABLE_COLOR_MULTIPLIER;
@@ -130,7 +129,7 @@ namespace RandoMapMod.Pins
 
             text += $"\n\n{L.Localize("Status")}:";
 
-            if (IsVisited())
+            if (IsVisitedBench())
             {
                 text += $" {L.Localize("Can warp")}";
             }
@@ -147,12 +146,12 @@ namespace RandoMapMod.Pins
             return text; 
         }
 
-        private bool IsCleared()
+        internal bool IsCleared()
         {
             return RandomizerMod.RandomizerMod.RS.TrackerData.clearedLocations.Contains(BenchName);
         }
 
-        private bool IsVisited()
+        internal override bool IsVisitedBench()
         {
             return BenchwarpInterop.IsVisitedBench(BenchName);
         }

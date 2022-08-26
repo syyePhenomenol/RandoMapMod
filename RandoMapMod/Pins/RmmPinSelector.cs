@@ -70,10 +70,14 @@ namespace RandoMapMod.Pins
                 attackHoldTimer.Reset();
             }
 
-            if (RandoMapMod.GS.ShowBenchwarpPins && attackHoldTimer.ElapsedMilliseconds >= 500 && BenchwarpInterop.IsVisitedBench(SelectedObjectKey))
+            if (attackHoldTimer.ElapsedMilliseconds >= 500)
             {
                 attackHoldTimer.Reset();
-                GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(SelectedObjectKey));
+
+                if (BenchSelected())
+                {
+                    GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(SelectedObjectKey));
+                }
             }
         }
 
@@ -194,6 +198,7 @@ namespace RandoMapMod.Pins
         protected override void OnSelectionChanged()
         {
             SelectionPanels.UpdatePinPanel();
+            SelectionPanels.UpdateRoomPanel();
         }
 
         private bool ActiveByCurrentMode()
@@ -214,7 +219,7 @@ namespace RandoMapMod.Pins
 
                 List<InControl.BindingSource> attackBindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 
-                if (RandoMapMod.GS.ShowBenchwarpPins && BenchwarpInterop.IsVisitedBench(SelectedObjectKey))
+                if (BenchSelected())
                 {
                     text += $"\n\n{L.Localize("Hold")} {Utils.GetBindingsText(attackBindings)} {L.Localize("to benchwarp")}.";
                 }
@@ -234,6 +239,11 @@ namespace RandoMapMod.Pins
             }
 
             return "";
+        }
+
+        internal bool BenchSelected()
+        {
+            return Interop.HasBenchwarp() && RandoMapMod.GS.ShowBenchwarpPins && BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
         }
     }
 }

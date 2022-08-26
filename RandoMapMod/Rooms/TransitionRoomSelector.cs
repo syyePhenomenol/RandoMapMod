@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
+using RandoMapMod.Pins;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
 
@@ -47,10 +48,15 @@ namespace RandoMapMod.Rooms
                 attackHoldTimer.Reset();
             }
 
-            if (attackHoldTimer.ElapsedMilliseconds >= 500 && SelectedObjectKey is not NONE_SELECTED)
+            // Disable this benchwarp if the pin selector has already selected a bench
+            if (attackHoldTimer.ElapsedMilliseconds >= 500)
             {
                 attackHoldTimer.Reset();
-                RouteTracker.TryBenchwarp();
+
+                if (SelectedObjectKey is not NONE_SELECTED && CanBenchwarp())
+                {
+                    RouteTracker.TryBenchwarp();
+                }
             }
         }
 
@@ -77,6 +83,11 @@ namespace RandoMapMod.Rooms
             if (transitions is "") return instructions;
 
             return $"{instructions}\n\n{transitions}";
+        }
+
+        internal bool CanBenchwarp()
+        {
+            return Interop.HasBenchwarp() && !RmmPinSelector.Instance.BenchSelected();
         }
     }
 }

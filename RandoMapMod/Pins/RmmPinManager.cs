@@ -9,6 +9,7 @@ using MapChanger;
 using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
 using Newtonsoft.Json;
+using RandoMapMod.Modes;
 using RandomizerCore;
 using RandomizerMod.IC;
 using UnityEngine;
@@ -65,6 +66,7 @@ namespace RandoMapMod.Pins
 
             MoPins = Utils.MakeMonoBehaviour<MapObject>(goMap, "RandoMapMod Pins");
             MoPins.Initialize();
+            MoPins.ActiveModifiers.Add(Conditions.RandoMapModEnabled);
 
             MapObjectUpdater.Add(MoPins);
 
@@ -153,8 +155,6 @@ namespace RandoMapMod.Pins
 
         internal static void UpdateRandoPins()
         {
-            RandoMapMod.Instance.LogDebug("UpdateRandoPins");
-
             foreach (RmmPin pin in Pins.Values)
             {
                 if (pin is RandomizedRmmPin randoPin)

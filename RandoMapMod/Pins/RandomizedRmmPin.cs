@@ -6,19 +6,19 @@ using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
-using RandoMapMod.Defs;
 using RandoMapMod.Rooms;
 using UnityEngine;
 using L = RandomizerMod.Localization;
 using RM = RandomizerMod.RandomizerMod;
 using SD = ConnectionMetadataInjector.SupplementalMetadata;
+using RPS = RandoMapMod.Pins.RandoPlacementState;
 
 namespace RandoMapMod.Pins
 {
     internal sealed class RandomizedRmmPin : RmmPin, IPeriodicUpdater
     {
         private AbstractPlacement placement;
-        private RandoPlacementState placementState;
+        private RPS placementState;
 
         private IEnumerable<AbstractItem> remainingItems;
         private int itemIndex = 0;
@@ -172,8 +172,8 @@ namespace RandoMapMod.Pins
 
         protected private override bool ActiveByProgress()
         {
-            return (placementState != RandoPlacementState.Cleared)
-                && (placementState != RandoPlacementState.ClearedPersistent || RandoMapMod.GS.ShowPersistentPins);
+            return (placementState != RPS.Cleared)
+                && (placementState != RPS.ClearedPersistent || RandoMapMod.GS.ShowPersistentPins);
         }
 
         public override void OnMainUpdate(bool active)
@@ -190,8 +190,8 @@ namespace RandoMapMod.Pins
             }
 
             showItemSprite = RandoMapMod.LS.SpoilerOn
-                || (placementState is RandoPlacementState.Previewed && placement.CanPreview())
-                || placementState is RandoPlacementState.ClearedPersistent;
+                || (placementState is RPS.Previewed && placement.CanPreview())
+                || placementState is RPS.ClearedPersistent;
 
             StopPeriodicUpdate();
 
@@ -228,7 +228,7 @@ namespace RandoMapMod.Pins
             {
                 size *= SELECTED_MULTIPLIER;
             }
-            else if (placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.ClearedPersistent)
+            else if (placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent)
             {
                 size *= UNREACHABLE_SIZE_MULTIPLIER;
             }
@@ -240,7 +240,7 @@ namespace RandoMapMod.Pins
         {
             Vector4 color = UnityEngine.Color.white;
 
-            if (placementState == RandoPlacementState.UncheckedUnreachable)
+            if (placementState is RPS.UncheckedUnreachable)
             {
                 Color = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
                 return;
@@ -253,14 +253,14 @@ namespace RandoMapMod.Pins
         {
             Vector4 color = placementState switch
             {
-                RandoPlacementState.OutOfLogicReachable => RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic),
-                RandoPlacementState.Previewed => RmmColors.GetColor(RmmColorSetting.Pin_Previewed),
-                RandoPlacementState.Cleared => RmmColors.GetColor(RmmColorSetting.Pin_Cleared),
-                RandoPlacementState.ClearedPersistent => RmmColors.GetColor(RmmColorSetting.Pin_Persistent),
+                RPS.OutOfLogicReachable => RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic),
+                RPS.Previewed => RmmColors.GetColor(RmmColorSetting.Pin_Previewed),
+                RPS.Cleared => RmmColors.GetColor(RmmColorSetting.Pin_Cleared),
+                RPS.ClearedPersistent => RmmColors.GetColor(RmmColorSetting.Pin_Persistent),
                 _ => RmmColors.GetColor(RmmColorSetting.Pin_Normal),
             };
 
-            if (placementState == RandoPlacementState.UncheckedUnreachable)
+            if (placementState is RPS.UncheckedUnreachable)
             {
                 BorderColor = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
             }
@@ -276,29 +276,29 @@ namespace RandoMapMod.Pins
             {
                 if (placement.IsPersistent())
                 {
-                    placementState = RandoPlacementState.ClearedPersistent;
+                    placementState = RPS.ClearedPersistent;
                 }
                 else
                 {
-                    placementState = RandoPlacementState.Cleared;
+                    placementState = RPS.Cleared;
                 }
             }
             // Does not guarantee the item sprites should show (for a cost-only or a "none" preview)
             else if (RM.RS.TrackerData.previewedLocations.Contains(name))
             {
-                placementState = RandoPlacementState.Previewed;
+                placementState = RPS.Previewed;
             }
             else if (RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
             {
-                placementState = RandoPlacementState.UncheckedReachable;
+                placementState = RPS.UncheckedReachable;
             }
             else if (RM.RS.TrackerData.uncheckedReachableLocations.Contains(name))
             {
-                placementState = RandoPlacementState.OutOfLogicReachable;
+                placementState = RPS.OutOfLogicReachable;
             }
             else
             {
-                placementState = RandoPlacementState.UncheckedUnreachable;
+                placementState = RPS.UncheckedUnreachable;
             }
         }
 
@@ -322,18 +322,18 @@ namespace RandoMapMod.Pins
 
             text += placementState switch
             {
-                RandoPlacementState.UncheckedUnreachable => $" {L.Localize("Randomized, unchecked, unreachable")}",
-                RandoPlacementState.UncheckedReachable => $" {L.Localize("Randomized, unchecked, reachable")}",
-                RandoPlacementState.OutOfLogicReachable => $" {L.Localize("Randomized, unchecked, reachable through sequence break")}",
-                RandoPlacementState.Previewed => $" {L.Localize("Randomized, previewed")}",
-                RandoPlacementState.Cleared => $" {L.Localize("Cleared")}",
-                RandoPlacementState.ClearedPersistent => $" {L.Localize("Randomized, cleared, persistent")}",
+                RPS.UncheckedUnreachable => $" {L.Localize("Randomized, unchecked, unreachable")}",
+                RPS.UncheckedReachable => $" {L.Localize("Randomized, unchecked, reachable")}",
+                RPS.OutOfLogicReachable => $" {L.Localize("Randomized, unchecked, reachable through sequence break")}",
+                RPS.Previewed => $" {L.Localize("Randomized, previewed")}",
+                RPS.Cleared => $" {L.Localize("Cleared")}",
+                RPS.ClearedPersistent => $" {L.Localize("Randomized, cleared, persistent")}",
                 _ => ""
             };
 
             text += $"\n\n{L.Localize("Logic")}: {Logic?? "not found"}";
 
-            if (placementState is RandoPlacementState.Previewed && placement.TryGetPreviewText(out List<string> previewText))
+            if (placementState is RPS.Previewed && placement.TryGetPreviewText(out List<string> previewText))
             {
                 text += $"\n\n{L.Localize("Previewed item(s)")}:";
 
@@ -362,7 +362,7 @@ namespace RandoMapMod.Pins
             IEnumerable<AbstractItem> spoilerItems = placement.Items.Where(item => !item.WasEverObtained());
 
             if (spoilerItems.Any() && RandoMapMod.LS.SpoilerOn
-                && !(placementState is RandoPlacementState.Previewed && placement.CanPreview()))
+                && !(placementState is RPS.Previewed && placement.CanPreview()))
             {
                 text += $"\n\n{L.Localize("Spoiler item(s)")}:";
 
@@ -383,6 +383,11 @@ namespace RandoMapMod.Pins
                     .Replace(", I'll gladly sell it to you.", "")
                     .Replace("Requires ", "");
             }
+        }
+
+        internal override bool IsVisitedBench()
+        {
+            return BenchwarpInterop.IsVisitedBench(name);
         }
     }
 }

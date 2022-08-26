@@ -1,4 +1,4 @@
-﻿namespace RandoMapMod.Defs
+﻿namespace RandoMapMod.Pins
 {
     internal enum RandoPlacementState
     {

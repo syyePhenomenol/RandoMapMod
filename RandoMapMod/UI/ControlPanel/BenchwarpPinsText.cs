@@ -10,7 +10,7 @@ namespace RandoMapMod.UI
 
         private protected override bool ActiveCondition()
         {
-            return RandoMapMod.GS.ControlPanelOn && Conditions.ItemRandoModeEnabled();
+            return RandoMapMod.GS.ControlPanelOn;
         }
 
         private protected override Vector4 GetColor()

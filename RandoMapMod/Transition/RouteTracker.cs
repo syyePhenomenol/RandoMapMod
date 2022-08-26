@@ -78,22 +78,11 @@ namespace RandoMapMod.Transition
             AfterGetRoute();
         }
 
-        internal static void ReevaluateRoute(ItemChanger.Transition lastTransition)
+        internal static void ReevaluateRoute(string transition)
         {
             if (Pathfinder.localPm == null) return;
 
             rejectedRoutes.Clear();
-
-            string transition = lastTransition.ToString();
-
-            if (transition == "Fungus2_15[top2]")
-            {
-                transition = "Fungus2_15[top3]";
-            }
-            if (transition == "Fungus2_14[bot1]")
-            {
-                transition = "Fungus2_14[bot3]";
-            }
 
             try
             {
@@ -140,28 +129,36 @@ namespace RandoMapMod.Transition
 
         internal static void UpdateRoute(ItemChanger.Transition lastTransition)
         {
-            RandoMapMod.Instance.LogDebug("Last transition: " + lastTransition.ToString());
+            RandoMapMod.Instance.LogDebug($"Last transition: {lastTransition}");
 
             if (!selectedRoute.Any()) return;
 
-            string transition = selectedRoute.First();
+            string nextRouteTransition = selectedRoute.First();
 
-            // Check adjacent transition matches the route's transition
-            if (lastTransition.GateName == "" && transition.IsBenchwarpTransition())
+            string lastTransitionName = lastTransition.ToString() switch
             {
-                if (BenchwarpInterop.BenchKeys.TryGetValue(transition, out RmmBenchKey key)
-                    && lastTransition.SceneName == key.SceneName && PlayerData.instance.respawnMarkerName == key.RespawnMarkerName)
+                "Fungus2_15[top2]" => "Fungus2_15[top3]",
+                "Fungus2_14[bot1]" => "Fungus2_14[bot3]",
+                _ => lastTransition.ToString()
+            };
+
+            if (lastTransitionName == nextRouteTransition.GetAdjacentTerm())
+            {
+                UpdateRoute();
+                return;
+            }
+
+            RandoMapMod.Instance.LogDebug($"Scene: {lastTransition.SceneName}, Respawn Marker: {PlayerData.instance.respawnMarkerName}");
+
+            if (Interop.HasBenchwarp() && BenchwarpInterop.BenchNames.TryGetValue(new RmmBenchKey(lastTransition.SceneName, PlayerData.instance.respawnMarkerName), out string benchName))
+            {
+                lastTransitionName = benchName.GetAdjacentTerm();
+
+                if (nextRouteTransition == benchName)
                 {
                     UpdateRoute();
                     return;
                 }
-            }
-            else if (lastTransition.ToString() == transition.GetAdjacentTerm()
-                || (lastTransition.ToString() == "Fungus2_15[top2]" && transition.GetAdjacentTerm() == "Fungus2_15[top3]")
-                || (lastTransition.ToString() == "Fungus2_14[bot1]" && transition.GetAdjacentTerm() == "Fungus2_14[bot3]"))
-            {
-                UpdateRoute();
-                return;
             }
 
             // The transition doesn't match the route
@@ -172,7 +169,7 @@ namespace RandoMapMod.Transition
                     UpdateRouteUI();
                     break;
                 case OffRouteBehaviour.Reevaluate:
-                    ReevaluateRoute(lastTransition);
+                    ReevaluateRoute(lastTransitionName);
                     break;
                 default:
                     break;
@@ -180,7 +177,7 @@ namespace RandoMapMod.Transition
 
             void UpdateRoute()
             {
-                selectedRoute.Remove(transition);
+                selectedRoute.Remove(nextRouteTransition);
 
                 if (!selectedRoute.Any())
                 {
@@ -252,7 +249,7 @@ namespace RandoMapMod.Transition
                 text += $" {L.Localize("to find a new route")}.";
             }
 
-            if (selectedRoute.Any() && selectedRoute.First().IsBenchwarpTransition() && Interop.HasBenchwarp())
+            if (selectedRoute.Any() && selectedRoute.First().IsBenchwarpTransition() && TransitionRoomSelector.Instance.CanBenchwarp())
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 

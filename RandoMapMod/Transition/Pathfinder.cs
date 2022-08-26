@@ -84,6 +84,8 @@ namespace RandoMapMod.Transition
         // If reevaluating, start and final are transitions instead of scenes
         public static List<string> ShortestRoute(string start, string final, List<List<string>> rejectedRoutes, bool reevaluate)
         {
+            RandoMapMod.Instance.LogDebug($"Start: {start}, Final: {final}, Reevaluate: {reevaluate}");
+
             if (start == null || final == null) return new();
 
             if (reevaluate && start == final) return new();
@@ -103,7 +105,16 @@ namespace RandoMapMod.Transition
                 SearchNode node = queue.First();
                 queue.RemoveFirst();
 
-                if (!reevaluate)
+                if (reevaluate)
+                {
+                    // If reevaluating, we just check if the final transition is correct
+                    if (final != "" && node.lastAdjacentTerm == final)
+                    {
+                        node.PrintRoute();
+                        return node.route;
+                    }
+                }
+                else
                 {
                     // Avoid terminating on duplicate/redudant new paths
                     if (node.scene == final && !rejectedRoutes.Any(r => r.First() == node.route.First() && r.Last().GetAdjacentTerm() == node.lastAdjacentTerm))
@@ -112,15 +123,6 @@ namespace RandoMapMod.Transition
                         if (node.route.First().IsBenchwarpTransition()
                             && rejectedRoutes.Any(r => r.Last().GetAdjacentTerm() == node.lastAdjacentTerm && r.First().IsBenchwarpTransition())) continue;
 
-                        node.PrintRoute();
-                        return node.route;
-                    }
-                }
-                else
-                {
-                    // If reevaluating, we just check if the final transition is correct
-                    if (final != "" && node.lastAdjacentTerm == final)
-                    {
                         node.PrintRoute();
                         return node.route;
                     }
@@ -164,8 +166,26 @@ namespace RandoMapMod.Transition
 
                 localPm.StartTemp();
 
-                // If reevaluating, start is a transition instead of a scene
-                if (!reevaluate)
+                // If reevaluating, start is a term instead of a scene
+                if (reevaluate)
+                {
+                    if (localPm.lm.TermLookup.ContainsKey(start))
+                    {
+                        localPm.Set(start, 1);
+                    }
+
+                    searchScene = start.GetScene() ?? start.GetAdjacentScene();
+                    candidateReachableTransitions = searchScene.GetTransitionsInScene();
+
+                    while (UpdateReachableTransitions(searchScene, candidateReachableTransitions)) { }
+
+                    // Remove certain top transitions that can't be returned to 
+                    if (localPm.lm.TransitionLookup.TryGetValue(start, out LogicTransition transition) && !transition.CanGet(localPm))
+                    {
+                        localPm.Set(start, 0);
+                    }
+                }
+                else
                 {
                     IEnumerable<string> seedTransitions = TransitionData.GetTransitionsByScene(start)
                         .Where(t => normalTransitionSpace.Contains(t) || localPm.lm.TransitionLookup[t].CanGet(localPm));
@@ -178,26 +198,6 @@ namespace RandoMapMod.Transition
                     candidateReachableTransitions = start.GetTransitionsInScene();
 
                     while (UpdateReachableTransitions(searchScene, candidateReachableTransitions)) { }
-                }
-                else
-                {
-                    if (start.GetScene() != null)
-                    {
-                        if (localPm.lm.TransitionLookup.ContainsKey(start))
-                        {
-                            localPm.Set(start, 1);
-                        }
-                        searchScene = start.GetScene();
-                        candidateReachableTransitions = start.GetScene().GetTransitionsInScene();
-
-                        while (UpdateReachableTransitions(searchScene, candidateReachableTransitions)) { }
-                    }
-
-                    // Remove certain top transitions that can't be returned to 
-                    if (localPm.lm.TransitionLookup.ContainsKey(start) && !localPm.lm.TransitionLookup[start].CanGet(localPm))
-                    {
-                        localPm.Set(start, 0);
-                    }
                 }
 
                 foreach (string transition in candidateReachableTransitions.Where(t => localPm.lm.TransitionLookup[t].CanGet(localPm)))

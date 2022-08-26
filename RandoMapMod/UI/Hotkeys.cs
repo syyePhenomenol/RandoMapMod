@@ -37,14 +37,14 @@ namespace RandoMapMod.UI
                     RandoMapMod.GS.ToggleBenchwarpPins();
                     RmmPinManager.Update();
                     UpdateSelectors();
-                }, ModifierKeys.Ctrl, () => Conditions.ItemRandoModeEnabled());
+                }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
             }
 
             Root.ListenForHotkey(KeyCode.R, () =>
             {
                 RandoMapMod.GS.ToggleRoomSelection();
                 UpdateSelectors();
-            }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
+            }, ModifierKeys.Ctrl, () => Conditions.TransitionRandoModeEnabled());
 
             Root.ListenForHotkey(KeyCode.S, () =>
             {

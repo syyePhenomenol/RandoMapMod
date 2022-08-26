@@ -116,7 +116,8 @@ namespace RandoMapMod.Pins
             return MapZone is MapZone.NONE
                 || MapChanger.Settings.CurrentMode() is FullMapMode or AllPinsMode
                 || (MapChanger.Settings.CurrentMode() is PinsOverMapMode && Utils.HasMapSetting(MapZone))
-                || (Conditions.TransitionRandoModeEnabled() && TransitionTracker.GetRoomActive(SceneName));
+                || (Conditions.TransitionRandoModeEnabled() && TransitionTracker.GetRoomActive(SceneName))
+                || (Interop.HasBenchwarp() && RandoMapMod.GS.ShowBenchwarpPins && IsVisitedBench());
         }
 
         protected private abstract bool ActiveBySettings();
@@ -133,6 +134,11 @@ namespace RandoMapMod.Pins
             }
 
             return text;
+        }
+
+        internal virtual bool IsVisitedBench()
+        {
+            return false;
         }
     }
 }
