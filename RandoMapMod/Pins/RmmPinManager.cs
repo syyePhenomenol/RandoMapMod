@@ -81,13 +81,21 @@ namespace RandoMapMod.Pins
             }
             if (Interop.HasBenchwarp())
             {
-                foreach ((string benchName, string sceneName) in BenchwarpInterop.BenchNames.Select(kvp => (kvp.Value, kvp.Key.SceneName)))
+                if (Interop.HasBenchRando() && BenchRandoInterop.BenchesRandomized())
                 {
-                    MakeBenchPin(benchName, sceneName);
+                    MakeBenchPin(BenchwarpInterop.BENCH_WARP_START, ItemChanger.Internal.Ref.Settings.Start.SceneName);
+                }
+                else
+                {
+                    foreach ((string benchName, string sceneName) in BenchwarpInterop.BenchNames.Select(kvp => (kvp.Value, kvp.Key.SceneName)))
+                    {
+                        MakeBenchPin(benchName, sceneName);
+                    }
                 }
             }
 
-            GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.PinGridIndex).OrderBy(pin => pin.LocationPoolGroup).ThenBy(pin => pin.name).ToList();
+            // If you are planning to place pins into the grid on the world map, please refer to the following ordering hierarchy.
+            GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroup).ThenBy(pin => pin.PinGridIndex).ThenBy(pin => pin.name).ToList();
 
             StaggerPins();
             InitializePoolGroups();

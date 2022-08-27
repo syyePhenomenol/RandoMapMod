@@ -61,7 +61,7 @@ namespace RandoMapMod.Pins
 
         protected private override bool ActiveByProgress()
         {
-            return !Interop.HasBenchRando() || !ItemChanger.Internal.Ref.Settings.Placements.ContainsKey(BenchName) || IsCleared();
+            return true;
         }
 
         private protected override void UpdatePinSprite()
@@ -99,14 +99,7 @@ namespace RandoMapMod.Pins
         {
             Vector4 color;
 
-            if (IsCleared())
-            {
-                color = RmmColors.GetColor(RmmColorSetting.Pin_Cleared);
-            }
-            else
-            {
-                color = RmmColors.GetColor(RmmColorSetting.Pin_Normal);
-            }
+            color = RmmColors.GetColor(RmmColorSetting.Pin_Normal);
 
             if (!IsVisitedBench())
             {
@@ -138,17 +131,7 @@ namespace RandoMapMod.Pins
                 text += $" {L.Localize("Cannot warp")}";
             }
 
-            if (IsCleared())
-            {
-                text += $", {L.Localize("location cleared")}";
-            }
-
             return text; 
-        }
-
-        internal bool IsCleared()
-        {
-            return RandomizerMod.RandomizerMod.RS.TrackerData.clearedLocations.Contains(BenchName);
         }
 
         internal override bool IsVisitedBench()

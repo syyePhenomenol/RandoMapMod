@@ -81,7 +81,7 @@ namespace RandoMapMod.Transition
             }
 
             // Use BenchRando's BenchDefs if it is enabled for this save
-            if (Interop.HasBenchRando() && BenchRandoInterop.IsBenchRandoEnabled())
+            if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
             {
                 foreach (KeyValuePair<RmmBenchKey, string> kvp in BenchwarpInterop.BenchNames)
                 {

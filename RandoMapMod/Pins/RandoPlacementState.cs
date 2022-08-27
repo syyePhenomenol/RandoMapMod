@@ -5,7 +5,8 @@
         UncheckedUnreachable,
         UncheckedReachable,
         OutOfLogicReachable,
-        Previewed,
+        PreviewedUnreachable,
+        PreviewedReachable,
         Cleared,
         ClearedPersistent
     }

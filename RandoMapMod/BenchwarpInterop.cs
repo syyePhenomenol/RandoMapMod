@@ -24,7 +24,7 @@ namespace RandoMapMod
             BenchNames = new();
             BenchKeys = new();
 
-            if (Interop.HasBenchRando() && BenchRandoInterop.IsBenchRandoEnabled())
+            if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
             {
                 BenchNames = BenchRandoInterop.GetBenches();
             }

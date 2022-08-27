@@ -14,10 +14,16 @@ namespace RandoMapMod
             return bsm.LS.Benches.ToDictionary(benchName => new RmmBenchKey(BenchLookup[benchName].SceneName, BenchLookup[benchName].GetRespawnMarkerName()), benchName => benchName);
         }
 
-        internal static bool IsBenchRandoEnabled()
+        internal static bool BenchRandoEnabled()
         {
             BRLocalSettingsModule bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
             return bsm != null && bsm.LS.Settings.IsEnabled();
+        }
+
+        internal static bool BenchesRandomized()
+        {
+            BRLocalSettingsModule bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
+            return bsm != null && bsm.LS.Settings.RandomizedItems is not BenchRando.Rando.ItemRandoMode.None;
         }
     }
 }

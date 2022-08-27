@@ -51,7 +51,7 @@ namespace RandoMapMod.Pins
         internal abstract HashSet<string> ItemPoolGroups { get; }
         internal string SceneName { get; protected private set; }
         internal MapZone MapZone { get; protected private set; } = MapZone.NONE;
-        internal string Logic { get; private set; }
+        internal OptimizedLogicDef Logic { get; private set; }
         internal int PinGridIndex { get; protected private set; }
 
         public override void Initialize()
@@ -71,7 +71,7 @@ namespace RandoMapMod.Pins
 
             if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out OptimizedLogicDef logic))
             {
-                Logic = logic.ToInfix();
+                Logic = logic;
             }
 
             BorderSprite = new EmbeddedSprite("Pins.Border").Value;

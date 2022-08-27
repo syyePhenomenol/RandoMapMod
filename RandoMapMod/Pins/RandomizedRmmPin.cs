@@ -149,6 +149,8 @@ namespace RandoMapMod.Pins
 
         protected private override bool ActiveBySettings()
         {
+            if (Interop.HasBenchwarp() && RandoMapMod.GS.ShowBenchwarpPins && IsVisitedBench()) return true;
+
             if (RandoMapMod.LS.GroupBy == Settings.GroupBySetting.Item)
             {
                 foreach (string poolGroup in remainingItems.Select(item => itemPoolGroups[item]))
@@ -172,15 +174,21 @@ namespace RandoMapMod.Pins
 
         protected private override bool ActiveByProgress()
         {
-            return (placementState != RPS.Cleared)
-                && (placementState != RPS.ClearedPersistent || RandoMapMod.GS.ShowPersistentPins);
+            if (Interop.HasBenchwarp() && RandoMapMod.GS.ShowBenchwarpPins && IsVisitedBench()) return true;
+
+            return (placementState is not RPS.Cleared && (placementState is not RPS.ClearedPersistent || RandoMapMod.GS.ShowPersistentPins))
+                || RandoMapMod.GS.ShowClearedPins;
         }
 
         public override void OnMainUpdate(bool active)
         {
             itemIndex = 0;
 
-            if (RandoMapMod.GS.ShowPersistentPins)
+            if (placementState is RPS.Cleared)
+            {
+                remainingItems = placement.Items;
+            }
+            else if (RandoMapMod.GS.ShowPersistentPins)
             {
                 remainingItems = placement.Items.Where(item => !item.WasEverObtained() || item.IsPersistent());
             }
@@ -189,9 +197,10 @@ namespace RandoMapMod.Pins
                 remainingItems = placement.Items.Where(item => !item.WasEverObtained());
             }
 
-            showItemSprite = RandoMapMod.LS.SpoilerOn
-                || (placementState is RPS.Previewed && placement.CanPreview())
-                || placementState is RPS.ClearedPersistent;
+            showItemSprite = remainingItems.Any()
+                && (RandoMapMod.LS.SpoilerOn
+                    || (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable && placement.CanPreview())
+                    || placementState is RPS.ClearedPersistent);
 
             StopPeriodicUpdate();
 
@@ -228,7 +237,7 @@ namespace RandoMapMod.Pins
             {
                 size *= SELECTED_MULTIPLIER;
             }
-            else if (placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent)
+            else if (placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent or RPS.Cleared)
             {
                 size *= UNREACHABLE_SIZE_MULTIPLIER;
             }
@@ -240,7 +249,7 @@ namespace RandoMapMod.Pins
         {
             Vector4 color = UnityEngine.Color.white;
 
-            if (placementState is RPS.UncheckedUnreachable)
+            if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
             {
                 Color = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
                 return;
@@ -254,13 +263,13 @@ namespace RandoMapMod.Pins
             Vector4 color = placementState switch
             {
                 RPS.OutOfLogicReachable => RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic),
-                RPS.Previewed => RmmColors.GetColor(RmmColorSetting.Pin_Previewed),
+                RPS.PreviewedUnreachable or RPS.PreviewedReachable => RmmColors.GetColor(RmmColorSetting.Pin_Previewed),
                 RPS.Cleared => RmmColors.GetColor(RmmColorSetting.Pin_Cleared),
                 RPS.ClearedPersistent => RmmColors.GetColor(RmmColorSetting.Pin_Persistent),
                 _ => RmmColors.GetColor(RmmColorSetting.Pin_Normal),
             };
 
-            if (placementState is RPS.UncheckedUnreachable)
+            if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
             {
                 BorderColor = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
             }
@@ -286,7 +295,15 @@ namespace RandoMapMod.Pins
             // Does not guarantee the item sprites should show (for a cost-only or a "none" preview)
             else if (RM.RS.TrackerData.previewedLocations.Contains(name))
             {
-                placementState = RPS.Previewed;
+                if (Logic is not null && Logic.CanGet(RM.RS.TrackerData.pm))
+                {
+                    placementState = RPS.PreviewedReachable;
+                }
+                else
+                {
+                    placementState = RPS.PreviewedUnreachable;
+                }
+
             }
             else if (RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
             {
@@ -325,15 +342,28 @@ namespace RandoMapMod.Pins
                 RPS.UncheckedUnreachable => $" {L.Localize("Randomized, unchecked, unreachable")}",
                 RPS.UncheckedReachable => $" {L.Localize("Randomized, unchecked, reachable")}",
                 RPS.OutOfLogicReachable => $" {L.Localize("Randomized, unchecked, reachable through sequence break")}",
-                RPS.Previewed => $" {L.Localize("Randomized, previewed")}",
+                RPS.PreviewedUnreachable => $" {L.Localize("Randomized, previewed, unreachable")}",
+                RPS.PreviewedReachable => $" {L.Localize("Randomized, previewed, reachable")}",
                 RPS.Cleared => $" {L.Localize("Cleared")}",
                 RPS.ClearedPersistent => $" {L.Localize("Randomized, cleared, persistent")}",
                 _ => ""
             };
 
-            text += $"\n\n{L.Localize("Logic")}: {Logic?? "not found"}";
+            if (Interop.HasBenchwarp() && LocationPoolGroup is "Benches")
+            {
+                if (BenchwarpInterop.IsVisitedBench(name))
+                {
+                    text += ", can warp";
+                }
+                else
+                {
+                    text += ", cannot warp";
+                }
+            }
 
-            if (placementState is RPS.Previewed && placement.TryGetPreviewText(out List<string> previewText))
+            text += $"\n\n{L.Localize("Logic")}: {Logic?.ToInfix() ?? "not found"}";
+
+            if (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable && placement.TryGetPreviewText(out List<string> previewText))
             {
                 text += $"\n\n{L.Localize("Previewed item(s)")}:";
 
@@ -362,7 +392,7 @@ namespace RandoMapMod.Pins
             IEnumerable<AbstractItem> spoilerItems = placement.Items.Where(item => !item.WasEverObtained());
 
             if (spoilerItems.Any() && RandoMapMod.LS.SpoilerOn
-                && !(placementState is RPS.Previewed && placement.CanPreview()))
+                && !(placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable && placement.CanPreview()))
             {
                 text += $"\n\n{L.Localize("Spoiler item(s)")}:";
 

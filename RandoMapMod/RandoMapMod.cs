@@ -49,6 +49,7 @@ namespace RandoMapMod
             new VanillaButton(),
             new SpoilersButton(),
             new PoolsPanelButton(),
+            new ClearedButton(),
             new PersistentButton(),
             new GroupByButton()
         };

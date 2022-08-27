@@ -47,7 +47,7 @@ namespace RandoMapMod.Pins
 
         protected private override bool ActiveByProgress()
         {
-            return !Tracker.HasClearedLocation(name);
+            return !Tracker.HasClearedLocation(name) || RandoMapMod.GS.ShowClearedPins;
         }
 
         private protected override void UpdatePinSprite()
@@ -76,7 +76,22 @@ namespace RandoMapMod.Pins
 
         private protected override void UpdateBorderColor()
         {
-            BorderColor = vanillaColor;
+            Vector4 color;
+
+            if (Tracker.HasClearedLocation(name))
+            {
+                color = RmmColors.GetColor(RmmColorSetting.Pin_Cleared);
+            }
+            else if (IsPersistent())
+            {
+                color = RmmColors.GetColor(RmmColorSetting.Pin_Persistent);
+            }
+            else
+            {
+                color = RmmColors.GetColor(RmmColorSetting.Pin_Normal);
+            }
+
+            BorderColor = new(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
         }
 
         internal override string GetSelectionText()
@@ -85,23 +100,30 @@ namespace RandoMapMod.Pins
 
             text += $"\n\n{L.Localize("Status")}:";
 
-            if (IsPersistent())
+            if (Tracker.HasClearedLocation(name))
             {
-                text += $" {L.Localize("Not randomized, persistent")}";
+                text += $" {L.Localize("Not randomized, cleared")}";
             }
             else
             {
-                text += $" {L.Localize("Not randomized, unchecked")}";
+                if (IsPersistent())
+                {
+                    text += $" {L.Localize("Not randomized, persistent")}";
+                }
+                else
+                {
+                    text += $" {L.Localize("Not randomized, unchecked")}";
+                }
             }
 
-            text += $"\n\n{L.Localize("Logic")}: {Logic ?? "not found"}";
+            text += $"\n\n{L.Localize("Logic")}: {Logic?.ToInfix() ?? "not found"}";
 
             return text; 
         }
 
         private bool IsPersistent()
         {
-            return LocationPoolGroup == PoolGroup.LifebloodCocoons.FriendlyName() 
+            return LocationPoolGroup == PoolGroup.LifebloodCocoons.FriendlyName()
                 || LocationPoolGroup == PoolGroup.SoulTotems.FriendlyName()
                 || LocationPoolGroup == PoolGroup.LoreTablets.FriendlyName();
         }

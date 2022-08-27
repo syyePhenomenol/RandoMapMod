@@ -15,6 +15,7 @@ namespace RandoMapMod.Settings
         public bool ShowRouteCompass = true;
         public PinStyle PinStyle = PinStyle.Normal;
         public PinSize PinSize = PinSize.Medium;
+        public bool ShowClearedPins = false;
         public bool ShowPersistentPins = false;
         public bool ShowBenchwarpPins = true;
 
@@ -83,6 +84,11 @@ namespace RandoMapMod.Settings
         internal void TogglePinSize()
         {
             PinSize = (PinSize)(((int)PinSize + 1) % Enum.GetNames(typeof(PinSize)).Length);
+        }
+
+        internal void ToggleCleared()
+        {
+            ShowClearedPins = !ShowClearedPins;
         }
 
         internal void TogglePersistent()
