@@ -53,7 +53,7 @@ namespace RandoMapMod.Rooms
             {
                 attackHoldTimer.Reset();
 
-                if (SelectedObjectKey is not NONE_SELECTED && CanBenchwarp())
+                if (CanBenchwarp())
                 {
                     RouteTracker.TryBenchwarp();
                 }

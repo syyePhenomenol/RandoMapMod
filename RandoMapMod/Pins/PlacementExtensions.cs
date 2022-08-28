@@ -83,7 +83,7 @@ namespace RandoMapMod.Pins
             text = new();
 
             if (placement.GetTag<ItemChanger.Tags.MultiPreviewRecordTag>() is ItemChanger.Tags.MultiPreviewRecordTag mprt
-                    && mprt.previewTexts != null)
+                    && mprt.previewTexts is not null)
             {
                 for (int i = 0; i < mprt.previewTexts.Length; i++)
                 {

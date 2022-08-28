@@ -33,9 +33,9 @@ namespace RandoMapMod.UI
 
         private static void CreateRouteCompass()
         {
-            if (goCompass != null && Compass != null) Compass.Destroy();
+            if (goCompass is not null && Compass is not null) Compass.Destroy();
 
-            if (Knight == null || GameManager.instance.IsNonGameplayScene()) return;
+            if (Knight is null || GameManager.instance.IsNonGameplayScene()) return;
 
             Sprite arrow = new EmbeddedSprite("GUI.Arrow").Value;
 
@@ -57,9 +57,9 @@ namespace RandoMapMod.UI
 
         public static void Update()
         {
-            if (goCompass == null) return;
+            if (goCompass is null) return;
 
-            if (Compass != null && RouteTracker.SelectedRoute.Any())
+            if (Compass is not null && RouteTracker.SelectedRoute.Any())
             {
                 string transition = RouteTracker.SelectedRoute.First();
                 string scene = transition.GetScene();
@@ -94,7 +94,7 @@ namespace RandoMapMod.UI
 
                 GameObject gateObject = UnityExtensions.FindGameObject(SM.GetActiveScene(), gate);
 
-                if (gateObject != null)
+                if (gateObject is not null)
                 {
                     Compass.TrackedObjects = new() { gateObject };
                     goCompass.SetActive(true);
@@ -103,7 +103,7 @@ namespace RandoMapMod.UI
 
                 GameObject gateObject2 = UnityExtensions.FindGameObject(SM.GetActiveScene(), "_Transition Gates/" + gate);
 
-                if (gateObject2 != null)
+                if (gateObject2 is not null)
                 {
                     Compass.TrackedObjects = new() { gateObject2 };
                     goCompass.SetActive(true);

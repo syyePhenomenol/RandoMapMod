@@ -90,7 +90,7 @@ namespace RandoMapMod
             {
                 Bench bench = Bench.Benches.FirstOrDefault(b => b.sceneName == benchKey.SceneName && b.respawnMarker == benchKey.RespawnMarkerName);
 
-                if (bench != null)
+                if (bench is not null)
                 {
                     bench.SetBench();
                 }

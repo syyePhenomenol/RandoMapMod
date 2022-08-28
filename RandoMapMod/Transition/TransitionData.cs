@@ -23,7 +23,7 @@ namespace RandoMapMod.Transition
         internal static bool IsTransitionRando()
         {
             return RM.RS.GenerationSettings.TransitionSettings.Mode != TM.None
-                || (RM.RS.Context.transitionPlacements != null && RM.RS.Context.transitionPlacements.Any());
+                || (RM.RS.Context.transitionPlacements is not null && RM.RS.Context.transitionPlacements.Any());
         }
 
         internal static bool IsRandomizedTransition(string source)
@@ -79,7 +79,7 @@ namespace RandoMapMod.Transition
             }
 
             if (transitionLookup.TryGetValue(source, out TransitionPlacement placement)
-                && placement.Target != null)
+                && placement.Target is not null)
             {
                 return placement.Target.Name;
             }
@@ -90,7 +90,7 @@ namespace RandoMapMod.Transition
         internal static string GetAdjacentScene(string source)
         {
             if (transitionLookup.TryGetValue(source, out TransitionPlacement placement)
-                && placement.Target != null && placement.Target.TransitionDef != null)
+                && placement.Target is not null && placement.Target.TransitionDef is not null)
             {
                 return placement.Target.TransitionDef.SceneName;
             }
@@ -100,7 +100,7 @@ namespace RandoMapMod.Transition
 
         internal static HashSet<string> GetTransitionsByScene(string scene)
         {
-            if (scene != null && transitionsByScene.ContainsKey(scene))
+            if (scene is not null && transitionsByScene.ContainsKey(scene))
             {
                 return transitionsByScene[scene];
             }
@@ -207,12 +207,15 @@ namespace RandoMapMod.Transition
 
         public override void OnEnterGame()
         {
-            if (Ctx.transitionPlacements != null)
+            if (Ctx.transitionPlacements is not null)
             {
                 randomizedTransitions = new(Ctx.transitionPlacements.Select(tp => tp.Source.Name));
                 transitionLookup = Ctx.transitionPlacements.ToDictionary(tp => tp.Source.Name, tp => tp);
             }
 
+            // Currently, this won't pick up connection-provided vanilla transitions,
+            // and there is no simple way to get their TransitionDef in the general case
+            // TODO: update when the support is available
             foreach (GeneralizedPlacement gp in Ctx.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
             {
                 RandoModTransition target = new(Lm.GetTransition(gp.Item.Name))
@@ -228,7 +231,7 @@ namespace RandoMapMod.Transition
                 transitionLookup.Add(gp.Location.Name, new(target, source));
             }
 
-            if (Ctx.transitionPlacements != null)
+            if (Ctx.transitionPlacements is not null)
             {
                 // Add impossible transitions (because we still need info like scene name etc.)
                 foreach (TransitionPlacement tp in Ctx.transitionPlacements)
@@ -256,7 +259,7 @@ namespace RandoMapMod.Transition
             // Get transitions sorted by scene
             transitionsByScene = new();
 
-            foreach (TransitionPlacement tp in transitionLookup.Values.Where(tp => tp.Target != null))
+            foreach (TransitionPlacement tp in transitionLookup.Values.Where(tp => tp.Target is not null))
             {
                 string scene = tp.Source.TransitionDef.SceneName;
 

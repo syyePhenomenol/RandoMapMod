@@ -115,7 +115,7 @@ namespace RandoMapMod
                 return;
             }
 
-            if (customColorsRaw != null)
+            if (customColorsRaw is not null)
             {
                 foreach (string colorSettingRaw in customColorsRaw.Keys)
                 {
@@ -125,7 +125,7 @@ namespace RandoMapMod
 
                     float[] rgba = customColorsRaw[colorSettingRaw];
 
-                    if (rgba == null || rgba.Length < 4) continue;
+                    if (rgba is null || rgba.Length < 4) continue;
 
                     Vector4 color = new(rgba[0] / 256f, rgba[1] / 256f, rgba[2] / 256f, rgba[3]);
 
@@ -148,7 +148,7 @@ namespace RandoMapMod
 
         internal static Vector4 GetColor(RmmColorSetting rmmColor)
         {
-            if (customColors != null && customColors.ContainsKey(rmmColor))
+            if (customColors is not null && customColors.ContainsKey(rmmColor))
             {
                 return customColors[rmmColor];
             }

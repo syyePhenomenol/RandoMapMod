@@ -59,7 +59,7 @@ namespace RandoMapMod.Transition
 
         internal static void GetRoute(string scene)
         {
-            if (Pathfinder.localPm == null) return;
+            if (Pathfinder.localPm is null) return;
 
             if (lastStartScene != Utils.CurrentScene() || lastFinalScene != scene)
             {
@@ -80,7 +80,7 @@ namespace RandoMapMod.Transition
 
         internal static void ReevaluateRoute(string transition)
         {
-            if (Pathfinder.localPm == null) return;
+            if (Pathfinder.localPm is null) return;
 
             rejectedRoutes.Clear();
 
@@ -279,7 +279,7 @@ namespace RandoMapMod.Transition
                 }
                 else
                 {
-                    text += $"{lastStartTransition.ToCleanName()} ->...-> {lastFinalTransition.GetAdjacentTerm().ToCleanName()}";
+                    text += $"{lastStartTransition.ToCleanName()} ->...-> {lastFinalTransition.GetAdjacentTerm()?.ToCleanName()}";
                 }
 
                 text += $"\n\n{L.Localize("Transitions")}: {transitionsCount}";

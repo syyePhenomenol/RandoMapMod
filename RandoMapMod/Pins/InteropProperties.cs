@@ -13,7 +13,7 @@ namespace RandoMapMod.Pins
 
         internal static readonly MetadataProperty<AbstractPlacement, ISprite> LocationPinSprite = new("PinSprite", GetDefaultLocationSprite);
 
-        //TODO: move docstring into... documentation
+        // TODO: move docstring into... documentation
         /// <summary>
         /// The effective length and height of the pin sprite, not including transparent pixels
         /// that may be in the texture.

@@ -283,7 +283,7 @@ namespace RandoMapMod.Pins
         {
             if (RM.RS.TrackerData.clearedLocations.Contains(name))
             {
-                if (placement.IsPersistent())
+                if (placement.IsPersistent() && LocationPoolGroup is not "Benches")
                 {
                     placementState = RPS.ClearedPersistent;
                 }

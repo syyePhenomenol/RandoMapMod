@@ -30,6 +30,7 @@ namespace RandoMapMod.Transition
         {
             foreach (Term term in Td.pm.lm.Terms)
             {
+                // TODO: don't use RD
                 if (!RandomizerMod.RandomizerData.Data.IsTransition(term.Name)
                     && !RandomizerMod.RandomizerData.Data.IsRoom(term.Name))
                 {
@@ -86,7 +87,7 @@ namespace RandoMapMod.Transition
         {
             RandoMapMod.Instance.LogDebug($"Start: {start}, Final: {final}, Reevaluate: {reevaluate}");
 
-            if (start == null || final == null) return new();
+            if (start is null || final is null) return new();
 
             if (reevaluate && start == final) return new();
 
@@ -242,9 +243,9 @@ namespace RandoMapMod.Transition
 
                     string adjacent = transition.GetAdjacentTerm();
 
-                    if (adjacent == null || !localPm.lm.TermLookup.ContainsKey(adjacent)) return;
+                    if (adjacent is null || !localPm.lm.TermLookup.ContainsKey(adjacent)) return;
 
-                    if (node != null)
+                    if (node is not null)
                     {
                         // No repeated transitions
                         if (node.route.Any(t => t == transition) || node.route.Any(t => t == adjacent)) return;
@@ -351,7 +352,7 @@ namespace RandoMapMod.Transition
             foreach (string transition in Td.lm.TransitionLookup.Keys)
             {
                 if (Td.uncheckedReachableTransitions.Contains(transition)
-                    || transition.GetAdjacentTerm() == null) continue;
+                    || transition.GetAdjacentTerm() is null) continue;
 
                 string scene = transition.GetScene();
 

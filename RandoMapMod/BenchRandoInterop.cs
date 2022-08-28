@@ -16,14 +16,14 @@ namespace RandoMapMod
 
         internal static bool BenchRandoEnabled()
         {
-            BRLocalSettingsModule bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
-            return bsm != null && bsm.LS.Settings.IsEnabled();
+            return ItemChangerMod.Modules.Get<BRLocalSettingsModule>() is BRLocalSettingsModule bsm
+                && bsm.LS.Settings.IsEnabled();
         }
 
         internal static bool BenchesRandomized()
         {
-            BRLocalSettingsModule bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
-            return bsm != null && bsm.LS.Settings.RandomizedItems is not BenchRando.Rando.ItemRandoMode.None;
+            return ItemChangerMod.Modules.Get<BRLocalSettingsModule>() is BRLocalSettingsModule bsm
+                && bsm.LS.Settings.RandomizedItems is not BenchRando.Rando.ItemRandoMode.None;
         }
     }
 }

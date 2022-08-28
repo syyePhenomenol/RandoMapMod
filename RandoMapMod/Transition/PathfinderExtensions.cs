@@ -48,7 +48,7 @@ namespace RandoMapMod.Transition
                 return PD.AdjacentScenes[transition];
             }
 
-            return transition.GetAdjacentTerm().GetScene();
+            return transition.GetAdjacentTerm()?.GetScene();
         }
 
         internal static string GetAdjacentTerm(this string transition)
