@@ -81,16 +81,9 @@ namespace RandoMapMod.Pins
             }
             if (Interop.HasBenchwarp())
             {
-                if (Interop.HasBenchRando() && BenchRandoInterop.BenchesRandomized())
+                foreach (KeyValuePair<RmmBenchKey, string> kvp in BenchwarpInterop.BenchNames.Where(kvp => !Pins.ContainsKey(kvp.Value)))
                 {
-                    MakeBenchPin(BenchwarpInterop.BENCH_WARP_START, ItemChanger.Internal.Ref.Settings.Start.SceneName);
-                }
-                else
-                {
-                    foreach ((string benchName, string sceneName) in BenchwarpInterop.BenchNames.Select(kvp => (kvp.Value, kvp.Key.SceneName)))
-                    {
-                        MakeBenchPin(benchName, sceneName);
-                    }
+                    MakeBenchPin(kvp.Value, kvp.Key.SceneName);
                 }
             }
 
