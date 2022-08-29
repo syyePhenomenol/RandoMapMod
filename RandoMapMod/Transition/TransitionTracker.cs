@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MapChanger;
 using RandoMapMod.Modes;
-using RandoMapMod.Settings;
 using UnityEngine;
 using RM = RandomizerMod.RandomizerMod;
 
@@ -17,6 +16,7 @@ namespace RandoMapMod.Transition
         public override void OnEnterGame()
         {
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate += Update;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
 
             Update();
 
@@ -35,10 +35,21 @@ namespace RandoMapMod.Transition
             RouteTracker.ResetRoute();
 
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate -= Update;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= ActiveSceneChanged;
+        }
+
+        private static void ActiveSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+        {
+            if (GameManager.instance.IsGameplayScene())
+            {
+                Update();
+            }
         }
 
         internal static void Update()
         {
+            RandoMapMod.Instance.LogDebug("Update TransitionTracker");
+
             Pathfinder.UpdateProgression();
 
             InLogicScenes = new();
