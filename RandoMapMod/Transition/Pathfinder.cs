@@ -29,11 +29,13 @@ namespace RandoMapMod.Transition
 
             UpdateProgression();
             GetFullNetwork();
+
+            RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate += UpdateProgression;
         }
 
         public override void OnQuitToMenu()
         {
-            
+            RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate -= UpdateProgression;
         }
 
         internal static void UpdateProgression()
@@ -42,7 +44,7 @@ namespace RandoMapMod.Transition
             {
                 if (!term.Name.IsTransition() && !term.Name.IsScene())
                 {
-                    RmmPM.Set(term.Id, RM.RS.TrackerData.pm.Get(term.Id));
+                    RmmPM.Set(term, RM.RS.TrackerData.pm.Get(term));
                 }
             }
 
@@ -253,14 +255,18 @@ namespace RandoMapMod.Transition
             string outTransition = node.Route.Last();
 
             // Don't add transitions already visited (unless bypassed by repeating route)
-            if (traversedTransitions.Contains(outTransition) || traversedTransitions.Contains(node.InTransition)) return;
+            if (traversedTransitions.Contains(outTransition)) return;
 
             // Don't add transitions already visited in current route
             if (node.Route.Where(t => t == outTransition).Count() > 1) return;
 
+            // Don't add out-transitions connecting to in-transitions already visited in current route
+            // Exclude benchwarps since their adjacencies are themselves
+            if (!node.InTransition.IsBenchwarpTransition() && node.Route.Any(t => t == node.InTransition)) return;
+
             // Don't add transitions into rooms not displayed in this mode
             if (MapChanger.Settings.CurrentMode() is TransitionVisitedOnlyMode
-            && !PlayerData.instance.scenesVisited.Contains(node.Scene)) return;
+                && !PlayerData.instance.scenesVisited.Contains(node.Scene)) return;
 
             // Don't add transitions blocked by infection
             if (outTransition.IsInfectedTransition()) return;
