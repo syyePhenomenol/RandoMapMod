@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using MapChanger;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Pins;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandoMapMod.UI;
@@ -47,19 +48,10 @@ namespace RandoMapMod.Transition
             ResetRoute();
         }
 
-        private static Thread SelectRouteThread;
-        internal static void SelectRoute(string scene)
-        {
-            if (SelectRouteThread is null || !SelectRouteThread.IsAlive)
-            {
-                SelectRouteThread = new Thread(() => GetRoute(scene));
-                SelectRouteThread.Start();
-            }
-        }
 
         internal static void GetRoute(string scene)
         {
-            if (Pathfinder.localPm is null) return;
+            if (Pathfinder.RmmPM is null) return;
 
             if (lastStartScene != Utils.CurrentScene() || lastFinalScene != scene)
             {
@@ -68,7 +60,7 @@ namespace RandoMapMod.Transition
 
             try
             {
-                selectedRoute = Pathfinder.ShortestRoute(Utils.CurrentScene(), scene, rejectedRoutes, false);
+                selectedRoute = Pathfinder.GetRoute(Utils.CurrentScene(), scene, rejectedRoutes);
             }
             catch (Exception e)
             {
@@ -80,13 +72,13 @@ namespace RandoMapMod.Transition
 
         internal static void ReevaluateRoute(string transition)
         {
-            if (Pathfinder.localPm is null) return;
+            if (Pathfinder.RmmPM is null) return;
 
             rejectedRoutes.Clear();
 
             try
             {
-                selectedRoute = Pathfinder.ShortestRoute(transition, lastFinalTransition.GetAdjacentTerm(), rejectedRoutes, true);
+                selectedRoute = Pathfinder.GetRoute(transition, lastFinalTransition.GetAdjacency());
             }
             catch (Exception e)
             {
@@ -142,17 +134,19 @@ namespace RandoMapMod.Transition
                 _ => lastTransition.ToString()
             };
 
-            if (lastTransitionName == nextRouteTransition.GetAdjacentTerm())
+            if (lastTransitionName == nextRouteTransition.GetAdjacency())
             {
                 UpdateRoute();
                 return;
             }
 
-            RandoMapMod.Instance.LogDebug($"Scene: {lastTransition.SceneName}, Respawn Marker: {PlayerData.instance.respawnMarkerName}");
-
-            if (Interop.HasBenchwarp() && BenchwarpInterop.BenchNames.TryGetValue(new RmmBenchKey(lastTransition.SceneName, PlayerData.instance.respawnMarkerName), out string benchName))
+            if (lastTransition.GateName is ""
+                && Interop.HasBenchwarp()
+                && BenchwarpInterop.BenchNames.TryGetValue(new RmmBenchKey(lastTransition.SceneName, PlayerData.instance.respawnMarkerName), out string benchName))
             {
-                lastTransitionName = benchName.GetAdjacentTerm();
+                RandoMapMod.Instance.LogDebug($"Scene: {lastTransition.SceneName}, Respawn Marker: {PlayerData.instance.respawnMarkerName}");
+
+                lastTransitionName = benchName;
 
                 if (nextRouteTransition == benchName)
                 {
@@ -249,7 +243,7 @@ namespace RandoMapMod.Transition
                 text += $" {L.Localize("to find a new route")}.";
             }
 
-            if (selectedRoute.Any() && selectedRoute.First().IsBenchwarpTransition() && TransitionRoomSelector.Instance.CanBenchwarp())
+            if (selectedRoute.Any() && !RmmPinSelector.Instance.BenchSelected() && BenchwarpInterop.IsVisitedBench(selectedRoute.First()))
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 
@@ -272,14 +266,14 @@ namespace RandoMapMod.Transition
                 {
                     text += $"{lastStartTransition.ToCleanName()}";
 
-                    if (transitionsCount >= 1)
+                    if (lastStartTransition != lastFinalTransition)
                     {
                         text += $" ->...-> {lastFinalTransition.ToCleanName()}";
                     }
                 }
                 else
                 {
-                    text += $"{lastStartTransition.ToCleanName()} ->...-> {lastFinalTransition.GetAdjacentTerm()?.ToCleanName()}";
+                    text += $"{lastStartTransition.ToCleanName()} ->...-> {lastFinalTransition.GetAdjacency()?.ToCleanName()}";
                 }
 
                 text += $"\n\n{L.Localize("Transitions")}: {transitionsCount}";
@@ -294,7 +288,7 @@ namespace RandoMapMod.Transition
 
         internal static void TryBenchwarp()
         {
-            if (selectedRoute.Any() && selectedRoute.First().IsBenchwarpTransition())
+            if (Interop.HasBenchwarp() && selectedRoute.Any() && BenchwarpInterop.IsVisitedBench(selectedRoute.First()))
             {
                 GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(selectedRoute.First()));
             }

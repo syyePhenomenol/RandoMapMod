@@ -17,7 +17,7 @@ namespace RandoMapMod.Settings
 
         public GroupBySetting GroupBy = GroupBySetting.Location;
 
-        public void Initialize()
+        internal void Initialize()
         {
             if (InitializedPreviously) return;
 

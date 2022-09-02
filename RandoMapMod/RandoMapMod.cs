@@ -75,7 +75,7 @@ namespace RandoMapMod
         {
             new RmmColors(),
             new TransitionData(),
-            new PathfinderData(),
+            new Pathfinder(),
             new RmmPinManager(),
             new TransitionTracker(),
             new RouteTracker(),
@@ -89,16 +89,20 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.0.2";
+        public override string GetVersion() => "3.0.4";
 
         public override int LoadPriority() => 10;
 
         public static LocalSettings LS = new();
+
         public void OnLoadLocal(LocalSettings ls) => LS = ls;
+
         public LocalSettings OnSaveLocal() => LS;
 
         public static GlobalSettings GS = new();
+
         public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
+
         public GlobalSettings OnSaveGlobal() => GS;
 
         public override void Initialize()
@@ -117,7 +121,8 @@ namespace RandoMapMod
             Interop.FindInteropMods();
             RmmRoomManager.Load();
             RmmPinManager.Load();
-            PathfinderData.Load();
+            Pathfinder.Load();
+            RouteCompass.Load();
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 
             Events.OnEnterGame += OnEnterGame;

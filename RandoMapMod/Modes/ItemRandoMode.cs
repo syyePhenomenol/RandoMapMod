@@ -9,7 +9,7 @@ namespace RandoMapMod.Modes
     {
         public override bool InitializeToThis()
         {
-            if (TransitionData.IsTransitionRando()) return false;
+            if (TransitionExtensions.IsTransitionRando()) return false;
 
             return ModeName == RandoMapMod.GS.DefaultItemRandoMode.ToString().ToCleanName();
         }

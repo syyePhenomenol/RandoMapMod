@@ -7,11 +7,9 @@ namespace RandoMapMod.UI
 {
     internal class ModEnabledButton : MainButton
     {
-        public static ModEnabledButton Instance { get; private set; }
-
         public ModEnabledButton() : base("Mod Enabled", RandoMapMod.MOD, 0, 0)
         {
-            Instance = this;
+            
         }
 
         protected override void OnClick()

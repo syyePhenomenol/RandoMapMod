@@ -6,7 +6,7 @@ namespace RandoMapMod.UI
 {
     internal class ClearedButton : MainButton
     {
-        public ClearedButton() : base("Cleared Button", RandoMapMod.MOD, 2, 1)
+        internal ClearedButton() : base("Cleared Button", RandoMapMod.MOD, 2, 1)
         {
 
         }

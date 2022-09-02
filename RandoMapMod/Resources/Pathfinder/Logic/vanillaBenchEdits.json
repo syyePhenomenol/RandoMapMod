@@ -1,0 +1,234 @@
+﻿[
+  {
+    "name": "Town",
+    "logic": "ORIG | Bench-Dirtmouth"
+  },
+  {
+    "name": "Room_nailmaster[left1]",
+    "logic": "ORIG | Bench-Mato"
+  },
+  {
+    "name": "Crossroads_30[left1]",
+    "logic": "ORIG | Bench-Crossroads_Hot_Springs"
+  },
+  {
+    "name": "Crossroads_47[right1]",
+    "logic": "ORIG | Bench-Crossroads_Stag"
+  },
+  {
+    "name": "Crossroads_04[door_charmshop]",
+    "logic": "ORIG | Bench-Salubra"
+  },
+  {
+    "name": "Crossroads_ShamanTemple[left1]",
+    "logic": "ORIG | Bench-Ancestral_Mound"
+  },
+  {
+    "name": "Room_Final_Boss_Atrium[left1]",
+    "logic": "ORIG | Bench-Black_Egg_Temple"
+  },
+  {
+    "name": "Fungus1_01b[left1]",
+    "logic": "ORIG | Bench-Waterfall"
+  },
+  {
+    "name": "Fungus1_01b[right1]",
+    "logic": "ORIG | Bench-Waterfall"
+  },
+  {
+    "name": "Fungus1_37[left1]",
+    "logic": "ORIG | Bench-Stone_Sanctuary"
+  },
+  {
+    "name": "Fungus1_31[bot1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus1_31[right1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus1_31[top1]",
+    "logic": "ORIG | Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Fungus1_16_alt[right1]",
+    "logic": "ORIG | Bench-Greenpath_Stag"
+  },
+  {
+    "name": "Room_Slug_Shrine[left1]",
+    "logic": "ORIG | Bench-Lake_of_Unn"
+  },
+  {
+    "name": "Fungus1_15[door1]",
+    "logic": "ORIG | Bench-Sheo"
+  },
+  {
+    "name": "Fungus3_archive[bot1]",
+    "logic": "ORIG | Bench-Archives"
+  },
+  {
+    "name": "Fungus3_archive[left1]",
+    "logic": "ORIG | Bench-Archives"
+  },
+  {
+    "name": "Fungus2_02[right1]",
+    "logic": "ORIG | Bench-Queen's_Station"
+  },
+  {
+    "name": "Fungus2_26[left1]",
+    "logic": "ORIG | Bench-Leg_Eater"
+  },
+  {
+    "name": "Fungus2_13",
+    "logic": "ORIG | Bench-Bretta + (RIGHTDASH | RIGHTSUPERDASH | LEFTCLAW | RIGHTCLAW | WINGS | ENEMYPOGOS | PRECISEMOVEMENT)"
+  },
+  {
+    "name": "Fungus2_13[left3]",
+    "logic": "ORIG | Bench-Bretta"
+  },
+  {
+    "name": "Fungus2_31[left1]",
+    "logic": "ORIG | Bench-Mantis_Village + Defeated_Mantis_Lords"
+  },
+  {
+    "name": "Ruins1_02[bot1]",
+    "logic": "ORIG | Bench-Quirrel"
+  },
+  {
+    "name": "Ruins1_31[left1]",
+    "logic": "ORIG | Bench-City_Toll"
+  },
+  {
+    "name": "Ruins1_29[left1]",
+    "logic": "ORIG | Bench-City_Storerooms"
+  },
+  {
+    "name": "Ruins1_18[right2]",
+    "logic": "ORIG | Bench-Watcher's_Spire"
+  },
+  {
+    "name": "Ruins2_08[left1]",
+    "logic": "ORIG | Bench-King's_Station"
+  },
+  {
+    "name": "Ruins_Bathhouse[door1]",
+    "logic": "ORIG | Bench-Pleasure_House"
+  },
+  {
+    "name": "Waterways_02",
+    "logic": "ORIG | Bench-Waterways"
+  },
+  {
+    "name": "Waterways_02[bot1]",
+    "logic": "ORIG | Bench-Waterways + QUAKE"
+  },
+  {
+    "name": "Waterways_02[bot2]",
+    "logic": "ORIG | Bench-Waterways + (LEFTCLAW | RIGHTCLAW | WINGS | RIGHTSUPERDASH | SWIM | ENEMYPOGOS + DANGEROUSSKIPS + RIGHTDASH)"
+  },
+  {
+    "name": "GG_Atrium",
+    "logic": "ORIG | Bench-Godhome_Atrium"
+  },
+  {
+    "name": "GG_Workshop[left1]",
+    "logic": "ORIG | Bench-Hall_of_Gods"
+  },
+  {
+    "name": "Deepnest_30[left1]",
+    "logic": "ORIG | Bench-Deepnest_Hot_Springs"
+  },
+  {
+    "name": "Deepnest_14[left1]",
+    "logic": "ORIG | Bench-Failed_Tramway"
+  },
+  {
+    "name": "Deepnest_Spider_Town[left1]",
+    "logic": "ORIG | Bench-Beast's_Den"
+  },
+  {
+    "name": "Abyss_18[right1]",
+    "logic": "ORIG | Bench-Basin_Toll"
+  },
+  {
+    "name": "Abyss_22[left1]",
+    "logic": "ORIG | Bench-Hidden_Station"
+  },
+  {
+    "name": "Deepnest_East_06[door1]",
+    "logic": "ORIG | Bench-Oro"
+  },
+  {
+    "name": "Deepnest_East_13[bot1]",
+    "logic": "ORIG | Bench-Camp"
+  },
+  {
+    "name": "Room_Colosseum_02[top1]",
+    "logic": "ORIG | Bench-Colosseum + (LEFTCLAW | RIGHTCLAW)"
+  },
+  {
+    "name": "Room_Colosseum_02[top2]",
+    "logic": "ORIG | Bench-Colosseum + (LEFTCLAW | RIGHTCLAW)"
+  },
+  {
+    "name": "Hive_01[right2]",
+    "logic": "ORIG | Bench-Hive"
+  },
+  {
+    "name": "Mines_29[left1]",
+    "logic": "ORIG | Bench-Peak_Dark_Room"
+  },
+  {
+    "name": "Mines_18[left1]",
+    "logic": "ORIG | Bench-Crystal_Guardian"
+  },
+  {
+    "name": "RestingGrounds_09[left1]",
+    "logic": "ORIG | Bench-Grounds_Stag"
+  },
+  {
+    "name": "RestingGrounds_12[door_Mansion]",
+    "logic": "ORIG | Bench-Grey_Mourner"
+  },
+  {
+    "name": "Fungus1_24[left1]",
+    "logic": "ORIG | Bench-Gardens_Cornifer"
+  },
+  {
+    "name": "Fungus3_50[right1]",
+    "logic": "ORIG | Bench-Gardens_Toll"
+  },
+  {
+    "name": "Fungus3_40[right1]",
+    "logic": "ORIG | Bench-Gardens_Stag"
+  },
+  {
+    "name": "Fungus3_40[top1]",
+    "logic": "ORIG | Bench-Gardens_Stag + (LEFTCLAW | RIGHTCLAW + LEFTSUPERDASH | WINGS | LEFTDASH)"
+  },
+  {
+    "name": "White_Palace_01",
+    "logic": "ORIG | Bench-Palace_Entrance"
+  },
+  {
+    "name": "White_Palace_03_hub",
+    "logic": "ORIG | Bench-Palace_Atrium"
+  },
+  {
+    "name": "White_Palace_06[top1]",
+    "logic": "ORIG | Bench-Palace_Balcony + (LEFTCLAW | WINGS)"
+  },
+  {
+    "name": "White_Palace_06[bot1]",
+    "logic": "ORIG | Bench-Palace_Balcony"
+  },
+  {
+    "name": "Room_Tram_RG[door1]",
+    "logic": "ORIG | Bench-Upper_Tram"
+  },
+  {
+    "name": "Room_Tram[door1]",
+    "logic": "ORIG | Bench-Lower_Tram"
+  }
+]

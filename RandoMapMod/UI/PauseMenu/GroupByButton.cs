@@ -7,7 +7,7 @@ namespace RandoMapMod.UI
 {
     internal class GroupByButton : MainButton
     {
-        public GroupByButton() : base("Group By Button", RandoMapMod.MOD, 2, 3)
+        internal GroupByButton() : base("Group By Button", RandoMapMod.MOD, 2, 3)
         {
 
         }

@@ -3,282 +3,225 @@ using System.Linq;
 using MapChanger;
 using RandomizerCore;
 using RandomizerCore.Logic;
-using RandomizerMod;
 using RandomizerMod.RC;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
-using TM = RandomizerMod.Settings.TransitionSettings.TransitionMode;
 
 namespace RandoMapMod.Transition
 {
     internal class TransitionData : HookModule
     {
-        private static RandoModContext Ctx => RM.RS?.Context;
-        private static LogicManager Lm => Ctx?.LM;
-
-        private static HashSet<string> randomizedTransitions = new();
-        private static Dictionary<string, TransitionPlacement> transitionLookup = new();
-        private static Dictionary<string, HashSet<string>> transitionsByScene = new();
-
-        internal static bool IsTransitionRando()
+        private static readonly (LogicManagerBuilder.JsonType type, string fileName)[] files = new[]
         {
-            return RM.RS.GenerationSettings.TransitionSettings.Mode != TM.None
-                || (RM.RS.Context.transitionPlacements is not null && RM.RS.Context.transitionPlacements.Any());
-        }
+            (LogicManagerBuilder.JsonType.Macros, "macros"),
+            (LogicManagerBuilder.JsonType.Waypoints, "waypoints"),
+            (LogicManagerBuilder.JsonType.Transitions, "transitions"),
+            (LogicManagerBuilder.JsonType.LogicEdit, "edits"),
+            (LogicManagerBuilder.JsonType.LogicSubst, "substitutions")
+        };
 
-        internal static bool IsRandomizedTransition(string source)
+        internal static readonly string[] InfectionBlockedTransitions =
         {
-            return randomizedTransitions.Contains(source);
-        }
+            "Crossroads_03[bot1]",
+            "Crossroads_06[right1]",
+            "Crossroads_10[left1",
+            "Crossroads_19[top1]"
+        };
 
-        internal static bool IsInTransitionLookup(string source)
-        {
-            return transitionLookup.ContainsKey(source);
-        }
+        internal static readonly string[] fileNames =
+{
+            "transitions",
+            "edits",
+            "substitutions",
+            "waypoints"
+        };
 
-        internal static bool IsSpecialRoom(string room)
-        {
-            // Rooms that we care about that aren't randomized
-            return room == "Room_Tram_RG"
-             || room == "Room_Tram"
-             || room == "GG_Atrium"
-             || room == "GG_Workshop"
-             || room == "GG_Atrium_Roof";
-        }
-
-        internal static string GetScene(string source)
-        {
-            if (transitionLookup.TryGetValue(source, out TransitionPlacement placement))
-            {
-                return placement.Source.TransitionDef.SceneName;
-            }
-
-            return null;
-        }
-
-        internal static string GetTransitionDoor(string source)
-        {
-            if (transitionLookup.TryGetValue(source, out TransitionPlacement placement))
-            {
-                return placement.Source.TransitionDef.DoorName;
-            }
-
-            return null;
-        }
-
-        internal static string GetAdjacentTransition(string source)
-        {
-            if (source == "Fungus2_14[bot1]")
-            {
-                return GetAdjacentTransition("Fungus2_14[bot3]");
-            }
-
-            if (source == "Fungus2_15[top2]")
-            {
-                return GetAdjacentTransition("Fungus2_15[top3]");
-            }
-
-            if (transitionLookup.TryGetValue(source, out TransitionPlacement placement)
-                && placement.Target is not null)
-            {
-                return placement.Target.Name;
-            }
-
-            return null;
-        }
-
-        internal static string GetAdjacentScene(string source)
-        {
-            if (transitionLookup.TryGetValue(source, out TransitionPlacement placement)
-                && placement.Target is not null && placement.Target.TransitionDef is not null)
-            {
-                return placement.Target.TransitionDef.SceneName;
-            }
-
-            return null;
-        }
-
-        internal static HashSet<string> GetTransitionsByScene(string scene)
-        {
-            if (scene is not null && transitionsByScene.ContainsKey(scene))
-            {
-                return transitionsByScene[scene];
-            }
-
-            return new();
-        }
-
-        internal static string GetUncheckedVisited(string scene)
-        {
-            string text = "";
-
-            IEnumerable<string> uncheckedTransitions = RM.RS.TrackerData.uncheckedReachableTransitions
-                .Where(t => GetScene(t) == scene);
-
-            if (uncheckedTransitions.Any())
-            {
-                text += $"{Localization.Localize("Unchecked")}:";
-
-                foreach (string transition in uncheckedTransitions)
-                {
-                    text += "\n";
-
-                    if (!RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
-                    {
-                        text += "*";
-                    }
-
-                    text += GetTransitionDoor(transition);
-                }
-            }
-
-            Dictionary<string, string> visitedTransitions = RM.RS.TrackerData.visitedTransitions
-                .Where(t => GetScene(t.Key) == scene).ToDictionary(t => t.Key, t => t.Value);
-
-            text += BuildTransitionStringList(visitedTransitions, "Visited", false, text != "");
-
-            Dictionary<string, string> visitedTransitionsTo = RM.RS.TrackerData.visitedTransitions
-            .Where(t => GetScene(t.Value) == scene).ToDictionary(t => t.Key, t => t.Value);
-
-            // Display only one-way transitions in coupled rando
-            if (RM.RS.GenerationSettings.TransitionSettings.Coupled)
-            {
-                visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value)).ToDictionary(t => t.Key, t => t.Value);
-            }
-
-            text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
-
-            Dictionary<string, string> vanillaTransitions = RM.RS.Context.Vanilla
-                .Where(t => RD.IsTransition(t.Location.Name)
-                    && GetScene(t.Location.Name) == scene
-                    && RM.RS.TrackerData.pm.Get(t.Location.Name) > 0)
-                .ToDictionary(t => t.Location.Name, t => t.Item.Name);
-
-
-            text += BuildTransitionStringList(vanillaTransitions, "Vanilla", false, text != "");
-
-            Dictionary<string, string> vanillaTransitionsTo = RM.RS.Context.Vanilla
-                .Where(t => RD.IsTransition(t.Location.Name)
-                    && GetScene(t.Item.Name) == scene
-                    && RM.RS.TrackerData.pm.Get(t.Item.Name) > 0
-                    && !vanillaTransitions.ContainsKey(t.Item.Name))
-                .ToDictionary(t => t.Location.Name, t => t.Item.Name);
-
-            text += BuildTransitionStringList(vanillaTransitionsTo, "Vanilla to", true, text != "");
-
-            return text;
-        }
-
-        internal static string BuildTransitionStringList(Dictionary<string, string> transitions, string subtitle, bool to, bool addNewLines)
-        {
-            string text = "";
-
-            if (transitions.Any())
-            {
-                if (addNewLines)
-                {
-                    text += "\n\n";
-                }
-
-                text += $"{Localization.Localize(subtitle)}:";
-
-                foreach (KeyValuePair<string, string> pair in transitions)
-                {
-                    text += "\n";
-
-                    if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(pair.Key))
-                    {
-                        text += "*";
-                    }
-
-                    if (to)
-                    {
-                        text += pair.Key + " -> " + GetTransitionDoor(pair.Value);
-                    }
-                    else
-                    {
-                        text += GetTransitionDoor(pair.Key) + " -> " + pair.Value;
-                    }
-                }
-            }
-
-            return text;
-        }
+        private static LogicManagerBuilder lmb;
+        internal static LogicManager LM { get; private set; }
+        internal static bool VanillaInfectedTransitions { get; private set; }
+        /// <summary>
+        /// Key: Scene, Value: PathfinderScene
+        /// </summary>
+        internal static Dictionary<string, PathfinderScene> Scenes { get; private set; }
+        /// <summary>
+        /// Key: Term, Value: Scenes
+        /// </summary>
+        internal static Dictionary<string, HashSet<string>> SceneLookup { get; private set; }
+        /// <summary>
+        /// Key: Transition, Value: Transition
+        /// </summary>
+        internal static Dictionary<string, string> AdjacencyLookup { get; private set; }
+        internal static HashSet<string> VanillaTransitions { get; private set; }
+        internal static HashSet<string> RandomizedTransitions { get; private set; }
+        internal static HashSet<string> SpecialTransitions { get; private set; }
 
         public override void OnEnterGame()
         {
-            if (Ctx.transitionPlacements is not null)
+            Scenes = new();
+            SceneLookup = new();
+            AdjacencyLookup = new();
+            VanillaTransitions = new();
+            RandomizedTransitions = new();
+            SpecialTransitions = new();
+
+            // Set custom logic
+            lmb = new(RM.RS.Context.LM);
+
+            foreach ((LogicManagerBuilder.JsonType type, string fileName) in files)
             {
-                randomizedTransitions = new(Ctx.transitionPlacements.Select(tp => tp.Source.Name));
-                transitionLookup = Ctx.transitionPlacements.ToDictionary(tp => tp.Source.Name, tp => tp);
+                lmb.DeserializeJson(type, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.{fileName}.json"));
             }
 
-            // Currently, this won't pick up connection-provided vanilla transitions,
-            // and there is no simple way to get their TransitionDef in the general case
-            // TODO: update when the support is available
-            foreach (GeneralizedPlacement gp in Ctx.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
+            if (Interop.HasBenchwarp())
             {
-                RandoModTransition target = new(Lm.GetTransition(gp.Item.Name))
+                if (!Interop.HasBenchRando() || !BenchRandoInterop.BenchRandoEnabled())
                 {
-                    TransitionDef = RD.GetTransitionDef(gp.Item.Name)
-                };
+                    lmb.DeserializeJson(LogicManagerBuilder.JsonType.Transitions, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.vanillaBenchTransitions.json"));
+                    lmb.DeserializeJson(LogicManagerBuilder.JsonType.LogicEdit, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.vanillaBenchEdits.json"));
+                }
 
-                RandoModTransition source = new(Lm.GetTransition(gp.Location.Name))
+                // Set Start warp logic
+                string[] startTerms = GetStartTerms();
+                if (startTerms.Length > 0)
                 {
-                    TransitionDef = RD.GetTransitionDef(gp.Location.Name)
-                };
-
-                transitionLookup.Add(gp.Location.Name, new(target, source));
-            }
-
-            if (Ctx.transitionPlacements is not null)
-            {
-                // Add impossible transitions (because we still need info like scene name etc.)
-                foreach (TransitionPlacement tp in Ctx.transitionPlacements)
-                {
-                    if (!transitionLookup.ContainsKey(tp.Target.Name))
+                    lmb.AddTransition(new(BenchwarpInterop.BENCH_WARP_START, "FALSE"));
+                    foreach (string transition in startTerms)
                     {
-                        transitionLookup.Add(tp.Target.Name, new(null, tp.Target));
+                        lmb.DoLogicEdit(new(transition, $"ORIG | {BenchwarpInterop.BENCH_WARP_START}"));
                     }
                 }
             }
 
-            foreach (GeneralizedPlacement gp in Ctx.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
+            LM = new(lmb);
+
+            // Import randomized transitions from Context
+            if (RM.RS.Context.transitionPlacements is not null)
             {
-                if (!transitionLookup.ContainsKey(gp.Item.Name))
+                foreach (TransitionPlacement tp in RM.RS.Context.transitionPlacements)
                 {
-                    RandoModTransition source = new(Lm.GetTransition(gp.Item.Name))
+                    RandomizedTransitions.Add(tp.Source.Name);
+                    RandomizedTransitions.Add(tp.Target.Name);
+                    AddLogicToScene(tp.Source.TransitionDef.SceneName, tp.Source.Name);
+                    AddLogicToScene(tp.Target.TransitionDef.SceneName, tp.Target.Name);
+                    AddAdjacency(tp.Source.Name, tp.Target.Name);
+                }
+            }
+
+            // Import vanilla transitions from Context
+            // Currently doesn't support connection-provided vanilla transitions
+            foreach (GeneralizedPlacement gp in RM.RS.Context.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
+            {
+                VanillaTransitions.Add(gp.Location.Name);
+                VanillaTransitions.Add(gp.Item.Name);
+                AddLogicToScene(RD.GetTransitionDef(gp.Location.Name).SceneName, gp.Location.Name);
+                AddLogicToScene(RD.GetTransitionDef(gp.Item.Name).SceneName, gp.Item.Name);
+                AddAdjacency(gp.Location.Name, gp.Item.Name);
+            }
+
+            // Add waypoint logic to scenes
+            foreach (LogicWaypoint waypoint in LM.Waypoints)
+            {
+                if (waypoint.Name.IsScene())
+                {
+                    AddLogicToScene(waypoint.Name, waypoint.Name);
+                }
+            }
+
+            if (Interop.HasBenchwarp())
+            {
+                // Set benchwarp scene information
+                foreach ((string benchName, string scene) in BenchwarpInterop.BenchKeys.Select(kvp => (kvp.Key, kvp.Value.SceneName)))
+                {
+                    SpecialTransitions.Add(benchName);
+                    AddLogicToScene(scene, benchName);
+                    AddAdjacency(benchName, benchName);
+                }
+            }
+
+            // Import scene information for special transitions
+            foreach (KeyValuePair<string, string[]> kvp in JsonUtil.DeserializeFromAssembly<Dictionary<string, string[]>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.scenes.json"))
+            {
+                SpecialTransitions.Add(kvp.Key);
+                foreach (string scene in kvp.Value)
+                {
+                    AddLogicToScene(scene, kvp.Key);
+                }
+            }
+
+            // Import special adjacencies
+            foreach (KeyValuePair<string, string> kvp in JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.adjacencies.json"))
+            {
+                AddAdjacency(kvp.Key, kvp.Value);
+            }
+
+            // Set SceneLookup
+            foreach (PathfinderScene ps in Scenes.Values)
+            {
+                foreach (ILogicDef logic in ps.LogicDefs)
+                {
+                    if (SceneLookup.TryGetValue(logic.Name, out HashSet<string> scenes))
                     {
-                        TransitionDef = RD.GetTransitionDef(gp.Item.Name)
-                    };
-
-                    transitionLookup.Add(gp.Item.Name, new(null, source));
+                        scenes.Add(ps.SceneName);
+                    }
+                    else
+                    {
+                        SceneLookup[logic.Name] = new() { ps.SceneName };
+                    }
                 }
             }
 
-            // Get transitions sorted by scene
-            transitionsByScene = new();
-
-            foreach (TransitionPlacement tp in transitionLookup.Values.Where(tp => tp.Target is not null))
-            {
-                string scene = tp.Source.TransitionDef.SceneName;
-
-                if (!transitionsByScene.ContainsKey(scene))
-                {
-                    transitionsByScene.Add(scene, new() { tp.Source.Name });
-                }
-                else
-                {
-                    transitionsByScene[scene].Add(tp.Source.Name);
-                }
-            }
+            // To remove transitions that are blocked by infection from being included in the pathfinder
+            VanillaInfectedTransitions = InfectionBlockedTransitions.All(t => VanillaTransitions.Contains(t));
         }
 
         public override void OnQuitToMenu()
         {
-            randomizedTransitions = new();
-            transitionLookup = new();
-            transitionsByScene = new();
+
+        }
+
+        internal static string[] GetStartTerms()
+        {
+            if (RM.RS.Context.InitialProgression is not ProgressionInitializer pi || RM.RS.Context.LM is not LogicManager lm)
+            {
+                return new string[] { };
+            }
+
+            return pi.Setters.Concat(pi.Increments)
+                .Where(tv => (lm.TransitionLookup.ContainsKey(tv.Term.Name) || lm.Waypoints.Any(waypoint => waypoint.Name == tv.Term.Name)) && tv.Value > 0)
+                .Select(tv => tv.Term.Name)
+                .ToArray();
+        }
+
+        internal static void AddLogicToScene(string scene, string term)
+        {
+            if (!LM.LogicLookup.TryGetValue(term, out OptimizedLogicDef logic))
+            {
+                RandoMapMod.Instance.LogDebug($"Logic not found in PathfinderData LM: {term}");
+            }
+
+            if (Scenes.TryGetValue(scene, out PathfinderScene ps))
+            {
+                ps.LogicDefs.Add(logic);
+            }
+            else
+            {
+                Scenes[scene] = new()
+                { 
+                    SceneName = scene,
+                    LogicDefs = new() { logic }
+                };
+            }
+        }
+
+        internal static void AddAdjacency(string transition, string term)
+        {
+            if (AdjacencyLookup.ContainsKey(transition))
+            {
+                RandoMapMod.Instance.LogWarn($"Key already exists in Adjacencies: {transition}");
+                return;
+            }
+
+            AdjacencyLookup[transition] = term;
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using MapChanger;
 using Modding.Utils;
 using RandoMapMod.Modes;
 using RandoMapMod.Transition;
 using UnityEngine;
-using PD = RandoMapMod.Transition.PathfinderData;
 using SM = UnityEngine.SceneManagement.SceneManager;
 
 namespace RandoMapMod.UI
@@ -14,6 +14,14 @@ namespace RandoMapMod.UI
         private static GameObject goCompass;
         private static DirectionalCompass Compass => goCompass.GetComponent<DirectionalCompass>();
         private static GameObject Knight => HeroController.instance?.gameObject;
+        internal static Dictionary<string, string> DoorObjectsByScene { get; private set; }
+        internal static Dictionary<string, string> DoorObjectsByTransition { get; private set; }
+
+        internal static void Load()
+        {
+            DoorObjectsByScene = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Compass.doorObjectsByScene.json");
+            DoorObjectsByTransition = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Compass.doorObjectsByTransition.json");
+        }
 
         public override void OnEnterGame()
         {
@@ -27,13 +35,13 @@ namespace RandoMapMod.UI
 
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
         {
-            CreateRouteCompass();
+            Make();
             Update();
         }
 
-        private static void CreateRouteCompass()
+        private static void Make()
         {
-            if (goCompass is not null && Compass is not null) Compass.Destroy();
+            if (goCompass is not null) Object.Destroy(goCompass);
 
             if (Knight is null || GameManager.instance.IsNonGameplayScene()) return;
 
@@ -63,36 +71,32 @@ namespace RandoMapMod.UI
             {
                 string transition = RouteTracker.SelectedRoute.First();
                 string scene = transition.GetScene();
-                string gate = "";
+                string gatePath = null;
 
                 if (Utils.CurrentScene() == scene)
                 {
-                    if (PD.DoorObjectsByTransition.ContainsKey(transition))
+                    if (DoorObjectsByTransition.ContainsKey(transition))
                     {
-                        gate = PD.DoorObjectsByTransition[transition];
+                        gatePath = DoorObjectsByTransition[transition];
                     }
-                    else if (TransitionData.IsInTransitionLookup(transition))
+                    else
                     {
-                        gate = TransitionData.GetTransitionDoor(transition);
-                    }
-                    else if (transition.Contains("[") && transition.Contains("]"))
-                    {
-                        gate = transition.Split(']')[0].Split('[')[1];
+                        gatePath = TransitionExtensions.GetDoor(transition);
                     }
                 }
-                else if ((transition.IsStagTransition() || transition.IsTramTransition())
-                    && PD.DoorObjectsByScene.ContainsKey(Utils.CurrentScene()))
+                else if ((transition.StartsWith("Stag-") || transition.StartsWith("Lower_Tram-") || transition.StartsWith("Upper_Tram-"))
+                    && DoorObjectsByScene.ContainsKey(Utils.CurrentScene()))
                 {
-                    gate = PD.DoorObjectsByScene[Utils.CurrentScene()];
+                    gatePath = DoorObjectsByScene[Utils.CurrentScene()];
                 }
 
-                if (gate == "")
+                if (gatePath is null)
                 {
                     goCompass.SetActive(false);
                     return;
                 }
 
-                GameObject gateObject = UnityExtensions.FindGameObject(SM.GetActiveScene(), gate);
+                GameObject gateObject = UnityExtensions.FindGameObject(SM.GetActiveScene(), gatePath);
 
                 if (gateObject is not null)
                 {
@@ -101,7 +105,7 @@ namespace RandoMapMod.UI
                     return;
                 }
 
-                GameObject gateObject2 = UnityExtensions.FindGameObject(SM.GetActiveScene(), "_Transition Gates/" + gate);
+                GameObject gateObject2 = UnityExtensions.FindGameObject(SM.GetActiveScene(), "_Transition Gates/" + gatePath);
 
                 if (gateObject2 is not null)
                 {

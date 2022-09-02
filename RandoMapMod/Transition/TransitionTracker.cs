@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using MapChanger;
 using RandoMapMod.Modes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Transition
@@ -17,17 +18,6 @@ namespace RandoMapMod.Transition
         {
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate += Update;
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
-
-            Update();
-
-            try
-            {
-                Pathfinder.GetFullNetwork();
-            }
-            catch (Exception e)
-            {
-                RandoMapMod.Instance.LogError(e);
-            }
         }
 
         public override void OnQuitToMenu()
@@ -38,9 +28,9 @@ namespace RandoMapMod.Transition
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= ActiveSceneChanged;
         }
 
-        private static void ActiveSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+        private static void ActiveSceneChanged(Scene from, Scene to)
         {
-            if (GameManager.instance.IsGameplayScene())
+            if (to.name is not "Quit_To_Menu")
             {
                 Update();
             }
@@ -50,8 +40,6 @@ namespace RandoMapMod.Transition
         {
             RandoMapMod.Instance.LogDebug("Update TransitionTracker");
 
-            Pathfinder.UpdateProgression();
-
             InLogicScenes = new();
             VisitedAdjacentScenes = new();
             UncheckedReachableScenes = new();
@@ -59,11 +47,11 @@ namespace RandoMapMod.Transition
             RandomizerCore.Logic.ProgressionManager pm = RM.RS.TrackerData.pm;
 
             // Get in-logic, out-of-logic, and adjacent visited scenes
-            foreach (KeyValuePair<string, RandomizerCore.Logic.LogicTransition> t in RM.RS.TrackerData.lm.TransitionLookup)
+            foreach (string transition in TransitionData.RandomizedTransitions.Union(TransitionData.VanillaTransitions))
             {
-                string scene = TransitionData.GetScene(t.Key);
+                string scene = transition.GetScene();
 
-                if (pm.Has(t.Value.term.Id))
+                if (pm.Get(transition) > 0)
                 {
                     InLogicScenes.Add(scene);
                 }
@@ -100,7 +88,7 @@ namespace RandoMapMod.Transition
             // Get scenes where there are unchecked reachable transitions
             foreach (string transition in RM.RS.TrackerData.uncheckedReachableTransitions)
             {
-                UncheckedReachableScenes.Add(TransitionData.GetScene(transition));
+                UncheckedReachableScenes.Add(transition.GetScene());
             }
         }
 

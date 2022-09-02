@@ -1,0 +1,278 @@
+﻿{
+  "Abyss_03_b[door_tram]": [
+    "Abyss_03_b"
+  ],
+  "Abyss_03_c[door_tram]": [
+    "Abyss_03_c"
+  ],
+  "Abyss_03[door_tram]": [
+    "Abyss_03"
+  ],
+  "Abyss_05[door_dreamReturn_reality]": [
+    "Abyss_05"
+  ],
+  "Abyss_05[warp]": [
+    "Abyss_05"
+  ],
+  "Abyss_06_Core[door_dreamReturn]": [
+    "Abyss_06_Core"
+  ],
+  "Abyss_08[warp]": [
+    "Abyss_08"
+  ],
+  "Abyss_22[door_stagExit]": [
+    "Abyss_22"
+  ],
+  "Cliffs_03[door_stagExit]": [
+    "Cliffs_03"
+  ],
+  "Crossroads_46[door_tram]": [
+    "Crossroads_46"
+  ],
+  "Crossroads_46b[door_tram]": [
+    "Crossroads_46b"
+  ],
+  "Crossroads_47[door_stagExit]": [
+    "Crossroads_47"
+  ],
+  "Crossroads_49[elev_entrance]": [
+    "Crossroads_49"
+  ],
+  "Crossroads_49b[elev_entrance]": [
+    "Crossroads_49b"
+  ],
+  "Deepnest_09[door_stagExit]": [
+    "Deepnest_09"
+  ],
+  "Fungus1_16_alt[door_stagExit]": [
+    "Fungus1_16_alt"
+  ],
+  "Fungus2_02[door_stagExit]": [
+    "Fungus2_02"
+  ],
+  "Fungus3_40[door_stagExit]": [
+    "Fungus3_40"
+  ],
+  "GG_Atrium[door_dreamEnter]": [
+    "GG_Atrium"
+  ],
+  "GG_Atrium[Door_Workshop]": [
+    "GG_Atrium"
+  ],
+  "GG_Atrium[warp]": [
+    "GG_Atrium"
+  ],
+  "GG_Waterways[door_dreamReturn]": [
+    "GG_Waterways"
+  ],
+  "GG_Waterways[warp]": [
+    "GG_Waterways"
+  ],
+  "GG_Workshop[left1]": [
+    "GG_Workshop"
+  ],
+  "Left_Elevator-Down": [
+    "Crossroads_49"
+  ],
+  "Left_Elevator-Up": [
+    "Crossroads_49b"
+  ],
+  "Lower_Tram-Left": [
+    "Room_Tram"
+  ],
+  "Lower_Tram-Middle": [
+    "Room_Tram"
+  ],
+  "Lower_Tram-Right": [
+    "Room_Tram"
+  ],
+  "RestingGrounds_09[door_stagExit]": [
+    "RestingGrounds_09"
+  ],
+  "Right_Elevator-Down": [
+    "Ruins2_10"
+  ],
+  "Right_Elevator-Up": [
+    "Ruins2_10b"
+  ],
+  "Room_Final_Boss_Atrium[left1]": [
+    "Room_Final_Boss_Atrium"
+  ],
+  "Room_temple[door1]": [
+    "Room_temple"
+  ],
+  "Room_Town_Stag_Station[door_stagExit]": [
+    "Room_Town_Stag_Station"
+  ],
+  "Room_Tram_RG[door1]": [
+    "Room_Tram_RG"
+  ],
+  "Room_Tram[door1]": [
+    "Room_Tram"
+  ],
+  "Ruins1_29[door_stagExit]": [
+    "Ruins1_29"
+  ],
+  "Ruins2_08[door_stagExit]": [
+    "Ruins2_08"
+  ],
+  "Ruins2_10[elev_entrance]": [
+    "Ruins2_10"
+  ],
+  "Ruins2_10b[elev_entrance]": [
+    "Ruins2_10b"
+  ],
+  "Stag-City_Storerooms": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Crossroads": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Dirtmouth": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Distant_Village": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Greenpath": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Hidden_Station": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-King's_Station": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Queen's_Gardens": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Queen's_Station": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Resting_Grounds": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Stag-Stag_Nest": [
+    "Room_Town_Stag_Station",
+    "Crossroads_47",
+    "Fungus1_16_alt",
+    "Fungus2_02",
+    "Deepnest_09",
+    "Abyss_22",
+    "Ruins1_29",
+    "Ruins2_08",
+    "RestingGrounds_09",
+    "Fungus3_40"
+  ],
+  "Upper_Tram-Left": [
+    "Room_Tram_RG"
+  ],
+  "Upper_Tram-Right": [
+    "Room_Tram_RG"
+  ],
+  "White_Palace_03_hub[warp]": [
+    "White_Palace_03_hub"
+  ],
+  "White_Palace_06[door_dreamReturn]": [
+    "White_Palace_06"
+  ],
+  "White_Palace_11[door1]": [
+    "White_Palace_11"
+  ],
+  "White_Palace_11[warp]": [
+    "White_Palace_11"
+  ],
+  "White_Palace_20[warp]": [
+    "White_Palace_20"
+  ]
+}

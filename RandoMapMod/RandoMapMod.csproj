@@ -62,7 +62,22 @@
 	</Target>
 
 	<ItemGroup>
+	  <Compile Remove="Transition\PathfinderData.cs" />
+	  <Compile Remove="Transition\PathfinderDataOld.cs" />
+	  <Compile Remove="Transition\PathfinderOld.cs" />
+	  <Compile Remove="Transition\TransitionDataOld.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\benchwarp.json" />
+	  <None Remove="Resources\Pathfinder\Data\adjacentScenes.json" />
+	  <None Remove="Resources\Pathfinder\Logic\benchLogicEdits.json" />
+	  <None Remove="Resources\Pathfinder\Logic\benchLogicEditsOld.json" />
+	  <None Remove="Resources\Pathfinder\Logic\benchWaypoints.json" />
+	  <None Remove="Resources\Pathfinder\Logic\godhomeLogicSubstitutions.json" />
+	  <None Remove="Resources\Pathfinder\Logic\godhomeTransitions.json" />
+	  <None Remove="Resources\Pathfinder\Logic\vanillaBenchEdits.json" />
+	  <None Remove="Resources\Pathfinder\Logic\vanillaBenchTransitions.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,19 +85,15 @@
 		<EmbeddedResource Include="Resources\locations.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Compass\doorObjectsByScene.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Compass\doorObjectsByTransition.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\adjacentScenes.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\adjacentTerms.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Data\scenes.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Data\adjacencies.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\conditionalTerms.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\scenesByTransition.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\transitionsByScene.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\benchLogicEdits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\benchWaypoints.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\godhomeLogicSubstitutions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\godhomeTransitions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\logicEdits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\logicSubstitutions.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\macros.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\transitions.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchEdits.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchTransitions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\waypoints.json" />
 		<EmbeddedResource Include="Resources\quickMapGrids.json" />
 		<EmbeddedResource Include="Resources\roomTexts.json" />

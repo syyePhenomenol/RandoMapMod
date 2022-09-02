@@ -8,11 +8,9 @@ namespace RandoMapMod.UI
 {
     internal class ModeButton : MainButton
     {
-        public static ModeButton Instance { get; private set; }
-
         public ModeButton() : base("Mode", RandoMapMod.MOD, 1, 0)
         {
-            Instance = this;
+            
         }
 
         protected override void OnClick()

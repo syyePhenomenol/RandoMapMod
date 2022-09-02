@@ -6,14 +6,14 @@ namespace RandoMapMod
     /// <summary>
     /// Uses MapChanger's SpriteManager to get a Sprite.
     /// </summary>
-    public class EmbeddedSprite : ISprite
+    internal class EmbeddedSprite : ISprite
     {
-        public string key;
-        public Sprite Value => MapChanger.SpriteManager.Instance.GetSprite(key);
+        internal string Key { get; init; }
+        public Sprite Value => MapChanger.SpriteManager.Instance.GetSprite(Key);
 
-        public EmbeddedSprite(string key)
+        internal EmbeddedSprite(string key)
         {
-            this.key = key;
+            Key = key;
         }
 
         public ISprite Clone()

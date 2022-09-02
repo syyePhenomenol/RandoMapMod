@@ -35,7 +35,7 @@ namespace RandoMapMod.Rooms
                 && SelectedObjectKey is not NONE_SELECTED)
             {
                 attackHoldTimer.Reset();
-                RouteTracker.SelectRoute(SelectedObjectKey);
+                RouteTracker.GetRoute(SelectedObjectKey);
             }
 
             if (InputHandler.Instance.inputActions.attack.WasPressed)
@@ -53,7 +53,7 @@ namespace RandoMapMod.Rooms
             {
                 attackHoldTimer.Reset();
 
-                if (CanBenchwarp())
+                if (!RmmPinSelector.Instance.BenchSelected())
                 {
                     RouteTracker.TryBenchwarp();
                 }
@@ -78,16 +78,11 @@ namespace RandoMapMod.Rooms
         internal string GetText()
         {
             string instructions = RouteTracker.GetInstructionText();
-            string transitions = TransitionData.GetUncheckedVisited(SelectedObjectKey);
+            string transitions = SelectedObjectKey.GetUncheckedVisited();
 
             if (transitions is "") return instructions;
 
             return $"{instructions}\n\n{transitions}";
-        }
-
-        internal bool CanBenchwarp()
-        {
-            return Interop.HasBenchwarp() && !RmmPinSelector.Instance.BenchSelected();
         }
     }
 }
