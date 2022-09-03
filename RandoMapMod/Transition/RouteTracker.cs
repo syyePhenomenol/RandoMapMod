@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using MapChanger;
-using MapChanger.MonoBehaviours;
 using RandoMapMod.Pins;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandoMapMod.UI;
+using UnityEngine.SceneManagement;
 using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.Transition
@@ -28,26 +27,22 @@ namespace RandoMapMod.Transition
 
         public override void OnEnterGame()
         {
-            ItemChanger.Events.OnBeginSceneTransition += OnBeginSceneTransition;
-            MapChanger.Settings.OnSettingChanged += OnSettingChanged;
+            ItemChanger.Events.OnBeginSceneTransition += CheckRoute;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
+            MapChanger.Settings.OnSettingChanged += ResetRoute;
         }
 
         public override void OnQuitToMenu()
         {
-            ItemChanger.Events.OnBeginSceneTransition -= OnBeginSceneTransition;
-            MapChanger.Settings.OnSettingChanged -= OnSettingChanged;
+            ItemChanger.Events.OnBeginSceneTransition -= CheckRoute;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
+            MapChanger.Settings.OnSettingChanged -= ResetRoute;
         }
 
-        private static void OnBeginSceneTransition(ItemChanger.Transition obj)
+        private static void AfterSceneChange(Scene from, Scene to)
         {
-            UpdateRoute(obj);
+            RouteCompass.Update();
         }
-
-        private static void OnSettingChanged()
-        {
-            ResetRoute();
-        }
-
 
         internal static void GetRoute(string scene)
         {
@@ -68,6 +63,7 @@ namespace RandoMapMod.Transition
             }
 
             AfterGetRoute();
+            RouteCompass.Update();
         }
 
         internal static void ReevaluateRoute(string transition)
@@ -119,7 +115,7 @@ namespace RandoMapMod.Transition
             rejectedRoutes.Clear();
         }
 
-        internal static void UpdateRoute(ItemChanger.Transition lastTransition)
+        internal static void CheckRoute(ItemChanger.Transition lastTransition)
         {
             RandoMapMod.Instance.LogDebug($"Last transition: {lastTransition}");
 
@@ -187,7 +183,6 @@ namespace RandoMapMod.Transition
             RouteText.Instance.Update();
             RouteSummaryText.Instance.Update();
             SelectionPanels.UpdateRoomPanel();
-            RouteCompass.Update();
         }
 
         internal static string GetRouteText()

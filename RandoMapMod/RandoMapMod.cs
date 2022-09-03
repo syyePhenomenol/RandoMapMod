@@ -78,8 +78,7 @@ namespace RandoMapMod
             new Pathfinder(),
             new RmmPinManager(),
             new TransitionTracker(),
-            new RouteTracker(),
-            new RouteCompass(),
+            new RouteTracker()
         };
 
         internal static RandoMapMod Instance;

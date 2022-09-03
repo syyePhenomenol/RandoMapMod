@@ -10,14 +10,14 @@ namespace RandoMapMod.Transition
 {
     internal class TransitionTracker : HookModule
     {
-        internal static HashSet<string> InLogicScenes { get; private set; }
-        internal static HashSet<string> VisitedAdjacentScenes { get; private set; }
-        internal static HashSet<string> UncheckedReachableScenes { get; private set; }
+        internal static HashSet<string> InLogicScenes { get; private set; } = new();
+        internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = new();
+        internal static HashSet<string> UncheckedReachableScenes { get; private set; } = new();
 
         public override void OnEnterGame()
         {
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate += Update;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
         }
 
         public override void OnQuitToMenu()
@@ -25,12 +25,14 @@ namespace RandoMapMod.Transition
             RouteTracker.ResetRoute();
 
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate -= Update;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= ActiveSceneChanged;
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
         }
 
-        private static void ActiveSceneChanged(Scene from, Scene to)
+        private void AfterSceneChange(Scene from, Scene to)
         {
-            if (to.name is not "Quit_To_Menu")
+            if (to.name is "Quit_To_Menu") return;
+
+            if (GameManager.instance.IsGameplayScene())
             {
                 Update();
             }

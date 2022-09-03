@@ -89,53 +89,6 @@ namespace RandoMapMod.Transition
             }
         }
 
-        // The start transition and final transition are both in-transitions.
-        internal static List<string> GetRoute(string startTransition, string finalTransition)
-        {
-            if (startTransition is null || finalTransition is null || startTransition == finalTransition) return new();
-            
-            HashSet<string> visitedTransitions = new();
-            LinkedList<SearchNode> queue = new();
-
-            // Initialize queue. Prioritise doubling back, followed by other transitions, followed by benches
-            SearchNode start = new(startTransition);
-            if (start.InTransition is not null && start.Scene is not null)
-            {
-                foreach (SearchNode child in start.GetChildren(RmmPM, true))
-                {
-                    TryAddNode(queue, visitedTransitions, child);
-                }
-            }
-
-            if (RandoMapMod.GS.PathfinderBenchwarp && Interop.HasBenchwarp())
-            {
-                foreach (string outTransition in BenchwarpInterop.GetVisitedBenchNames())
-                {
-                    TryAddNode(queue, visitedTransitions, new SearchNode(null, outTransition));
-                }
-            }
-
-            // Traverse search space
-            while (queue.Any())
-            {
-                SearchNode parent = queue.First();
-                queue.RemoveFirst();
-
-                if (parent.InTransition == finalTransition)
-                {
-                    parent.PrintRoute();
-                    return parent.Route;
-                }
-
-                foreach (SearchNode child in parent.GetChildren(RmmPM))
-                {
-                    TryAddNode(queue, visitedTransitions, child);
-                }
-            }
-
-            return new();
-        }
-
         internal static List<string> GetRoute(string startScene, string finalScene, List<List<string>> rejectedRoutes)
         {
             if (startScene is null || finalScene is null) return new();
@@ -183,6 +136,53 @@ namespace RandoMapMod.Transition
                 foreach (SearchNode child in parent.GetChildren(RmmPM))
                 {
                     TryAddNode(queue, visitedTransitions, child, rejectedRoutes);
+                }
+            }
+
+            return new();
+        }
+
+        // The start transition and final transition are both in-transitions.
+        internal static List<string> GetRoute(string startTransition, string finalTransition)
+        {
+            if (startTransition is null || finalTransition is null || startTransition == finalTransition) return new();
+
+            HashSet<string> visitedTransitions = new();
+            LinkedList<SearchNode> queue = new();
+
+            // Initialize queue. Prioritise doubling back, followed by other transitions, followed by benches
+            SearchNode start = new(startTransition);
+            if (start.InTransition is not null && start.Scene is not null)
+            {
+                foreach (SearchNode child in start.GetChildren(RmmPM, true))
+                {
+                    TryAddNode(queue, visitedTransitions, child);
+                }
+            }
+
+            if (RandoMapMod.GS.PathfinderBenchwarp && Interop.HasBenchwarp())
+            {
+                foreach (string outTransition in BenchwarpInterop.GetVisitedBenchNames())
+                {
+                    TryAddNode(queue, visitedTransitions, new SearchNode(null, outTransition));
+                }
+            }
+
+            // Traverse search space
+            while (queue.Any())
+            {
+                SearchNode parent = queue.First();
+                queue.RemoveFirst();
+
+                if (parent.InTransition == finalTransition)
+                {
+                    parent.PrintRoute();
+                    return parent.Route;
+                }
+
+                foreach (SearchNode child in parent.GetChildren(RmmPM))
+                {
+                    TryAddNode(queue, visitedTransitions, child);
                 }
             }
 
