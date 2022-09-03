@@ -51,7 +51,7 @@ namespace RandoMapMod.Transition
             // Emulate a transition being possibly available via having the required term
             foreach (KeyValuePair<string, string> pair in ConditionalTerms)
             {
-                if (RM.RS.TrackerData.pm.Get(pair.Key) > 0)
+                if (pair.Key.IsIn(RM.RS.TrackerData.pm))
                 {
                     RmmPM.Set(pair.Value, 1);
                 }
@@ -285,7 +285,7 @@ namespace RandoMapMod.Transition
         private static bool IsVanillaOrCheckedTransition(string transition)
         {
             return RM.RS.TrackerData.HasVisited(transition)
-                || (transition.IsVanillaTransition() && RM.RS.TrackerData.pm.Get(transition) > 0);
+                || (transition.IsVanillaTransition() && transition.IsIn(RM.RS.TrackerData.pm));
         }
     }
 }

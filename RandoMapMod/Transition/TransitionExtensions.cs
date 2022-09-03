@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RandomizerCore.Logic;
 using L = RandomizerMod.Localization;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
@@ -48,6 +49,17 @@ namespace RandoMapMod.Transition
         internal static bool IsBenchwarpTransition(this string transition)
         {
             return Interop.HasBenchwarp() && BenchwarpInterop.IsVisitedBench(transition);
+        }
+
+        internal static bool IsIn(this string term, ProgressionManager pm)
+        {
+            if (!pm.lm.TermLookup.ContainsKey(term))
+            {
+                RandoMapMod.Instance.LogWarn($"Term not found in pm: {term}");
+                return false;
+            }
+
+            return pm.Get(term) > 0;
         }
 
         internal static string GetScene(this string term)
@@ -146,7 +158,7 @@ namespace RandoMapMod.Transition
             Dictionary<string, string> vanillaTransitions = RM.RS.Context.Vanilla
                 .Where(t => RD.IsTransition(t.Location.Name)
                     && t.Location.Name.GetScene() == scene
-                    && RM.RS.TrackerData.pm.Get(t.Location.Name) > 0)
+                    && t.Location.Name.IsIn(RM.RS.TrackerData.pm))
                 .ToDictionary(t => t.Location.Name, t => t.Item.Name);
 
 
@@ -155,7 +167,7 @@ namespace RandoMapMod.Transition
             Dictionary<string, string> vanillaTransitionsTo = RM.RS.Context.Vanilla
                 .Where(t => RD.IsTransition(t.Location.Name)
                     && t.Item.Name.GetScene() == scene
-                    && RM.RS.TrackerData.pm.Get(t.Item.Name) > 0
+                    && t.Item.Name.IsIn(RM.RS.TrackerData.pm)
                     && !vanillaTransitions.ContainsKey(t.Item.Name))
                 .ToDictionary(t => t.Location.Name, t => t.Item.Name);
 
@@ -168,32 +180,31 @@ namespace RandoMapMod.Transition
         {
             string text = "";
 
-            if (transitions.Any())
+            if (!transitions.Any()) return text;
+
+            if (addNewLines)
             {
-                if (addNewLines)
+                text += "\n\n";
+            }
+
+            text += $"{L.Localize(subtitle)}:";
+
+            foreach (KeyValuePair<string, string> pair in transitions)
+            {
+                text += "\n";
+
+                if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(pair.Key))
                 {
-                    text += "\n\n";
+                    text += "*";
                 }
 
-                text += $"{L.Localize(subtitle)}:";
-
-                foreach (KeyValuePair<string, string> pair in transitions)
+                if (to)
                 {
-                    text += "\n";
-
-                    if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(pair.Key))
-                    {
-                        text += "*";
-                    }
-
-                    if (to)
-                    {
-                        text += $"{pair.Key} -> {GetDoor(pair.Value)}";
-                    }
-                    else
-                    {
-                        text += $"{GetDoor(pair.Key)} -> {pair.Value}";
-                    }
+                    text += $"{pair.Key} -> {GetDoor(pair.Value)}";
+                }
+                else
+                {
+                    text += $"{GetDoor(pair.Key)} -> {pair.Value}";
                 }
             }
 

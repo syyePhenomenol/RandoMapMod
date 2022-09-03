@@ -101,7 +101,7 @@ namespace RandoMapMod.Pins
         {
             if (selectable is RmmPin pin)
             {
-                RandoMapMod.Instance.LogDebug($"Selected {pin.name}");
+                //RandoMapMod.Instance.LogDebug($"Selected {pin.name}");
                 pin.Selected = true;
 
                 if (pin is RandomizedRmmPin randoPin)
@@ -122,7 +122,7 @@ namespace RandoMapMod.Pins
         {
             if (selectable is RmmPin pin)
             {
-                RandoMapMod.Instance.LogDebug($"Deselected {pin.name}");
+                //RandoMapMod.Instance.LogDebug($"Deselected {pin.name}");
                 pin.Selected = false;
             }
 

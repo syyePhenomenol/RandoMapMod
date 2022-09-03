@@ -48,12 +48,21 @@ namespace RandoMapMod.Transition
 
             RandomizerCore.Logic.ProgressionManager pm = RM.RS.TrackerData.pm;
 
-            // Get in-logic, out-of-logic, and adjacent visited scenes
+            // Get in-logic scenes from randomized and vanilla transitions
             foreach (string transition in TransitionData.RandomizedTransitions.Union(TransitionData.VanillaTransitions))
             {
                 string scene = transition.GetScene();
 
-                if (pm.Get(transition) > 0)
+                if (transition.IsIn(pm))
+                {
+                    InLogicScenes.Add(scene);
+                }
+            }
+
+            // Get in-logic scenes from waypoints
+            foreach ((string waypoint, string scene) in waypointScenePairs)
+            {
+                if (waypoint.IsIn(pm))
                 {
                     InLogicScenes.Add(scene);
                 }
@@ -61,38 +70,22 @@ namespace RandoMapMod.Transition
 
             VisitedAdjacentScenes = Pathfinder.GetAdjacentReachableScenes(Utils.CurrentScene());
 
-            // Manuallly add Godhome/Tram scenes
-            if (pm.lm.TermLookup.ContainsKey("Warp-Godhome_to_Junk_Pit") && pm.Get("Warp-Godhome_to_Junk_Pit") > 0)
-            {
-                InLogicScenes.Add("GG_Atrium");
-            }
-
-            if (pm.lm.TermLookup.ContainsKey("Warp-Junk_Pit_to_Godhome") && pm.Get("Warp-Junk_Pit_to_Godhome") > 0)
-            {
-                InLogicScenes.Add("GG_Waterways");
-            }
-
-            if (pm.lm.TermLookup.ContainsKey("GG_Workshop") && pm.Get("GG_Workshop") > 0)
-            {
-                InLogicScenes.Add("GG_Workshop");
-            }
-
-            if (pm.Get("Upper_Tram") > 0)
-            {
-                InLogicScenes.Add("Room_Tram_RG");
-            }
-
-            if (pm.Get("Lower_Tram") > 0)
-            {
-                InLogicScenes.Add("Room_Tram");
-            }
-
             // Get scenes where there are unchecked reachable transitions
             foreach (string transition in RM.RS.TrackerData.uncheckedReachableTransitions)
             {
                 UncheckedReachableScenes.Add(transition.GetScene());
             }
         }
+
+        private static readonly (string, string)[] waypointScenePairs =
+        {
+            ("Can_Stag", "Room_Town_Stag_Station"),
+            ("Warp-Godhome_to_Junk_Pit", "GG_Atrium"),
+            ("Warp-Junk_Pit_to_Godhome", "GG_Waterways"),
+            ("GG_Workshop", "GG_Workshop"),
+            ("Upper_Tram", "Room_Tram_RG"),
+            ("Lower_Tram", "Room_Tram")
+        };
 
         internal static bool GetRoomActive(string scene)
         {

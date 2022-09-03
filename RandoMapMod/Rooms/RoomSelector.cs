@@ -57,30 +57,30 @@ namespace RandoMapMod.Rooms
         {
             selectable.Selected = true;
 
-            if (selectable is RoomSprite roomSprite)
-            {
-                RandoMapMod.Instance.LogDebug($"Selected {roomSprite.Rsd.SceneName}");
-            }
+            //if (selectable is RoomSprite roomSprite)
+            //{
+            //    RandoMapMod.Instance.LogDebug($"Selected {roomSprite.Rsd.SceneName}");
+            //}
 
-            if (selectable is RoomText roomText)
-            {
-                RandoMapMod.Instance.LogDebug($"Selected {roomText.Rtd.Name}");
-            }
+            //if (selectable is RoomText roomText)
+            //{
+            //    RandoMapMod.Instance.LogDebug($"Selected {roomText.Rtd.Name}");
+            //}
         }
 
         protected override void Deselect(ISelectable selectable)
         {
             selectable.Selected = false;
 
-            if (selectable is RoomSprite roomSprite)
-            {
-                RandoMapMod.Instance.LogDebug($"Deselected {roomSprite.Rsd.SceneName}");
-            }
+            //if (selectable is RoomSprite roomSprite)
+            //{
+            //    RandoMapMod.Instance.LogDebug($"Deselected {roomSprite.Rsd.SceneName}");
+            //}
 
-            if (selectable is RoomText roomText)
-            {
-                RandoMapMod.Instance.LogDebug($"Deselected {roomText.Rtd.Name}");
-            }
+            //if (selectable is RoomText roomText)
+            //{
+            //    RandoMapMod.Instance.LogDebug($"Deselected {roomText.Rtd.Name}");
+            //}
         }
     }
 }
