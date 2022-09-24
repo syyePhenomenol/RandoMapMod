@@ -105,22 +105,26 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.MapLocations) is (string, float, float)[] mapLocations)
-            {
-                MapRoomPosition mlp = new(mapLocations);
-                MapPosition = mlp;
-                MapZone = mlp.MapZone;
-            }
-            else if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
+            // This doesn't have a default handler and will always fall through when the property is not provided
+            if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
             {
                 WorldMapPosition wmp = new(worldMapLocations);
                 MapPosition = wmp;
                 MapZone = wmp.MapZone;
             }
+            // This doesn't have a default handler and will always fall through when the property is not provided
             else if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.AbsMapLocation) is (float, float) absMapLocation)
             {
                 MapPosition = new AbsMapPosition(absMapLocation);
             }
+            // This has a default handler and might not fall through when the property is not provided
+            else if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.MapLocations) is (string, float, float)[] mapLocations)
+            {
+                MapRoomPosition mlp = new(mapLocations);
+                MapPosition = mlp;
+                MapZone = mlp.MapZone;
+            }
+            // This has a default handler
             else
             {
                 PinGridIndex = SD.OfPlacementAndLocations(placement).Get(InteropProperties.PinGridIndex);

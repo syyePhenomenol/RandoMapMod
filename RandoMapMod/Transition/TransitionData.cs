@@ -108,13 +108,30 @@ namespace RandoMapMod.Transition
             }
 
             // Import vanilla transitions from Context
-            // Currently doesn't support connection-provided vanilla transitions
+            // Currently doesn't include connection-provided vanilla transitions
             foreach (GeneralizedPlacement gp in RM.RS.Context.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
             {
                 VanillaTransitions.Add(gp.Location.Name);
                 VanillaTransitions.Add(gp.Item.Name);
                 AddLogicToScene(RD.GetTransitionDef(gp.Location.Name).SceneName, gp.Location.Name);
                 AddLogicToScene(RD.GetTransitionDef(gp.Item.Name).SceneName, gp.Item.Name);
+                AddAdjacency(gp.Location.Name, gp.Item.Name);
+            }
+
+            // Fallback handling for connection-provided vanilla transitions
+            // e.g. Fungal city door
+            foreach (GeneralizedPlacement gp in RM.RS.Context.Vanilla.Where(gp => !RD.IsTransition(gp.Location.Name) && gp.Location.Name.Contains('[') && gp.Location.Name.Contains(']')))
+            {
+                VanillaTransitions.Add(gp.Location.Name);
+                VanillaTransitions.Add(gp.Item.Name);
+                if (gp.Location.Name.Split('[')[0] is string locationScene && locationScene.IsScene())
+                {
+                    AddLogicToScene(locationScene, gp.Location.Name);
+                }
+                if (gp.Item.Name.Split('[')[0] is string itemScene && itemScene.IsScene())
+                {
+                    AddLogicToScene(itemScene, gp.Item.Name);
+                }
                 AddAdjacency(gp.Location.Name, gp.Item.Name);
             }
 

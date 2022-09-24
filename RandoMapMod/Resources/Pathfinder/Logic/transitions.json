@@ -165,47 +165,47 @@
   },
   {
     "name": "Stag-City_Storerooms",
-    "logic": "ATSTAGSTATION + City_Storerooms_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + City_Storerooms_Stag"
   },
   {
     "name": "Stag-Crossroads",
-    "logic": "ATSTAGSTATION + Crossroads_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Crossroads_Stag"
   },
   {
     "name": "Stag-Dirtmouth",
-    "logic": "ATSTAGSTATION"
+    "logic": "ATSTAGSTATION + Can_Stag"
   },
   {
     "name": "Stag-Distant_Village",
-    "logic": "ATSTAGSTATION + Distant_Village_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Distant_Village_Stag"
   },
   {
     "name": "Stag-Greenpath",
-    "logic": "ATSTAGSTATION + Greenpath_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Greenpath_Stag"
   },
   {
     "name": "Stag-Hidden_Station",
-    "logic": "ATSTAGSTATION + Hidden_Station_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Hidden_Station_Stag"
   },
   {
     "name": "Stag-King's_Station",
-    "logic": "ATSTAGSTATION + King's_Station_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + King's_Station_Stag"
   },
   {
     "name": "Stag-Queen's_Gardens",
-    "logic": "ATSTAGSTATION + Queen's_Gardens_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Queen's_Gardens_Stag"
   },
   {
     "name": "Stag-Queen's_Station",
-    "logic": "ATSTAGSTATION + Queen's_Station_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Queen's_Station_Stag"
   },
   {
     "name": "Stag-Resting_Grounds",
-    "logic": "ATSTAGSTATION + Resting_Grounds_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Resting_Grounds_Stag"
   },
   {
     "name": "Stag-Stag_Nest",
-    "logic": "ATSTAGSTATION + Stag_Nest_Stag"
+    "logic": "ATSTAGSTATION + Can_Stag + Stag_Nest_Stag"
   },
   {
     "name": "Upper_Tram-Left",

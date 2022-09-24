@@ -62,22 +62,7 @@
 	</Target>
 
 	<ItemGroup>
-	  <Compile Remove="Transition\PathfinderData.cs" />
-	  <Compile Remove="Transition\PathfinderDataOld.cs" />
-	  <Compile Remove="Transition\PathfinderOld.cs" />
-	  <Compile Remove="Transition\TransitionDataOld.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Resources\benchwarp.json" />
-	  <None Remove="Resources\Pathfinder\Data\adjacentScenes.json" />
-	  <None Remove="Resources\Pathfinder\Logic\benchLogicEdits.json" />
-	  <None Remove="Resources\Pathfinder\Logic\benchLogicEditsOld.json" />
-	  <None Remove="Resources\Pathfinder\Logic\benchWaypoints.json" />
-	  <None Remove="Resources\Pathfinder\Logic\godhomeLogicSubstitutions.json" />
-	  <None Remove="Resources\Pathfinder\Logic\godhomeTransitions.json" />
-	  <None Remove="Resources\Pathfinder\Logic\vanillaBenchEdits.json" />
-	  <None Remove="Resources\Pathfinder\Logic\vanillaBenchTransitions.json" />
+	  <None Remove="Resources\Pathfinder\Logic\macros.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -89,8 +74,8 @@
 		<EmbeddedResource Include="Resources\Pathfinder\Data\adjacencies.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\conditionalTerms.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\macros.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\transitions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchEdits.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchTransitions.json" />
