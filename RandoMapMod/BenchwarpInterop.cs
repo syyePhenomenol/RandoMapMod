@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BenchRando;
 using Benchwarp;
 using InControl;
+using MapChanger;
 using Modding;
 using UnityEngine;
 
@@ -55,6 +58,23 @@ namespace RandoMapMod
                 || ((BenchKeys.TryGetValue(benchName, out RmmBenchKey key)
                     || (benchName.Length > BENCH_EXTRA_SUFFIX.Length && BenchKeys.TryGetValue(benchName.Substring(0, benchName.Length - BENCH_EXTRA_SUFFIX.Length), out key)))
                 && GetVisitedBenchKeys().Contains(key));
+        }
+
+        internal static string GetHotkey(string benchName, string sceneName)
+        {
+            if (benchName is BenchwarpInterop.BENCH_WARP_START) return "SB";
+            Bench benchObject;
+            try
+            {
+                benchObject = Bench.Benches.Where(b => b.name == benchName.Replace("Bench-", "").ToCleanName()).Single();
+            }
+            catch (Exception)
+            {
+                benchObject = Bench.Benches.FirstOrDefault(b => b.sceneName == sceneName);
+            }
+            if (benchObject == null) return "";
+            int benchIndex = Bench.Benches.IndexOf(benchObject);
+            return (benchIndex / 10).ToString() + (benchIndex % 10).ToString();
         }
 
         internal static IEnumerable<string> GetVisitedBenchNames()

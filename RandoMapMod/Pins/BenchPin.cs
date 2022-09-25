@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BenchRando;
 using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;
@@ -114,6 +115,7 @@ namespace RandoMapMod.Pins
         internal override string GetSelectionText()
         {
             string text = $"{BenchName.ToCleanName()}";
+            string hotkey = BenchwarpInterop.GetHotkey(BenchName, SceneName);
 
             if (SceneName is not null)
             {
@@ -124,7 +126,7 @@ namespace RandoMapMod.Pins
 
             if (IsVisitedBench())
             {
-                text += $" {L.Localize("Can warp")}";
+                text += $" {L.Localize("Can warp")}. Hotkey [{hotkey}].";
             }
             else
             {
