@@ -105,7 +105,8 @@ Or, you can install manually:
 If you need any help, feel free to ask in any of the active Hollow Knight Discord servers.
 
 # For Developers
-- To be added
+- Pins are automatically generated for each connection-provided placement with "best-guess" behaviour for position/displayed sprite.
+- To override this default behaviour with your connection mod, see [here](./RandoMapMod/Pins/InteropProperties.cs).
 
 # Acknowledgements
 - Special thanks to Homothety, Flib and BadMagic for significant coding help
