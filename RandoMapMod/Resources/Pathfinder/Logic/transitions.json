@@ -1,15 +1,15 @@
 ﻿[
   {
     "name": "Abyss_03[door_tram]",
-    "logic": "Abyss_03[door_tram] | Abyss_03 + Lower_Tram"
+    "logic": "Abyss_03[door_tram] | Abyss_03 + Lower_Tram + TRAM"
   },
   {
     "name": "Abyss_03_b[door_tram]",
-    "logic": "Abyss_03_b[door_tram] | Abyss_03_b + Lower_Tram"
+    "logic": "Abyss_03_b[door_tram] | Abyss_03_b + Lower_Tram + TRAM"
   },
   {
     "name": "Abyss_03_c[door_tram]",
-    "logic": "Abyss_03_c[door_tram] | Abyss_03_c + Lower_Tram"
+    "logic": "Abyss_03_c[door_tram] | Abyss_03_c + Lower_Tram + TRAM"
   },
   {
     "name": "Abyss_05[door_dreamReturn_reality]",
@@ -37,11 +37,11 @@
   },
   {
     "name": "Crossroads_46[door_tram]",
-    "logic": "Crossroads_46[door_tram] | Crossroads_46[left1] + Upper_Tram"
+    "logic": "Crossroads_46[door_tram] | Crossroads_46[left1] + Upper_Tram + TRAM"
   },
   {
     "name": "Crossroads_46b[door_tram]",
-    "logic": "Crossroads_46b[door_tram] | Crossroads_46b[right1] + Upper_Tram"
+    "logic": "Crossroads_46b[door_tram] | Crossroads_46b[right1] + Upper_Tram + TRAM"
   },
   {
     "name": "Crossroads_47[door_stagExit]",
