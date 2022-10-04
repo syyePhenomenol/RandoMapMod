@@ -73,11 +73,11 @@ namespace RandoMapMod.Pins
 
             SceneName = placement.RandoModLocation()?.LocationDef?.SceneName ?? ItemChanger.Finder.GetLocation(name)?.sceneName;
 
-            ModSource = SD.OfPlacementAndLocations(placement).Get(InteropProperties.ModSource);
+            ModSource = SD.Of(placement).Get(InteropProperties.ModSource);
 
-            LocationPoolGroup = SD.OfPlacementAndLocations(placement).Get(InjectedProps.LocationPoolGroup);
-            locationSprite = SD.OfPlacementAndLocations(placement).Get(InteropProperties.LocationPinSprite);
-            locationSpriteScale = GetPinSpriteScale(locationSprite, SD.OfPlacementAndLocations(placement).Get(InteropProperties.LocationPinSpriteSize));
+            LocationPoolGroup = SD.Of(placement).Get(InjectedProps.LocationPoolGroup);
+            locationSprite = SD.Of(placement).Get(InteropProperties.LocationPinSprite);
+            locationSpriteScale = GetPinSpriteScale(locationSprite, SD.Of(placement).Get(InteropProperties.LocationPinSpriteSize));
 
             itemPoolGroups = new();
             itemSprites = new();
@@ -88,7 +88,7 @@ namespace RandoMapMod.Pins
                 itemSprites[item] = (sprite, GetPinSpriteScale(sprite, SD.Of(item).Get(InteropProperties.ItemPinSpriteSize)));
             }
 
-            HighlightScenes = SD.OfPlacementAndLocations(placement).Get(InteropProperties.HighlightScenes);
+            HighlightScenes = SD.Of(placement).Get(InteropProperties.HighlightScenes);
 
             if (HighlightScenes is not null)
             {
@@ -106,19 +106,19 @@ namespace RandoMapMod.Pins
             }
 
             // This doesn't have a default handler and will always fall through when the property is not provided
-            if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
+            if (SD.Of(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
             {
                 WorldMapPosition wmp = new(worldMapLocations);
                 MapPosition = wmp;
                 MapZone = wmp.MapZone;
             }
             // This doesn't have a default handler and will always fall through when the property is not provided
-            else if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.AbsMapLocation) is (float, float) absMapLocation)
+            else if (SD.Of(placement).Get(InteropProperties.AbsMapLocation) is (float, float) absMapLocation)
             {
                 MapPosition = new AbsMapPosition(absMapLocation);
             }
             // This has a default handler and might not fall through when the property is not provided
-            else if (SD.OfPlacementAndLocations(placement).Get(InteropProperties.MapLocations) is (string, float, float)[] mapLocations)
+            else if (SD.Of(placement).Get(InteropProperties.MapLocations) is (string, float, float)[] mapLocations)
             {
                 MapRoomPosition mlp = new(mapLocations);
                 MapPosition = mlp;
@@ -127,7 +127,7 @@ namespace RandoMapMod.Pins
             // This has a default handler
             else
             {
-                PinGridIndex = SD.OfPlacementAndLocations(placement).Get(InteropProperties.PinGridIndex);
+                PinGridIndex = SD.Of(placement).Get(InteropProperties.PinGridIndex);
                 RmmPinManager.GridPins.Add(this);
             }
         }

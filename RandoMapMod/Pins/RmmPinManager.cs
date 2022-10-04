@@ -72,7 +72,7 @@ namespace RandoMapMod.Pins
 
             foreach (AbstractPlacement placement in ItemChanger.Internal.Ref.Settings.Placements.Values.Where(placement => placement.HasTag<RandoPlacementTag>()))
             {
-                if (SupplementalMetadata.OfPlacementAndLocations(placement).Get(InteropProperties.DoNotMakePin)) continue;
+                if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
                 MakeRandoPin(placement);
             }
             foreach (GeneralizedPlacement placement in RM.RS.Context.Vanilla.Where(placement => RD.Data.IsLocation(placement.Location.Name) && !Pins.ContainsKey(placement.Location.Name)))
