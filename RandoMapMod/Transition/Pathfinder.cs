@@ -10,15 +10,23 @@ namespace RandoMapMod.Transition
     internal class Pathfinder : HookModule
     {
         internal static ProgressionManager RmmPM { get; private set; }
-        internal static Dictionary<string, string> ConditionalTerms { get; private set; }
 
-        internal static void Load()
-        {
-            ConditionalTerms = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json");
-        }
+        private static (string, string)[] conditionalTerms;
 
         public override void OnEnterGame()
         {
+            // Helps with preventing throws to load them in like this
+            conditionalTerms = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json")
+                .Where(kvp => RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Key) && RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Value))
+                .Select(kvp => (kvp.Key, kvp.Value))
+                .ToArray();
+
+            RandoMapMod.Instance.LogDebug("Loaded conditional terms:");
+            foreach ((string, string) pair in conditionalTerms)
+            {
+                RandoMapMod.Instance.LogDebug(pair);
+            }
+
             RmmPM = new(TransitionData.LM, RM.RS.Context);
 
             // Remove start terms
@@ -49,11 +57,11 @@ namespace RandoMapMod.Transition
             }
 
             // Emulate a transition being possibly available via having the required term
-            foreach (KeyValuePair<string, string> pair in ConditionalTerms)
+            foreach ((string ifTerm, string thenTerm) in conditionalTerms)
             {
-                if (pair.Key.IsIn(RM.RS.TrackerData.pm))
+                if (ifTerm.IsIn(RM.RS.TrackerData.pm))
                 {
-                    RmmPM.Set(pair.Value, 1);
+                    RmmPM.Set(thenTerm, 1);
                 }
             }
 
