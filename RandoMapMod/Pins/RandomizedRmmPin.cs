@@ -105,8 +105,11 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            // This doesn't have a default handler and will always fall through when the property is not provided
-            if (SD.Of(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
+            // This has default behaviour only when the CoordinateLocation exists and no other properties are provided
+            if (!SD.Of(placement).IsNonDefault(InteropProperties.MapLocations)
+                && !SD.Of(placement).IsNonDefault(InteropProperties.AbsMapLocation)
+                && !SD.Of(placement).IsNonDefault(InteropProperties.PinGridIndex)
+                && SD.Of(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
             {
                 WorldMapPosition wmp = new(worldMapLocations);
                 MapPosition = wmp;

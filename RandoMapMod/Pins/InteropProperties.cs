@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using ConnectionMetadataInjector;
 using ItemChanger;
+using ItemChanger.Locations;
+using ItemChanger.Placements;
 using MapChanger.Defs;
 
 namespace RandoMapMod.Pins
@@ -83,7 +85,7 @@ namespace RandoMapMod.Pins
         /// The offset is interpreted as the world coordinate in the actual room.
         /// The mod will attempt to place the pin at the first scene in the array that has a corresponding room sprite.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (string, float, float)[]> WorldMapLocations = new("WorldMapLocations", (placement) => { return null; });
+        internal static readonly MetadataProperty<AbstractPlacement, (string, float, float)[]> WorldMapLocations = new("WorldMapLocations", (placement) => { return GetDefaultWorldMapLocations(placement); });
 
         /// <summary>
         /// (x-offset, y-offset) to position the pin based on absolute offset from the center of the map.
@@ -112,6 +114,19 @@ namespace RandoMapMod.Pins
             }
 
             RandoMapMod.Instance.LogDebug($"No MapLocation found for {name}.");
+
+            return null;
+        }
+
+        private static (string, float, float)[] GetDefaultWorldMapLocations(AbstractPlacement placement)
+        {
+            if (placement is IPrimaryLocationPlacement locationPlacement
+                && locationPlacement.Location is CoordinateLocation location
+                && location.sceneName is string sceneName
+                && MapChanger.Finder.IsMappedScene(sceneName))
+            {
+                return new (string, float, float)[] { (sceneName, location.x, location.y) };
+            }
 
             return null;
         }
