@@ -88,7 +88,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.0.5";
+        public override string GetVersion() => "3.0.6";
 
         public override int LoadPriority() => 10;
 
@@ -120,7 +120,6 @@ namespace RandoMapMod
             Interop.FindInteropMods();
             RmmRoomManager.Load();
             RmmPinManager.Load();
-            Pathfinder.Load();
             RouteCompass.Load();
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 
