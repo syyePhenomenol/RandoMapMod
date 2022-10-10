@@ -105,8 +105,9 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            // This has default behaviour only when the CoordinateLocation exists and no other properties are provided
-            if (!SD.Of(placement).IsNonDefault(InteropProperties.MapLocations)
+            // This has default behaviour when the CoordinateLocation exists and no other properties are provided
+            if (!MapChanger.Finder.TryGetLocation(placement.Name, out MapLocationDef _)
+                && !SD.Of(placement).IsNonDefault(InteropProperties.MapLocations)
                 && !SD.Of(placement).IsNonDefault(InteropProperties.AbsMapLocation)
                 && !SD.Of(placement).IsNonDefault(InteropProperties.PinGridIndex)
                 && SD.Of(placement).Get(InteropProperties.WorldMapLocations) is (string, float, float)[] worldMapLocations)
