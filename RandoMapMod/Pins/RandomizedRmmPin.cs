@@ -192,18 +192,7 @@ namespace RandoMapMod.Pins
         {
             itemIndex = 0;
 
-            if (placementState is RPS.Cleared)
-            {
-                remainingItems = placement.Items;
-            }
-            else if (RandoMapMod.GS.ShowPersistentPins)
-            {
-                remainingItems = placement.Items.Where(item => !item.WasEverObtained() || item.IsPersistent());
-            }
-            else
-            {
-                remainingItems = placement.Items.Where(item => !item.WasEverObtained());
-            }
+            UpdateRemainingItems();
 
             showItemSprite = remainingItems.Any()
                 && (RandoMapMod.LS.SpoilerOn
@@ -311,7 +300,6 @@ namespace RandoMapMod.Pins
                 {
                     placementState = RPS.PreviewedUnreachable;
                 }
-
             }
             else if (RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
             {
@@ -324,6 +312,24 @@ namespace RandoMapMod.Pins
             else
             {
                 placementState = RPS.UncheckedUnreachable;
+            }
+
+            UpdateRemainingItems();
+        }
+
+        private void UpdateRemainingItems()
+        {
+            if (placementState is RPS.Cleared)
+            {
+                remainingItems = placement.Items;
+            }
+            else if (RandoMapMod.GS.ShowPersistentPins)
+            {
+                remainingItems = placement.Items.Where(item => !item.WasEverObtained() || item.IsPersistent());
+            }
+            else
+            {
+                remainingItems = placement.Items.Where(item => !item.WasEverObtained());
             }
         }
 
