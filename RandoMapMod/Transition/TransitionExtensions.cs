@@ -19,6 +19,17 @@ namespace RandoMapMod.Transition
             return TransitionData.Scenes.ContainsKey(scene);
         }
 
+        // For connection mods that want to provide their own scene-based waypoints
+        // Works with waypoint names that start with "{SceneName}_Proxy"
+        internal static bool IsWaypointProxy(this string waypoint, out string scene)
+        {
+            string[] split = waypoint.Split(new string[] {"_Proxy"}, System.StringSplitOptions.RemoveEmptyEntries);
+
+            scene = split.Length > 0 ? split[0] : "";
+
+            return scene.IsScene();
+        }
+
         internal static bool IsTransition(this string transition)
         {
             return transition.IsRandomizedTransition() || transition.IsVanillaTransition() || transition.IsSpecialTransition();

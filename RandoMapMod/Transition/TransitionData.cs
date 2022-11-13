@@ -142,6 +142,11 @@ namespace RandoMapMod.Transition
                 {
                     AddLogicToScene(waypoint.Name, waypoint.Name);
                 }
+                else if (waypoint.Name.IsWaypointProxy(out string scene))
+                {
+                    AddLogicToScene(scene, waypoint.Name);
+                    RandoMapMod.Instance.LogDebug($"Added waypoint proxy: {waypoint.Name}");
+                }
             }
 
             if (Interop.HasBenchwarp())
