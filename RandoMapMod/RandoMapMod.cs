@@ -51,12 +51,16 @@ namespace RandoMapMod
             new PoolsPanelButton(),
             new ClearedButton(),
             new PersistentButton(),
-            new GroupByButton()
+            new GroupByButton(),
+            new MiscPanelButton(),
+            new AreaNamesButton(),
+            new NextAreasButton()
         };
 
         private static readonly ExtraButtonPanel[] extraButtonPanels = new ExtraButtonPanel[]
         {
-            new PoolsPanel()
+            new PoolsPanel(),
+            new MiscPanel()
         };
 
         private static readonly MapUILayer[] mapUILayers = new MapUILayer[]
@@ -88,7 +92,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.0.6";
+        public override string GetVersion() => "3.0.7";
 
         public override int LoadPriority() => 10;
 
