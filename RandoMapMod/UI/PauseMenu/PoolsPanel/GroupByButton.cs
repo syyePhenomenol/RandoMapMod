@@ -30,8 +30,6 @@ namespace RandoMapMod.UI
 
             Button.Visibility = PoolsPanel.Instance.ExtraButtonsGrid.Visibility;
 
-            Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
-
             string text = $"{L.Localize("Group by")}:\n";
 
             switch (RandoMapMod.LS.GroupBy)

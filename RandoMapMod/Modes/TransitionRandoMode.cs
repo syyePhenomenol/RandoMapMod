@@ -15,7 +15,6 @@ namespace RandoMapMod.Modes
         }
 
         public override bool DisableAreaNames => true;
-        public override bool DisableNextArea => true;
 
         public override bool? RoomActiveOverride(RoomSprite roomSprite)
         {
@@ -31,6 +30,9 @@ namespace RandoMapMod.Modes
         {
             return RmmColors.GetColor(ColorSetting.UI_Neutral);
         }
+
+        public override bool? NextAreaNameActiveOverride(NextAreaName nextAreaName) => false;
+        public override bool? NextAreaArrowActiveOverride(NextAreaArrow nextAreaArrow) => false;
     }
 
     internal class TransitionNormalMode : TransitionRandoMode

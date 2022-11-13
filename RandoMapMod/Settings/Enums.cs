@@ -51,4 +51,11 @@
         On,
         Mixed
     }
+
+    public enum NextAreaSetting
+    {
+        Off,
+        Arrows,
+        Full
+    }
 }
