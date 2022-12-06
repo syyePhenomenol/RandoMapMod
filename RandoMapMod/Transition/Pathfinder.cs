@@ -3,12 +3,14 @@ using System.Linq;
 using MapChanger;
 using RandoMapMod.Modes;
 using RandomizerCore.Logic;
+using RandomizerCore.Logic.StateLogic;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Transition
 {
     internal class Pathfinder : HookModule
     {
+        internal static StateUnion AnyState => RmmPM.lm.StateManager.StartStateSingleton;
         internal static ProgressionManager RmmPM { get; private set; }
 
         private static (string, string)[] conditionalTerms;
@@ -17,7 +19,7 @@ namespace RandoMapMod.Transition
         {
             // Helps with preventing throws to load them in like this
             conditionalTerms = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json")
-                .Where(kvp => RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Key) && RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Value))
+                .Where(kvp => RM.RS.Context.LM.Terms.TermLookup.ContainsKey(kvp.Key) && RM.RS.Context.LM.Terms.TermLookup.ContainsKey(kvp.Value))
                 .Select(kvp => (kvp.Key, kvp.Value))
                 .ToArray();
 
@@ -32,7 +34,7 @@ namespace RandoMapMod.Transition
             // Remove start terms
             foreach (string term in TransitionData.GetStartTerms())
             {
-                RmmPM.Set(term, 0);
+                term.RemoveFrom(RmmPM);
             }
 
             UpdateProgression();
@@ -52,7 +54,14 @@ namespace RandoMapMod.Transition
             {
                 if (!term.Name.IsTransition() && !term.Name.IsScene())
                 {
-                    RmmPM.Set(term, RM.RS.TrackerData.pm.Get(term));
+                    if (Term.GetTermType(term) is TermType.State)
+                    {
+                        term.Name.SetToState(RmmPM, RM.RS.TrackerData.pm.GetState(term));
+                    }
+                    else
+                    {
+                        RmmPM.Set(term, RM.RS.TrackerData.pm.Get(term));
+                    }
                 }
             }
 
@@ -61,29 +70,28 @@ namespace RandoMapMod.Transition
             {
                 if (ifTerm.IsIn(RM.RS.TrackerData.pm))
                 {
-                    RmmPM.Set(thenTerm, 1);
+                    thenTerm.AddTo(RmmPM);
                 }
             }
 
-            RmmPM.Set("Town_Lift_Activated", PlayerData.instance.GetBool("mineLiftOpened") ? 1 : 0);
-            RmmPM.Set("Opened_Shaman_Pillar", PlayerData.instance.GetBool("shamanPillar") ? 1 : 0);
-            RmmPM.Set("Opened_Mawlek_Wall", PlayerData.instance.GetBool("crossroadsMawlekWall") ? 1 : 0);
-            RmmPM.Set("Opened_Dung_Defender_Wall", PlayerData.instance.GetBool("dungDefenderWallBroken") ? 1 : 0);
-            //RmmPM.Set("ELEGANT", PlayerData.instance.GetBool("hasWhiteKey") ? 1 : 0);
+            "Town_Lift_Activated".SetToState(RmmPM, PlayerData.instance.GetBool("mineLiftOpened") ? AnyState : null);
+            "Opened_Shaman_Pillar".SetToState(RmmPM, PlayerData.instance.GetBool("shamanPillar") ? AnyState : null);
+            "Opened_Mawlek_Wall".SetToState(RmmPM, PlayerData.instance.GetBool("crossroadsMawlekWall") ? AnyState : null);
+            "Opened_Dung_Defender_Wall".SetToState(RmmPM, PlayerData.instance.GetBool("dungDefenderWallBroken") ? AnyState : null);
 
             foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
             {
                 if (pbd.sceneName is "Waterways_02" && pbd.id is "Quake Floor (1)")
                 {
-                    RmmPM.Set("Broke_Waterways_Bench_Ceiling", pbd.activated ? 1 : 0);
+                    "Broke_Waterways_Bench_Ceiling".SetToState(RmmPM, pbd.activated ? AnyState : null);
                 }
                 else if (pbd.sceneName is "Ruins1_31" && pbd.id is "Breakable Wall Ruin Lift")
                 {
-                    RmmPM.Set("City_Toll_Wall_Broken", pbd.activated ? 1 : 0);
+                    "City_Toll_Wall_Broken".SetToState(RmmPM, pbd.activated ? AnyState : null);
                 }
                 else if (pbd.sceneName is "Ruins1_31" && pbd.id is "Ruins Lever")
                 {
-                    RmmPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
+                    "Lever-Shade_Soul".SetToState(RmmPM, pbd.activated ? AnyState : null);
                 }
             }
 
@@ -91,8 +99,8 @@ namespace RandoMapMod.Transition
             {
                 if (pid.sceneName is "Ruins1_31" && pid.id is "Ruins Lift")
                 {
-                    RmmPM.Set("City_Toll_Elevator_Up", pid.value % 2 is 1 ? 1 : 0);
-                    RmmPM.Set("City_Toll_Elevator_Down", pid.value % 2 is 0 ? 1 : 0);
+                    "City_Toll_Elevator_Up".SetToState(RmmPM, pid.value % 2 is 1 ? AnyState : null);
+                    "City_Toll_Elevator_Down".SetToState(RmmPM, pid.value % 2 is 0 ? AnyState : null);
                 }
             }
         }
@@ -227,11 +235,11 @@ namespace RandoMapMod.Transition
         /// </summary>
         internal static void GetFullNetwork()
         {
-            RandoMapMod.Instance.LogDebug("Full pathfinder network:");
+            RandoMapMod.Instance.LogFine("Full pathfinder network:");
 
             foreach (string inTransition in TransitionData.AdjacencyLookup.Values.OrderBy(t => t))
             {
-                RandoMapMod.Instance.LogDebug(inTransition);
+                RandoMapMod.Instance.LogFine(inTransition);
 
                 if (inTransition.GetScene() is string scene && TransitionData.Scenes.TryGetValue(scene, out PathfinderScene ps))
                 {
@@ -242,11 +250,11 @@ namespace RandoMapMod.Transition
                     {
                         if (reachableTransitions.Contains(outTransition))
                         {
-                            RandoMapMod.Instance.LogDebug($"---> {outTransition}");
+                            RandoMapMod.Instance.LogFine($"---> {outTransition}");
                         }
                         else
                         {
-                            RandoMapMod.Instance.LogDebug($"-x-> {outTransition}");
+                            RandoMapMod.Instance.LogFine($"-x-> {outTransition}");
                         }
                     }
                 }
