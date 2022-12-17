@@ -4,9 +4,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class ClearedButton : MainButton
+    internal class PersistentButton : ExtraButton
     {
-        internal ClearedButton() : base("Cleared Button", RandoMapMod.MOD, 2, 1)
+        public PersistentButton() : base("Persistent Button", RandoMapMod.MOD)
         {
 
         }
@@ -20,18 +20,14 @@ namespace RandoMapMod.UI
 
         protected override void OnClick()
         {
-            RandoMapMod.GS.ToggleCleared();
+            RandoMapMod.GS.TogglePersistent();
         }
 
         public override void Update()
         {
-            base.Update();
+            string text = $"{L.Localize("Persistent\nitems")}: ";
 
-            Button.Visibility = PoolsPanel.Instance.ExtraButtonsGrid.Visibility;
-
-            string text = $"{L.Localize("Cleared\nlocations")}: ";
-
-            if (RandoMapMod.GS.ShowClearedPins)
+            if (RandoMapMod.GS.ShowPersistentPins)
             {
                 text += L.Localize("On");
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);

@@ -4,9 +4,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class AreaNamesButton : ExtraButton
+    internal class ClearedButton : ExtraButton
     {
-        public AreaNamesButton() : base("Area Name Button", RandoMapMod.MOD)
+        internal ClearedButton() : base("Cleared Button", RandoMapMod.MOD)
         {
 
         }
@@ -20,14 +20,14 @@ namespace RandoMapMod.UI
 
         protected override void OnClick()
         {
-            RandoMapMod.GS.ToggleAreaNames();
+            RandoMapMod.GS.ToggleCleared();
         }
 
         public override void Update()
         {
-            string text = $"{L.Localize("Show area\nnames")}: ";
+            string text = $"{L.Localize("Cleared\nlocations")}: ";
 
-            if (RandoMapMod.GS.ShowAreaNames)
+            if (RandoMapMod.GS.ShowClearedPins)
             {
                 text += L.Localize("On");
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);

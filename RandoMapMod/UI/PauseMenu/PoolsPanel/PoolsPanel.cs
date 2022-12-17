@@ -21,6 +21,11 @@ namespace RandoMapMod.UI
                 ExtraButtonsGrid.Children.Add(poolButton.Button);
                 ExtraButtons.Add(poolButton);
             }
+
+            GroupByButton groupByButton = new();
+            groupByButton.Make();
+            ExtraButtonsGrid.Children.Add(groupByButton.Button);
+            ExtraButtons.Add(groupByButton);
         }
     }
 }

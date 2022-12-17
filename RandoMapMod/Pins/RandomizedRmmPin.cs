@@ -234,7 +234,8 @@ namespace RandoMapMod.Pins
             {
                 size *= SELECTED_MULTIPLIER;
             }
-            else if (placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent or RPS.Cleared)
+            else if (RandoMapMod.GS.ReachablePins
+                && placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent or RPS.Cleared)
             {
                 size *= UNREACHABLE_SIZE_MULTIPLIER;
             }
@@ -246,7 +247,8 @@ namespace RandoMapMod.Pins
         {
             Vector4 color = UnityEngine.Color.white;
 
-            if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
+            if (RandoMapMod.GS.ReachablePins
+                && placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
             {
                 Color = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER, color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
                 return;

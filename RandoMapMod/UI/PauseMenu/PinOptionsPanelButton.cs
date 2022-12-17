@@ -4,16 +4,16 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class MiscPanelButton : MainButton
+    internal class PinOptionsPanelButton : MainButton
     {
-        public MiscPanelButton() : base("Misc Panel Button", RandoMapMod.MOD, 2, 0)
+        public PinOptionsPanelButton() : base("Pin Options Panel Button", RandoMapMod.MOD, 2, 0)
         {
 
         }
 
         protected override void OnClick()
         {
-            MiscPanel.Instance.Toggle();
+            PinOptionsPanel.Instance.Toggle();
         }
 
         public override void Update()
@@ -22,7 +22,7 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            if (MiscPanel.Instance.ExtraButtonsGrid.Visibility == MagicUI.Core.Visibility.Visible)
+            if (PinOptionsPanel.Instance.ExtraButtonsGrid.Visibility == MagicUI.Core.Visibility.Visible)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
             }
@@ -31,7 +31,7 @@ namespace RandoMapMod.UI
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 
-            Button.Content = $"{L.Localize("Misc.")}\n{L.Localize("Options")}";
+            Button.Content = $"{L.Localize("More Pin\nOptions")}";
         }
     }
 }

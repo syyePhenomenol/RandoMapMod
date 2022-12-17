@@ -4,9 +4,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PersistentButton : MainButton
+    internal class ReachablePinsButton : ExtraButton
     {
-        public PersistentButton() : base("Persistent Button", RandoMapMod.MOD, 2, 2)
+        public ReachablePinsButton() : base("Reachable Pins Button", RandoMapMod.MOD)
         {
 
         }
@@ -20,18 +20,14 @@ namespace RandoMapMod.UI
 
         protected override void OnClick()
         {
-            RandoMapMod.GS.TogglePersistent();
+            RandoMapMod.GS.ToggleReachablePins();
         }
 
         public override void Update()
         {
-            base.Update();
+            string text = $"{L.Localize("Indicate\nreachable")}: ";
 
-            Button.Visibility = PoolsPanel.Instance.ExtraButtonsGrid.Visibility;
-
-            string text = $"{L.Localize("Persistent\nitems")}: ";
-
-            if (RandoMapMod.GS.ShowPersistentPins)
+            if (RandoMapMod.GS.ReachablePins)
             {
                 text += L.Localize("On");
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);

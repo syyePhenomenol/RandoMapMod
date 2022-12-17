@@ -17,9 +17,11 @@ namespace RandoMapMod.Settings
         public PinSize PinSize = PinSize.Medium;
         public bool ShowClearedPins = false;
         public bool ShowPersistentPins = false;
+        public bool ReachablePins = true;
         public bool ShowBenchwarpPins = true;
         public bool ShowAreaNames = true;
         public NextAreaSetting ShowNextAreas = NextAreaSetting.Full;
+        public bool ShowMapMarkers = false;
 
         /// <summary>
         /// By default, the mode is set to Full Map in item rando, and Transition in a transition rando (at
@@ -98,6 +100,11 @@ namespace RandoMapMod.Settings
             ShowPersistentPins = !ShowPersistentPins;
         }
 
+        internal void ToggleReachablePins()
+        {
+            ReachablePins = !ReachablePins;
+        }
+
         internal void ToggleBenchPins()
         {
             ShowBenchwarpPins = !ShowBenchwarpPins;
@@ -111,6 +118,11 @@ namespace RandoMapMod.Settings
         internal void ToggleNextAreas()
         {
             ShowNextAreas = (NextAreaSetting)(((int)ShowNextAreas + 1) % Enum.GetNames(typeof(NextAreaSetting)).Length);
+        }
+
+        internal void ToggleMapMarkers()
+        {
+            ShowMapMarkers = !ShowMapMarkers;
         }
     }
 }

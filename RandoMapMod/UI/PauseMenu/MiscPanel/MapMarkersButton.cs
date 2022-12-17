@@ -1,12 +1,13 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
+using RandoMapMod.Settings;
 using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class AreaNamesButton : ExtraButton
+    internal class MapMarkersButton : ExtraButton
     {
-        public AreaNamesButton() : base("Area Name Button", RandoMapMod.MOD)
+        public MapMarkersButton() : base("Map Markers Button", RandoMapMod.MOD)
         {
 
         }
@@ -20,14 +21,14 @@ namespace RandoMapMod.UI
 
         protected override void OnClick()
         {
-            RandoMapMod.GS.ToggleAreaNames();
+            RandoMapMod.GS.ToggleMapMarkers();
         }
 
         public override void Update()
         {
-            string text = $"{L.Localize("Show area\nnames")}: ";
+            string text = $"{L.Localize("Show map\nmarkers")}: ";
 
-            if (RandoMapMod.GS.ShowAreaNames)
+            if (RandoMapMod.GS.ShowMapMarkers)
             {
                 text += L.Localize("On");
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
