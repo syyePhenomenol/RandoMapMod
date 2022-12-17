@@ -124,5 +124,10 @@ namespace RandoMapMod.Settings
         {
             ShowMapMarkers = !ShowMapMarkers;
         }
+
+        internal static void ResetToDefaultSettings()
+        {
+            RandoMapMod.GS = new();
+        }
     }
 }

@@ -8,7 +8,8 @@ namespace RandoMapMod.UI
         {
             new AreaNamesButton(),
             new NextAreasButton(),
-            new MapMarkersButton()
+            new MapMarkersButton(),
+            new DefaultSettingsButton()
         };
 
         internal static MiscOptionsPanel Instance { get; private set; }
