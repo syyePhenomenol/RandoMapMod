@@ -123,6 +123,7 @@ namespace RandoMapMod.Transition
 
             string nextRouteTransition = selectedRoute.First();
 
+            // Fix for big mantis village transition
             string lastTransitionName = lastTransition.ToString() switch
             {
                 "Fungus2_15[top2]" => "Fungus2_15[top3]",
@@ -130,7 +131,8 @@ namespace RandoMapMod.Transition
                 _ => lastTransition.ToString()
             };
 
-            if (lastTransitionName == nextRouteTransition.GetAdjacency())
+            if (lastTransitionName == nextRouteTransition.GetAdjacency()
+                || (lastTransition.GateName is "dreamGate" && nextRouteTransition is DreamgateTracker.DREAMGATE))
             {
                 UpdateRoute();
                 return;

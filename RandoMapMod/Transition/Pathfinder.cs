@@ -121,6 +121,8 @@ namespace RandoMapMod.Transition
                 }
             }
 
+            TryAddDreamGate(queue, visitedTransitions, rejectedRoutes);
+
             foreach (SearchNode node in SearchNode.GetNodesFromScene(startScene))
             {
                 if (IsVanillaOrCheckedTransition(node.InTransition))
@@ -175,6 +177,8 @@ namespace RandoMapMod.Transition
                     TryAddNode(queue, visitedTransitions, child);
                 }
             }
+
+            TryAddDreamGate(queue, visitedTransitions);
 
             if (RandoMapMod.GS.PathfinderBenchwarp && Interop.HasBenchwarp())
             {
@@ -258,6 +262,21 @@ namespace RandoMapMod.Transition
                         }
                     }
                 }
+            }
+        }
+
+        private static void TryAddDreamGate(LinkedList<SearchNode> queue, HashSet<string> traversedTransitions, List<List<string>> rejectedRoutes = null)
+        {
+            if (DreamgateTracker.DreamgateTiedTransition is not null)
+            {
+                SearchNode node = new(null, DreamgateTracker.DREAMGATE);
+
+                queue.AddLast(node);
+
+                // Allow other routes to go through a rejected route
+                if (node.IsFollowingRejectedRoute(rejectedRoutes)) return;
+
+                traversedTransitions.Add(DreamgateTracker.DREAMGATE);
             }
         }
 
