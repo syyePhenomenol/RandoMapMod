@@ -231,11 +231,11 @@ namespace RandoMapMod.Transition
         /// </summary>
         internal static void GetFullNetwork()
         {
-            RandoMapMod.Instance.LogDebug("Full pathfinder network:");
+            RandoMapMod.Instance.LogFine("Full pathfinder network:");
 
             foreach (string inTransition in TransitionData.AdjacencyLookup.Values.OrderBy(t => t))
             {
-                RandoMapMod.Instance.LogDebug(inTransition);
+                RandoMapMod.Instance.LogFine(inTransition);
 
                 if (inTransition.GetScene() is string scene && TransitionData.Scenes.TryGetValue(scene, out PathfinderScene ps))
                 {
@@ -246,11 +246,11 @@ namespace RandoMapMod.Transition
                     {
                         if (reachableTransitions.Contains(outTransition))
                         {
-                            RandoMapMod.Instance.LogDebug($"---> {outTransition}");
+                            RandoMapMod.Instance.LogFine($"---> {outTransition}");
                         }
                         else
                         {
-                            RandoMapMod.Instance.LogDebug($"-x-> {outTransition}");
+                            RandoMapMod.Instance.LogFine($"-x-> {outTransition}");
                         }
                     }
                 }
