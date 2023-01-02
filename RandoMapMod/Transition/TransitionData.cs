@@ -24,7 +24,7 @@ namespace RandoMapMod.Transition
         {
             "Crossroads_03[bot1]",
             "Crossroads_06[right1]",
-            "Crossroads_10[left1",
+            "Crossroads_10[left1]",
             "Crossroads_19[top1]"
         };
 
