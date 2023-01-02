@@ -71,10 +71,19 @@ Optional and compatible:
     - "Transition 1": Normal transition mode. See more info below.
     - "Transition 2": Transition mode, only showing visited rooms.
     - "Transition 3": Transition mode, showing all rooms.
-- "Customize Pins":
-    - Toggle each pool on/off.
-    - "Persistent items": Toggle persistent items to always showing or not.
+- "Customize Pools":
+    - Toggle showing each pool of pins on/off.
     - "Group by": Toggle the pools to be grouped by location, or by item (spoiler).
+- "More Pin Options":
+    - "Cleared Locations": Toggle showing pins for all cleared locations
+    - "Persistent Items": Toggle showing pins for persistent items, even when cleared
+    - "Indicate Reachable": Toggle indicating (by shading and shrinking pins) if locations are reachable in logic or not
+- "Misc. Options":
+    - "Show Area Names": Toggle showing area names on the world map
+    - "Show Next Areas": Toggle showing names/arrows for adjacent map areas on the quick map
+    - "Show Map Markers": Toggle showing map markers. You still need to buy the map markers to see them with this setting on.
+    - "Reset Global Settings": Resets all global settings to default settings
+    
 
 ## Transition Mode
 - Check out the in-game map key (`CTRL-K`) or the [Map Legend](./MAPLEGEND.md) for what the colors/brightness of each room indicate.

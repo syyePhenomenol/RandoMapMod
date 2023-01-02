@@ -7,7 +7,7 @@ namespace RandoMapMod.UI
 {
     internal class ModEnabledButton : MainButton
     {
-        public ModEnabledButton() : base("Mod Enabled", RandoMapMod.MOD, 0, 0)
+        public ModEnabledButton() : base(nameof(ModEnabledButton), RandoMapMod.MOD, 0, 0)
         {
             
         }

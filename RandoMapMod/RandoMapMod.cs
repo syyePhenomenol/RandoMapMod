@@ -48,19 +48,16 @@ namespace RandoMapMod
             new RandomizedButton(),
             new VanillaButton(),
             new SpoilersButton(),
-            new PoolsPanelButton(),
-            new ClearedButton(),
-            new PersistentButton(),
-            new GroupByButton(),
-            new MiscPanelButton(),
-            new AreaNamesButton(),
-            new NextAreasButton()
+            new PoolOptionsPanelButton(),
+            new PinOptionsPanelButton(),
+            new MiscOptionsPanelButton()
         };
 
         private static readonly ExtraButtonPanel[] extraButtonPanels = new ExtraButtonPanel[]
         {
-            new PoolsPanel(),
-            new MiscPanel()
+            new PoolOptionsPanel(),
+            new PinOptionsPanel(),
+            new MiscOptionsPanel()
         };
 
         private static readonly MapUILayer[] mapUILayers = new MapUILayer[]

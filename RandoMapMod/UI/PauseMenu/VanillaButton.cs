@@ -9,7 +9,7 @@ namespace RandoMapMod.UI
 {
     internal class VanillaButton : MainButton
     {
-        internal VanillaButton() : base("Vanilla Pins", RandoMapMod.MOD, 0, 2)
+        internal VanillaButton() : base(nameof(VanillaButton), RandoMapMod.MOD, 0, 2)
         {
 
         }

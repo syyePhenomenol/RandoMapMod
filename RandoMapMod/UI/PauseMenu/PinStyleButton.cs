@@ -7,7 +7,7 @@ namespace RandoMapMod.UI
 {
     internal class PinStyleButton : MainButton
     {
-        internal PinStyleButton() : base("Pin Style", RandoMapMod.MOD, 1, 1)
+        internal PinStyleButton() : base(nameof(PinStyleButton), RandoMapMod.MOD, 1, 1)
         {
 
         }

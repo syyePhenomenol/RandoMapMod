@@ -4,16 +4,16 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class SpoilersButton : MainButton
+    internal class PinOptionsPanelButton : MainButton
     {
-        internal SpoilersButton() : base(nameof(SpoilersButton), RandoMapMod.MOD, 0, 3)
+        public PinOptionsPanelButton() : base(nameof(PinOptionsPanelButton), RandoMapMod.MOD, 2, 0)
         {
 
         }
 
         protected override void OnClick()
         {
-            RandoMapMod.LS.ToggleSpoilers();
+            PinOptionsPanel.Instance.Toggle();
         }
 
         public override void Update()
@@ -22,16 +22,16 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            if (RandoMapMod.LS.SpoilerOn)
+            if (PinOptionsPanel.Instance.ExtraButtonsGrid.Visibility == MagicUI.Core.Visibility.Visible)
             {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("on")}";
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("off")}";
             }
+
+            Button.Content = $"{L.Localize("More Pin\nOptions")}";
         }
     }
 }

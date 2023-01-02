@@ -4,16 +4,16 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class MiscPanelButton : MainButton
+    internal class PoolOptionsPanelButton : MainButton
     {
-        public MiscPanelButton() : base("Misc Panel Button", RandoMapMod.MOD, 2, 0)
+        public PoolOptionsPanelButton() : base(nameof(PoolOptionsPanelButton), RandoMapMod.MOD, 1, 3)
         {
 
         }
 
         protected override void OnClick()
         {
-            MiscPanel.Instance.Toggle();
+            PoolOptionsPanel.Instance.Toggle();
         }
 
         public override void Update()
@@ -22,7 +22,7 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            if (MiscPanel.Instance.ExtraButtonsGrid.Visibility == MagicUI.Core.Visibility.Visible)
+            if (PoolOptionsPanel.Instance.ExtraButtonsGrid.Visibility == MagicUI.Core.Visibility.Visible)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
             }
@@ -31,7 +31,7 @@ namespace RandoMapMod.UI
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 
-            Button.Content = $"{L.Localize("Misc.")}\n{L.Localize("Options")}";
+            Button.Content = $"{L.Localize("Customize")}\n{L.Localize("Pools")}";
         }
     }
 }

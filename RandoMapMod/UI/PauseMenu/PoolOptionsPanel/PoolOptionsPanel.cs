@@ -3,11 +3,11 @@ using RandoMapMod.Pins;
 
 namespace RandoMapMod.UI
 {
-    internal class PoolsPanel : ExtraButtonPanel
+    internal class PoolOptionsPanel : ExtraButtonPanel
     {
-        internal static PoolsPanel Instance { get; private set; }
+        internal static PoolOptionsPanel Instance { get; private set; }
 
-        public PoolsPanel() : base("Pools Panel", RandoMapMod.MOD, 390f, 10)
+        public PoolOptionsPanel() : base(nameof(PoolOptionsPanel), RandoMapMod.MOD, 390f, 10)
         {
             Instance = this;
         }
@@ -21,6 +21,11 @@ namespace RandoMapMod.UI
                 ExtraButtonsGrid.Children.Add(poolButton.Button);
                 ExtraButtons.Add(poolButton);
             }
+
+            GroupByButton groupByButton = new();
+            groupByButton.Make();
+            ExtraButtonsGrid.Children.Add(groupByButton.Button);
+            ExtraButtons.Add(groupByButton);
         }
     }
 }

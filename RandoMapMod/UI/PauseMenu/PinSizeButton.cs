@@ -8,7 +8,7 @@ namespace RandoMapMod.UI
 {
     internal class PinSizeButton : MainButton
     {
-        internal PinSizeButton() : base("Pin Size", RandoMapMod.MOD, 1, 2)
+        internal PinSizeButton() : base(nameof(PinSizeButton), RandoMapMod.MOD, 1, 2)
         {
 
         }

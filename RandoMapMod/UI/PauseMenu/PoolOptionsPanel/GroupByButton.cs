@@ -5,9 +5,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class GroupByButton : MainButton
+    internal class GroupByButton : ExtraButton
     {
-        internal GroupByButton() : base("Group By Button", RandoMapMod.MOD, 2, 3)
+        internal GroupByButton() : base(nameof(GroupByButton), RandoMapMod.MOD)
         {
 
         }
@@ -26,10 +26,6 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            base.Update();
-
-            Button.Visibility = PoolsPanel.Instance.ExtraButtonsGrid.Visibility;
-
             string text = $"{L.Localize("Group by")}:\n";
 
             switch (RandoMapMod.LS.GroupBy)
@@ -44,7 +40,7 @@ namespace RandoMapMod.UI
             }
 
             Button.Content = text;
-            Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+            Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
         }
     }
 }

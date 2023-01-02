@@ -4,9 +4,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PersistentButton : MainButton
+    internal class PersistentButton : ExtraButton
     {
-        public PersistentButton() : base("Persistent Button", RandoMapMod.MOD, 2, 2)
+        public PersistentButton() : base(nameof(PersistentButton), RandoMapMod.MOD)
         {
 
         }
@@ -25,10 +25,6 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            base.Update();
-
-            Button.Visibility = PoolsPanel.Instance.ExtraButtonsGrid.Visibility;
-
             string text = $"{L.Localize("Persistent\nitems")}: ";
 
             if (RandoMapMod.GS.ShowPersistentPins)

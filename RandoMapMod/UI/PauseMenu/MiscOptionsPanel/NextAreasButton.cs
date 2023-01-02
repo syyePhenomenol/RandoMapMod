@@ -5,9 +5,9 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class NextAreasButton : MainButton
+    internal class NextAreasButton : ExtraButton
     {
-        public NextAreasButton() : base("Next Areas Button", RandoMapMod.MOD, 2, 2)
+        public NextAreasButton() : base(nameof(NextAreasButton), RandoMapMod.MOD)
         {
 
         }
@@ -26,10 +26,6 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            base.Update();
-
-            Button.Visibility = MiscPanel.Instance.ExtraButtonsGrid.Visibility;
-
             string text = $"{L.Localize("Show next\nareas")}: ";
 
             switch (RandoMapMod.GS.ShowNextAreas)
