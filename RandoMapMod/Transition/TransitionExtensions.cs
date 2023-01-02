@@ -90,6 +90,11 @@ namespace RandoMapMod.Transition
 
         internal static HashSet<string> GetScenes(this string term)
         {
+            if (term is DreamgateTracker.DREAMGATE)
+            {
+                return new() { DreamgateTracker.DreamgateScene };
+            }
+
             if (!TransitionData.SceneLookup.TryGetValue(term, out HashSet<string> scenes))
             {
                 RandoMapMod.Instance.LogWarn($"No corresponding set of scenes for {term}");
@@ -101,6 +106,11 @@ namespace RandoMapMod.Transition
 
         internal static string GetAdjacency(this string transition)
         {
+            if (transition is DreamgateTracker.DREAMGATE)
+            {
+                return DreamgateTracker.DreamgateTiedTransition;
+            }
+
             if (!TransitionData.AdjacencyLookup.TryGetValue(transition, out string term))
             {
                 RandoMapMod.Instance.LogWarn($"No corresponding adjacency for {transition}");

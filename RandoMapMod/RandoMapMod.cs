@@ -79,6 +79,7 @@ namespace RandoMapMod
             new Pathfinder(),
             new RmmPinManager(),
             new TransitionTracker(),
+            new DreamgateTracker(),
             new RouteTracker()
         };
 
