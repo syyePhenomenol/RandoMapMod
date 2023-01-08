@@ -23,7 +23,7 @@
   "OUTSKIRTS": {
     "MapZone": "OUTSKIRTS",
     "OrientateVertical": true,
-    "GridBaseX": -2.5,
+    "GridBaseX": -3.5,
     "GridBaseY": 1.5,
     "RollOverCount": 5
   },
