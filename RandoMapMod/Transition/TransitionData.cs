@@ -218,7 +218,8 @@ namespace RandoMapMod.Transition
         {
             if (!LM.LogicLookup.TryGetValue(term, out OptimizedLogicDef logic))
             {
-                RandoMapMod.Instance.LogDebug($"Logic not found in PathfinderData LM: {term}");
+                RandoMapMod.Instance.LogWarn($"Logic not found in PathfinderData LM: {term}");
+                return;
             }
 
             if (Scenes.TryGetValue(scene, out PathfinderScene ps))
