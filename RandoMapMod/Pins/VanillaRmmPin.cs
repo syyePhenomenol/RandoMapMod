@@ -116,7 +116,7 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            text += $"\n\n{L.Localize("Logic")}: {Logic?.ToInfix() ?? "not found"}";
+            text += $"\n\n{L.Localize("Logic")}: {Logic?.InfixSource ?? "not found"}";
 
             return text; 
         }
