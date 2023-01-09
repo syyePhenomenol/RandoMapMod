@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
 
         private protected override string GetText()
         {
-            string text = $"{L.Localize("Toogle room selection")} (Ctrl-R): ";
+            string text = $"{L.Localize("Toggle room selection")} (Ctrl-R): ";
             return text + (RandoMapMod.GS.RoomSelectionOn ? "On" : "Off");
         }
     }

@@ -18,7 +18,7 @@ namespace RandoMapMod.Transition
         /// </summary>
         internal string[] GetReachableTransitions(ProgressionManager pm, string inTransition)
         {
-            if (!LogicDefs.Any(def => def.Name == inTransition) || !pm.lm.TermLookup.ContainsKey(inTransition))
+            if (!LogicDefs.Any(def => def.Name == inTransition) || !pm.lm.Terms.TermLookup.ContainsKey(inTransition))
             {
                 RandoMapMod.Instance.LogWarn($"Invalid in-transition for {SceneName}: {inTransition}");
 
@@ -30,7 +30,7 @@ namespace RandoMapMod.Transition
 
             pm.StartTemp();
 
-            pm.Set(inTransition, 1);
+            inTransition.AddTo(pm);
 
             while (updated)
             {
@@ -39,7 +39,7 @@ namespace RandoMapMod.Transition
                 {
                     if (!addedDefs.Contains(def) && def.CanGet(pm))
                     {
-                        pm.Set(def.Name, 1);
+                        def.Name.AddTo(pm);
                         addedDefs.Add(def);
                         updated = true;
                     }

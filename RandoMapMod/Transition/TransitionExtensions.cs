@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RandomizerCore.Logic;
+using RandomizerCore.Logic.StateLogic;
 using L = RandomizerMod.Localization;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
@@ -62,15 +63,69 @@ namespace RandoMapMod.Transition
             return Interop.HasBenchwarp() && BenchwarpInterop.IsVisitedBench(transition);
         }
 
-        internal static bool IsIn(this string term, ProgressionManager pm)
+        internal static bool IsIn(this string termName, ProgressionManager pm)
         {
-            if (!pm.lm.TermLookup.ContainsKey(term))
+            if (!pm.lm.Terms.TermLookup.TryGetValue(termName, out Term term))
             {
-                RandoMapMod.Instance.LogWarn($"Term not found in pm: {term}");
+                RandoMapMod.Instance.LogWarn($"Term not found in pm: {termName}");
                 return false;
             }
 
-            return pm.Get(term) > 0;
+            if (Term.GetTermType(term) is TermType.State)
+            {
+                return pm.GetState(pm.lm.GetTerm(term)) is StateUnion su && su.Any();
+            }
+            else
+            {
+                return pm.Get(term) > 0;
+            }
+        }
+
+        internal static void AddTo(this string termName, ProgressionManager pm)
+        {
+            if (!pm.lm.Terms.TermLookup.TryGetValue(termName, out Term term))
+            {
+                RandoMapMod.Instance.LogWarn($"Term not found in pm: {termName}");
+                return;
+            }
+
+            if (Term.GetTermType(term) is TermType.State)
+            {
+                pm.SetState(term, pm.lm.StateManager.DefaultStateSingleton);
+            }
+            else
+            {
+                pm.Set(term, 1);
+            }
+        }
+
+        internal static void SetToState(this string termName, ProgressionManager pm, StateUnion state)
+        {
+            if (!pm.lm.Terms.TermLookup.TryGetValue(termName, out Term term))
+            {
+                RandoMapMod.Instance.LogWarn($"Term not found in pm: {termName}");
+                return;
+            }
+
+            pm.SetState(term, state);
+        }
+
+        internal static void RemoveFrom(this string termName, ProgressionManager pm)
+        {
+            if (!pm.lm.Terms.TermLookup.TryGetValue(termName, out Term term))
+            {
+                RandoMapMod.Instance.LogWarn($"Term not found in pm: {termName}");
+                return;
+            }
+
+            if (Term.GetTermType(term) is TermType.State)
+            {
+                pm.SetState(term, null);
+            }
+            else
+            {
+                pm.Set(term, 0);
+            }
         }
 
         internal static string GetScene(this string term)

@@ -3,12 +3,14 @@ using System.Linq;
 using MapChanger;
 using RandoMapMod.Modes;
 using RandomizerCore.Logic;
+using RandomizerCore.Logic.StateLogic;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Transition
 {
     internal class Pathfinder : HookModule
     {
+        internal static StateUnion AnyState => RmmPM.lm.StateManager.DefaultStateSingleton;
         internal static ProgressionManager RmmPM { get; private set; }
 
         private static (string, string)[] conditionalTerms;
@@ -17,14 +19,14 @@ namespace RandoMapMod.Transition
         {
             // Helps with preventing throws to load them in like this
             conditionalTerms = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json")
-                .Where(kvp => RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Key) && RM.RS.Context.LM.TermLookup.ContainsKey(kvp.Value))
+                .Where(kvp => RM.RS.Context.LM.Terms.TermLookup.ContainsKey(kvp.Key) && RM.RS.Context.LM.Terms.TermLookup.ContainsKey(kvp.Value))
                 .Select(kvp => (kvp.Key, kvp.Value))
                 .ToArray();
 
-            RandoMapMod.Instance.LogDebug("Loaded conditional terms:");
+            RandoMapMod.Instance.LogFine("Loaded conditional terms:");
             foreach ((string, string) pair in conditionalTerms)
             {
-                RandoMapMod.Instance.LogDebug(pair);
+                RandoMapMod.Instance.LogFine(pair);
             }
 
             RmmPM = new(TransitionData.LM, RM.RS.Context);
@@ -32,7 +34,7 @@ namespace RandoMapMod.Transition
             // Remove start terms
             foreach (string term in TransitionData.GetStartTerms())
             {
-                RmmPM.Set(term, 0);
+                term.RemoveFrom(RmmPM);
             }
 
             UpdateProgression();
@@ -52,7 +54,14 @@ namespace RandoMapMod.Transition
             {
                 if (!term.Name.IsTransition() && !term.Name.IsScene())
                 {
-                    RmmPM.Set(term, RM.RS.TrackerData.pm.Get(term));
+                    if (Term.GetTermType(term) is TermType.State)
+                    {
+                        term.Name.SetToState(RmmPM, RM.RS.TrackerData.pm.GetState(term));
+                    }
+                    else
+                    {
+                        RmmPM.Set(term, RM.RS.TrackerData.pm.Get(term));
+                    }
                 }
             }
 
@@ -61,7 +70,7 @@ namespace RandoMapMod.Transition
             {
                 if (ifTerm.IsIn(RM.RS.TrackerData.pm))
                 {
-                    RmmPM.Set(thenTerm, 1);
+                    thenTerm.AddTo(RmmPM);
                 }
             }
 
@@ -69,7 +78,6 @@ namespace RandoMapMod.Transition
             RmmPM.Set("Opened_Shaman_Pillar", PlayerData.instance.GetBool("shamanPillar") ? 1 : 0);
             RmmPM.Set("Opened_Mawlek_Wall", PlayerData.instance.GetBool("crossroadsMawlekWall") ? 1 : 0);
             RmmPM.Set("Opened_Dung_Defender_Wall", PlayerData.instance.GetBool("dungDefenderWallBroken") ? 1 : 0);
-            //RmmPM.Set("ELEGANT", PlayerData.instance.GetBool("hasWhiteKey") ? 1 : 0);
 
             foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
             {

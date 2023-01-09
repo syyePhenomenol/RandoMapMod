@@ -377,7 +377,7 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            text += $"\n\n{L.Localize("Logic")}: {Logic?.ToInfix() ?? "not found"}";
+            text += $"\n\n{L.Localize("Logic")}: {Logic?.InfixSource ?? "not found"}";
 
             if (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable && placement.TryGetPreviewText(out List<string> previewText))
             {

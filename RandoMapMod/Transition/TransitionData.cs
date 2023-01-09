@@ -85,12 +85,15 @@ namespace RandoMapMod.Transition
                 if (startTerms.Length > 0)
                 {
                     lmb.AddTransition(new(BenchwarpInterop.BENCH_WARP_START, "FALSE"));
-                    foreach (string transition in startTerms)
+                    foreach (string term in startTerms)
                     {
-                        lmb.DoLogicEdit(new(transition, $"ORIG | {BenchwarpInterop.BENCH_WARP_START}"));
+                        lmb.DoLogicEdit(new(term, $"ORIG | {BenchwarpInterop.BENCH_WARP_START}"));
                     }
                 }
             }
+
+            // Use custom state variables that ignore the state. Low-effort approximation
+            lmb.VariableResolver = new RmmVariableResolver();
 
             LM = new(lmb);
 
@@ -208,17 +211,15 @@ namespace RandoMapMod.Transition
                 return new string[] { };
             }
 
-            return pi.Setters.Concat(pi.Increments)
-                .Where(tv => (lm.TransitionLookup.ContainsKey(tv.Term.Name) || lm.Waypoints.Any(waypoint => waypoint.Name == tv.Term.Name)) && tv.Value > 0)
-                .Select(tv => tv.Term.Name)
-                .ToArray();
+            return pi.StartStateLinkedTerms.Select(t => t.Name).ToArray();
         }
 
         internal static void AddLogicToScene(string scene, string term)
         {
-            if (!LM.LogicLookup.TryGetValue(term, out OptimizedLogicDef logic))
+            if (!LM.LogicLookup.TryGetValue(term, out LogicDef logic))
             {
-                RandoMapMod.Instance.LogDebug($"Logic not found in PathfinderData LM: {term}");
+                RandoMapMod.Instance.LogWarn($"Logic not found in PathfinderData LM: {term}");
+                return;
             }
 
             if (Scenes.TryGetValue(scene, out PathfinderScene ps))
