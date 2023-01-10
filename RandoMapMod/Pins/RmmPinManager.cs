@@ -214,12 +214,12 @@ namespace RandoMapMod.Pins
         {
             MapObject[] pinsSorted = Pins.Values.OrderBy(mapObj => mapObj.transform.position.x).ThenBy(mapObj => mapObj.transform.position.y).ToArray();
 
-            float zIncrement = 1 / (Pins.Count() * OFFSETZ_RANGE);
+            float zIncrement = OFFSETZ_RANGE / pinsSorted.Count();
 
             for (int i = 0; i < pinsSorted.Count(); i++)
             {
                 Transform transform = pinsSorted[i].transform;
-                transform.localPosition = new(transform.localPosition.x, transform.localPosition.y, OFFSETZ_BASE + i * zIncrement);
+                transform.localPosition = new(transform.localPosition.x, transform.localPosition.y, OFFSETZ_BASE + i * (float)zIncrement);
             }
         }
 
