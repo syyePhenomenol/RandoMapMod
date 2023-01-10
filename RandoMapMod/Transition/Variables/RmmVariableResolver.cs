@@ -1,5 +1,4 @@
 ﻿using RandomizerCore.Logic;
-using RandomizerMod.RC;
 
 namespace RandoMapMod.Transition
 {
@@ -7,7 +6,12 @@ namespace RandoMapMod.Transition
     // https://github.com/homothetyhk/RandomizerMod/blob/master/RandomizerMod/RC/RandoVariableResolver.cs
     public class RmmVariableResolver : VariableResolver
     {
-        private static readonly RandoVariableResolver defaultResolver = new();
+        private readonly VariableResolver defaultResolver = new();
+
+        public RmmVariableResolver(VariableResolver defaultResolver)
+        {
+            this.defaultResolver = defaultResolver;
+        }
 
         public override bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {

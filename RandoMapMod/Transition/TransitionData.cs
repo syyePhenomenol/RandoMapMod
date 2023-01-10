@@ -93,7 +93,7 @@ namespace RandoMapMod.Transition
             }
 
             // Use custom state variables that ignore the state. Low-effort approximation
-            lmb.VariableResolver = new RmmVariableResolver();
+            lmb.VariableResolver = new RmmVariableResolver(RM.RS.Context.LM.VariableResolver);
 
             LM = new(lmb);
 
