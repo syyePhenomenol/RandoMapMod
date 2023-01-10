@@ -212,12 +212,14 @@ namespace RandoMapMod.Pins
         /// </summary>
         private static void StaggerPins()
         {
-            IEnumerable<MapObject> PinsSorted = Pins.Values.OrderBy(mapObj => mapObj.transform.position.x).ThenBy(mapObj => mapObj.transform.position.y);
+            MapObject[] pinsSorted = Pins.Values.OrderBy(mapObj => mapObj.transform.position.x).ThenBy(mapObj => mapObj.transform.position.y).ToArray();
 
-            for (int i = 0; i < PinsSorted.Count(); i++)
+            float zIncrement = 1 / (Pins.Count() * OFFSETZ_RANGE);
+
+            for (int i = 0; i < pinsSorted.Count(); i++)
             {
-                Transform transform = PinsSorted.ElementAt(i).transform;
-                transform.localPosition = new(transform.localPosition.x, transform.localPosition.y, OFFSETZ_BASE + (float)i / Pins.Count() * OFFSETZ_RANGE);
+                Transform transform = pinsSorted[i].transform;
+                transform.localPosition = new(transform.localPosition.x, transform.localPosition.y, OFFSETZ_BASE + i * zIncrement);
             }
         }
 
