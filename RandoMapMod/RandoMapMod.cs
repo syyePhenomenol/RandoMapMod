@@ -90,7 +90,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.1.2";
+        public override string GetVersion() => "3.1.3";
 
         public override int LoadPriority() => 10;
 
