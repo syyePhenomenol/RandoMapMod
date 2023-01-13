@@ -52,7 +52,7 @@ namespace RandoMapMod.Transition
         {
             foreach (Term term in RM.RS.TrackerData.lm.Terms)
             {
-                if (!term.Name.IsTransition() && !term.Name.IsScene())
+                if (!term.Name.IsTransition() && !term.Name.IsScene() && !term.Name.IsWaypointProxy(out _))
                 {
                     if (Term.GetTermType(term) is TermType.State)
                     {
