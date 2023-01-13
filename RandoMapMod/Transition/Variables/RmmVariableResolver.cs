@@ -17,7 +17,7 @@ namespace RandoMapMod.Transition
         {
             // Custom variables
             if (AnyStateVariable.TryMatch(term, out variable)) return true;
-            if (RmmEquipCharmsVariable.TryMatch(term, out variable)) return true;
+            if (RmmEquipCharmVariable.TryMatch(term, out variable)) return true;
             if (RmmShadeStateVariable.TryMatch(term, out variable)) return true;
 
             return defaultResolver.TryMatch(lm, term, out variable);
