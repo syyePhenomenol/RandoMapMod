@@ -1,7 +1,8 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using MapChanger;
+using RandoMapMod.Transition;
 
-namespace RandoMapMod.Transition
+namespace RandoMapMod.Pathfinder
 {
     internal class DreamgateTracker : HookModule
     {
@@ -39,43 +40,35 @@ namespace RandoMapMod.Transition
                 DreamgateScene = self.value.Value;
                 DreamgateTiedTransition = null;
 
-                RandoMapMod.Instance.LogDebug($"Dreamgate set to {DreamgateScene}");
+                //RandoMapMod.Instance.LogDebug($"Dreamgate set to {DreamgateScene}");
             }
         }
 
-        private static void TrackDreamgate(ItemChanger.Transition lastInTransition)
+        private static void TrackDreamgate(ItemChanger.Transition lastTransition)
         {
             // If the player left a scene where a dreamgate was just set OR just used, add logic to the transition performed
             if ((dreamgateSet || dreamgateUsed)
-                && TransitionData.Scenes.TryGetValue(DreamgateScene, out PathfinderScene ps))
+                && RmmPathfinder.SD.TransitionTermsByScene.TryGetValue(DreamgateScene, out var transitions))
             {
-                RandoMapMod.Instance.LogDebug($"Dreamgate was set or used in previous scene. Trying to add logical connection:");
+                //RandoMapMod.Instance.LogDebug($"Dreamgate was set or used in previous scene. Trying to add logical connection:");
 
                 DreamgateTiedTransition = null;
 
-                // Try getting the last out-transition (excludes benchwarps)
-                foreach (string outTransition in ps.GetAllTransitions())
+                // Try getting the last target (excludes benchwarps)
+                foreach (string source in transitions.Select(t => t.Name))
                 {
-                    if (TransitionData.AdjacencyLookup.TryGetValue(outTransition, out string adjacency)
-                        && adjacency == lastInTransition.ToString())
+                    if (TransitionData.Placements.TryGetValue(source, out string target)
+                        && target == lastTransition.ToString())
                     {
-                        DreamgateTiedTransition = outTransition;
-                        RandoMapMod.Instance.LogDebug($"Dreamgate tied to {outTransition}");
+                        DreamgateTiedTransition = source;
+                        InstructionData.UpdateDreamgateInstruction(source);
+                        //RandoMapMod.Instance.LogDebug($"Dreamgate tied to {source}");
                         break;
                     }
                 }
             }
 
-            if (lastInTransition.GateName is "dreamGate")
-            {
-                dreamgateUsed = true;
-                DreamgateTiedTransition = null;
-            }
-            else
-            {
-                dreamgateUsed = false;
-            }
-
+            dreamgateUsed = lastTransition.GateName is "dreamGate";
             dreamgateSet = false;
         }
     }

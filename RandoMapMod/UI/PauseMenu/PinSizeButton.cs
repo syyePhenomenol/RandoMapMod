@@ -1,5 +1,4 @@
 ﻿using MagicUI.Elements;
-using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Settings;
 using L = RandomizerMod.Localization;

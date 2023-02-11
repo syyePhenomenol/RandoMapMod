@@ -15,5 +15,7 @@ namespace RandoMapMod.UI
 
             TitleText.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
         }
+
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
 using RandoMapMod.Transition;

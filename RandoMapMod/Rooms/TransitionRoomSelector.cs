@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
+using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
+using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.Rooms
 {
@@ -35,7 +38,12 @@ namespace RandoMapMod.Rooms
                 && SelectedObjectKey is not NONE_SELECTED)
             {
                 attackHoldTimer.Reset();
-                RouteTracker.GetRoute(SelectedObjectKey);
+
+                RouteManager.TryGetNextRouteTo(SelectedObjectKey);
+
+                RouteText.Instance.Update();
+                RouteSummaryText.Instance.Update();
+                SelectionPanels.UpdateRoomPanel();
             }
 
             if (InputHandler.Instance.inputActions.attack.WasPressed)
@@ -55,7 +63,7 @@ namespace RandoMapMod.Rooms
 
                 if (!RmmPinSelector.Instance.BenchSelected())
                 {
-                    RouteTracker.TryBenchwarp();
+                    TryBenchwarp();
                 }
             }
         }
@@ -77,12 +85,55 @@ namespace RandoMapMod.Rooms
 
         internal string GetText()
         {
-            string instructions = RouteTracker.GetInstructionText();
-            string transitions = SelectedObjectKey.GetUncheckedVisited();
+            string instructions = GetInstructionText();
+            string transitions = TransitionData.GetUncheckedVisited(SelectedObjectKey);
 
             if (transitions is "") return instructions;
 
             return $"{instructions}\n\n{transitions}";
+        }
+
+        private static void TryBenchwarp()
+        {
+            if (Interop.HasBenchwarp() && RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First() is StartWarpInstruction or BenchwarpInstruction)
+            {
+                GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(RouteManager.CurrentRoute.RemainingInstructions.First().Text));
+            }
+        }
+
+        private static string GetInstructionText()
+        {
+            string selectedScene = Instance.SelectedObjectKey;
+            string text = "";
+
+            text += $"{L.Localize("Selected room")}: {selectedScene}.";
+
+            List<InControl.BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
+
+            if (selectedScene == Utils.CurrentScene())
+            {
+                text += $" {L.Localize("You are here")}.";
+            }
+
+            text += $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(bindings)}";
+
+            if (RouteManager.CanCycleRoute(selectedScene))
+            {
+                text += $" {L.Localize("to change starting / final transitions of current route")}.";
+            }
+            else
+            {
+                text += $" {L.Localize("to find a new route")}.";
+            }
+
+            if (!RmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
+            {
+                bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
+
+                text += $" {L.Localize("Hold")} {Utils.GetBindingsText(bindings)} {L.Localize("to benchwarp")}.";
+            }
+
+            return text;
         }
     }
 }

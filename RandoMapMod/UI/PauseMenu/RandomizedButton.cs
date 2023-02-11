@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using MagicUI.Elements;
+﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Pins;
 using RandoMapMod.Settings;

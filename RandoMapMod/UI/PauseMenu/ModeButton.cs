@@ -10,7 +10,7 @@ namespace RandoMapMod.UI
     {
         public ModeButton() : base(nameof(ModeButton), RandoMapMod.MOD, 1, 0)
         {
-            
+
         }
 
         protected override void OnClick()

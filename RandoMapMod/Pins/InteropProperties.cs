@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ConnectionMetadataInjector;
+﻿using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Placements;

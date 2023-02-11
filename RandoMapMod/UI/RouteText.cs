@@ -2,6 +2,8 @@
 using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Modes;
+using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Settings;
 using RandoMapMod.Transition;
 
@@ -29,7 +31,33 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            route.Text = RouteTracker.GetRouteText();
+            route.Text = GetRouteText();
+        }
+
+        private static string GetRouteText()
+        {
+            string text = "";
+
+            if (RouteManager.CurrentRoute is null) return text;
+
+            if (RandoMapMod.GS.RouteTextInGame is RouteTextInGame.NextTransitionOnly
+                && !States.QuickMapOpen && !States.WorldMapOpen)
+            {
+                return RouteManager.CurrentRoute.RemainingInstructions.First().ArrowedText;
+            }
+
+            foreach (Instruction instruction in RouteManager.CurrentRoute.RemainingInstructions)
+            {
+                if (text.Length > 100)
+                {
+                    text += " -> ..." + RouteManager.CurrentRoute.RemainingInstructions.Last().ArrowedText;
+                    break;
+                }
+
+                text += instruction.ArrowedText;
+            }
+
+            return text;
         }
     }
 }

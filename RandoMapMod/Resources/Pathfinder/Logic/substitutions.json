@@ -1,13 +1,44 @@
 ﻿[
   {
+    "name": "Room_temple[left1]",
+    "old": "Bench-Black_Egg_Temple",
+    "replacement": "Room_temple[door1]"
+  },
+  {
+    "name": "GG_Atrium",
+    "old": "GG_Workshop",
+    "replacement": "GG_Atrium[Door_Workshop]"
+  },
+  {
+    "name": "GG_Workshop",
+    "old": "GG_Atrium",
+    "replacement": "GG_Workshop[left1]"
+  },
+  {
+    "name": "Left_Elevator",
+    "old": "Crossroads_49[left1]",
+    "replacement": "Crossroads_49[left1] + Left_Elevator_Activated"
+  },
+  {
+    "name": "Left_Elevator",
+    "old": "Crossroads_49[right1]",
+    "replacement": "Crossroads_49[right1] + Left_Elevator_Activated"
+  },
+  {
+    "name": "Bench-Black_Egg_Temple",
+    "old": "Room_temple[left1]",
+    "replacement": "Room_Final_Boss_Atrium[left1]"
+  },
+  {
+    "name": "Bench-Black_Egg_Temple",
+    "old": "Opened_Black_Egg_Temple",
+    "replacement": "TRUE"
+  },
+  // TODO: Check this is the best way to handle these
+  {
     "name": "Abyss_01[left1]",
     "old": "Abyss_01[left1]",
     "replacement": "FALSE"
-  },
-  {
-    "name": "Abyss_06_Core[left1]",
-    "old": "Warp-Lifeblood_Core_to_Abyss",
-    "replacement": "Abyss_06_Core[door_dreamReturn]"
   },
   {
     "name": "Crossroads_33[left1]",
@@ -20,21 +51,6 @@
     "replacement": "FALSE"
   },
   {
-    "name": "GG_Atrium",
-    "old": "GG_Workshop",
-    "replacement": "GG_Atrium[Door_Workshop]"
-  },
-  {
-    "name": "GG_Atrium",
-    "old": "Warp-Junk_Pit_to_Godhome",
-    "replacement": "GG_Atrium[door_dreamEnter]"
-  },
-  {
-    "name": "GG_Waterways",
-    "old": "Warp-Godhome_to_Junk_Pit",
-    "replacement": "GG_Waterways[door_dreamReturn]"
-  },
-  {
     "name": "Ruins1_31[left2]",
     "old": "Ruins1_31[left2]",
     "replacement": "FALSE"
@@ -43,25 +59,5 @@
     "name": "Ruins1_31[left3]",
     "old": "Ruins1_31[left3]",
     "replacement": "FALSE"
-  },
-  {
-    "name": "White_Palace_06[bot1]",
-    "old": "Warp-Path_of_Pain_Complete",
-    "replacement": "White_Palace_06[door_dreamReturn]"
-  },
-  {
-    "name": "White_Palace_06[left1]",
-    "old": "Warp-Path_of_Pain_Complete",
-    "replacement": "White_Palace_06[door_dreamReturn]"
-  },
-  {
-    "name": "White_Palace_06[top1]",
-    "old": "Warp-Path_of_Pain_Complete",
-    "replacement": "White_Palace_06[door_dreamReturn]"
-  },
-  {
-    "name": "White_Palace_11[door2]",
-    "old": "Warp-Palace_Grounds_to_White_Palace",
-    "replacement": "White_Palace_11[door1]"
   }
 ]

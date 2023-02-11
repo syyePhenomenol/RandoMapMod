@@ -11,7 +11,7 @@ namespace RandoMapMod.Modes
     {
         public override bool InitializeToThis()
         {
-            if (TransitionExtensions.IsTransitionRando()) return false;
+            if (TransitionData.IsTransitionRando()) return false;
 
             return ModeName == RandoMapMod.GS.DefaultItemRandoMode.ToString().ToCleanName();
         }

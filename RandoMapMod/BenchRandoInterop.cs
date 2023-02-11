@@ -1,7 +1,5 @@
 ﻿using BenchRando.IC;
 using ItemChanger;
-using System.Collections.Generic;
-using System.Linq;
 using static BenchRando.BRData;
 
 namespace RandoMapMod
@@ -17,6 +15,7 @@ namespace RandoMapMod
         internal static bool BenchRandoEnabled()
         {
             return ItemChangerMod.Modules.Get<BRLocalSettingsModule>() is BRLocalSettingsModule bsm
+                && bsm.LS is not null && bsm.LS.Settings is not null
                 && bsm.LS.Settings.IsEnabled();
         }
 

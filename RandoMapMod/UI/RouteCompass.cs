@@ -1,31 +1,35 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MapChanger;
-using Modding.Utils;
+﻿using MapChanger;
 using RandoMapMod.Modes;
-using RandoMapMod.Transition;
+using RandoMapMod.Pathfinder;
 using UnityEngine;
-using SM = UnityEngine.SceneManagement.SceneManager;
+using UnityEngine.SceneManagement;
 
 namespace RandoMapMod.UI
 {
-    internal static class RouteCompass
+    internal class RouteCompass : HookModule
     {
         private static GameObject goCompass;
         private static DirectionalCompass Compass => goCompass?.GetComponent<DirectionalCompass>();
         private static GameObject Knight => HeroController.instance?.gameObject;
-        internal static Dictionary<string, string> DoorObjectsByScene { get; private set; }
-        internal static Dictionary<string, string> DoorObjectsByTransition { get; private set; }
 
-        internal static void Load()
+        public override void OnEnterGame()
         {
-            DoorObjectsByScene = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Compass.doorObjectsByScene.json");
-            DoorObjectsByTransition = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Compass.doorObjectsByTransition.json");
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
+        }
+
+        public override void OnQuitToMenu()
+        {
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
+        }
+
+        private static void AfterSceneChange(Scene from, Scene to)
+        {
+            Update();
         }
 
         internal static void Update()
         {
-            RandoMapMod.Instance.LogDebug("Update compass");
+            //RandoMapMod.Instance.LogDebug("Update compass");
 
             Destroy();
 
@@ -33,60 +37,12 @@ namespace RandoMapMod.UI
 
             Make();
 
-            if (RouteTracker.SelectedRoute.Any())
+            goCompass.SetActive(false);
+
+            if (RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First().TryGetCompassGO(out GameObject go))
             {
-                string transition = RouteTracker.SelectedRoute.First();
-                string gatePath = null;
-
-                // The compass might update in a scene not well defined such as Cinematic_Stag_Travel. Everything does need to be nested like this
-                if (transition.StartsWith("Stag-") || transition.StartsWith("Lower_Tram-") || transition.StartsWith("Upper_Tram-"))
-                {
-                    if (DoorObjectsByScene.ContainsKey(Utils.CurrentScene()))
-                    {
-                        gatePath = DoorObjectsByScene[Utils.CurrentScene()];
-                    }
-                }
-                else
-                {
-                    if (Utils.CurrentScene() == transition.GetScene())
-                    {
-                        if (DoorObjectsByTransition.ContainsKey(transition))
-                        {
-                            gatePath = DoorObjectsByTransition[transition];
-                        }
-                        else
-                        {
-                            gatePath = TransitionExtensions.GetDoor(transition);
-                        }
-                    }
-                }
-
-                if (gatePath is null)
-                {
-                    goCompass.SetActive(false);
-                    return;
-                }
-
-                GameObject gateObject = UnityExtensions.FindGameObject(SM.GetActiveScene(), gatePath);
-
-                if (gateObject != null)
-                {
-                    Compass.TrackedObjects = new() { gateObject };
-                    goCompass.SetActive(true);
-                    return;
-                }
-
-                GameObject gateObject2 = UnityExtensions.FindGameObject(SM.GetActiveScene(), "_Transition Gates/" + gatePath);
-
-                if (gateObject2 != null)
-                {
-                    Compass.TrackedObjects = new() { gateObject2 };
-                    goCompass.SetActive(true);
-                }
-            }
-            else
-            {
-                goCompass.SetActive(false);
+                Compass.TrackedObjects = new() { go };
+                goCompass.SetActive(true);
             }
         }
 
@@ -110,7 +66,7 @@ namespace RandoMapMod.UI
 
         private static void Destroy()
         {
-            Object.Destroy(goCompass);
+            UnityEngine.Object.Destroy(goCompass);
         }
 
         private static bool IsCompassEnabled()

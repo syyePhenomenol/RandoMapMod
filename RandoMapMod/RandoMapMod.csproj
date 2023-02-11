@@ -12,6 +12,7 @@
 		<AssemblyVersion>1.5.*</AssemblyVersion>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<Deterministic>false</Deterministic>
+		<ImplicitUsings>true</ImplicitUsings>
 		<NoWarn>CS7035</NoWarn>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
 		<LangVersion>latest</LangVersion>
@@ -62,23 +63,14 @@
 	</Target>
 
 	<ItemGroup>
-	  <None Remove="Resources\Pathfinder\Logic\macros.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<EmbeddedResource Include="Resources\benchwarp.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Compass\doorObjectsByScene.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Compass\doorObjectsByTransition.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\scenes.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\adjacencies.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Compass\compassObjOverrides.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\conditionalTerms.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointInstructions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\macros.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\transitions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchEdits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\vanillaBenchTransitions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\waypoints.json" />
 		<EmbeddedResource Include="Resources\quickMapGrids.json" />
 		<EmbeddedResource Include="Resources\roomTexts.json" />
@@ -127,6 +119,9 @@
 	  </Reference>
 	  <Reference Include="RandomizerMod">
 	    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\Randomizer 4\RandomizerMod.dll</HintPath>
+	  </Reference>
+	  <Reference Include="RCPathfinder">
+	    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\RCPathfinder\RCPathfinder.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine">
 	    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll</HintPath>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MapChanger.MonoBehaviours;
+﻿using MapChanger.MonoBehaviours;
 
 namespace RandoMapMod.Rooms
 {
@@ -56,31 +54,11 @@ namespace RandoMapMod.Rooms
         protected override void Select(ISelectable selectable)
         {
             selectable.Selected = true;
-
-            //if (selectable is RoomSprite roomSprite)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Selected {roomSprite.Rsd.SceneName}");
-            //}
-
-            //if (selectable is RoomText roomText)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Selected {roomText.Rtd.Name}");
-            //}
         }
 
         protected override void Deselect(ISelectable selectable)
         {
             selectable.Selected = false;
-
-            //if (selectable is RoomSprite roomSprite)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Deselected {roomSprite.Rsd.SceneName}");
-            //}
-
-            //if (selectable is RoomText roomText)
-            //{
-            //    RandoMapMod.Instance.LogDebug($"Deselected {roomText.Rtd.Name}");
-            //}
         }
     }
 }

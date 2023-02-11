@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.UI;
 using Modding;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
+using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandoMapMod.Transition;
@@ -76,11 +76,12 @@ namespace RandoMapMod
         {
             new RmmColors(),
             new TransitionData(),
-            new Pathfinder(),
+            new RmmPathfinder(),
             new RmmPinManager(),
             new TransitionTracker(),
             new DreamgateTracker(),
-            new RouteTracker()
+            new RouteManager(),
+            new RouteCompass()
         };
 
         internal static RandoMapMod Instance;
@@ -90,7 +91,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.1.3";
+        public override string GetVersion() => "3.2.0";
 
         public override int LoadPriority() => 10;
 
@@ -120,9 +121,11 @@ namespace RandoMapMod
             }
 
             Interop.FindInteropMods();
+            RmmSearchData.LoadConditionalTerms();
+            Instruction.LoadCompssObjOverrides();
+            InstructionData.LoadWaypointInstructions();
             RmmRoomManager.Load();
             RmmPinManager.Load();
-            RouteCompass.Load();
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 
             Events.OnEnterGame += OnEnterGame;

@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using ConnectionMetadataInjector;
 using ItemChanger;
 using MapChanger;
@@ -10,8 +8,8 @@ using RandoMapMod.Rooms;
 using UnityEngine;
 using L = RandomizerMod.Localization;
 using RM = RandomizerMod.RandomizerMod;
-using SD = ConnectionMetadataInjector.SupplementalMetadata;
 using RPS = RandoMapMod.Pins.RandoPlacementState;
+using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins
 {

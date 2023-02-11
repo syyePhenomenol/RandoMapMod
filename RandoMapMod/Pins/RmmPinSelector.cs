@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics;
 using MapChanger;
 using MapChanger.MonoBehaviours;
@@ -180,10 +178,7 @@ namespace RandoMapMod.Pins
 
         private void StartAnimateHighlightedRooms()
         {
-            if (animateHighlightedRooms is null)
-            {
-                animateHighlightedRooms = StartCoroutine(AnimateHighlightedRooms());
-            }
+            animateHighlightedRooms ??= StartCoroutine(AnimateHighlightedRooms());
         }
 
         private void StopAnimateHighlightedRooms()
