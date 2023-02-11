@@ -18,11 +18,5 @@ namespace RandoMapMod
                 && bsm.LS is not null && bsm.LS.Settings is not null
                 && bsm.LS.Settings.IsEnabled();
         }
-
-        internal static bool BenchesRandomized()
-        {
-            return ItemChangerMod.Modules.Get<BRLocalSettingsModule>() is BRLocalSettingsModule bsm
-                && bsm.LS.Settings.RandomizedItems is not BenchRando.Rando.ItemRandoMode.None;
-        }
     }
 }
