@@ -2,6 +2,7 @@
 using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
+using RandoMapMod.Pathfinder;
 using RandoMapMod.Rooms;
 using RandoMapMod.Transition;
 using UnityEngine;
@@ -57,7 +58,7 @@ namespace RandoMapMod.UI
                 Root.ListenForHotkey(KeyCode.B, () =>
                 {
                     RandoMapMod.GS.ToggleAllowBenchWarpSearch();
-                    RouteTracker.ResetRoute();
+                    RouteManager.ResetRoute();
                     MapUILayerUpdater.Update();
                     RouteCompass.Update();
                 }, ModifierKeys.Ctrl, () => Conditions.TransitionRandoModeEnabled());

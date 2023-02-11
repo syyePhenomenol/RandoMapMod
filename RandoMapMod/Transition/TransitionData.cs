@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using MapChanger;
-using RandomizerCore;
-using RandomizerCore.Logic;
-using RandomizerMod.RC;
+using RandomizerMod.RandomizerData;
+using L = RandomizerMod.Localization;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
 
@@ -11,240 +9,209 @@ namespace RandoMapMod.Transition
 {
     internal class TransitionData : HookModule
     {
-        private static readonly (LogicManagerBuilder.JsonType type, string fileName)[] files = new[]
+        internal static (string location, string item)[] ExtraVanillaTransitions { get; } =
         {
-            (LogicManagerBuilder.JsonType.Macros, "macros"),
-            (LogicManagerBuilder.JsonType.Waypoints, "waypoints"),
-            (LogicManagerBuilder.JsonType.Transitions, "transitions"),
-            (LogicManagerBuilder.JsonType.LogicEdit, "edits"),
-            (LogicManagerBuilder.JsonType.LogicSubst, "substitutions")
+            ( "Room_temple[door1]", "Room_Final_Boss_Atrium[left1]" ),
+            ( "Room_Final_Boss_Atrium[left1]", "Room_temple[door1]" ),
+            ( "GG_Atrium[Door_Workshop]", "GG_Workshop[left1]" ),
+            ( "GG_Workshop[left1]", "GG_Atrium[Door_Workshop]" )
         };
 
-        internal static readonly string[] InfectionBlockedTransitions =
-        {
-            "Crossroads_03[bot1]",
-            "Crossroads_06[right1]",
-            "Crossroads_10[left1]",
-            "Crossroads_19[top1]"
-        };
+        internal static ReadOnlyCollection<RmmTransitionDef> Transitions { get; private set; }
+        private static Dictionary<string, RmmTransitionDef> _vanillaTransitions;
+        private static Dictionary<string, RmmTransitionDef> _randomizedTransitions;
 
-        internal static readonly string[] fileNames =
-{
-            "transitions",
-            "edits",
-            "substitutions",
-            "waypoints"
-        };
-
-        private static LogicManagerBuilder lmb;
-        internal static LogicManager LM { get; private set; }
-        internal static bool VanillaInfectedTransitions { get; private set; }
-        /// <summary>
-        /// Key: Scene, Value: PathfinderScene
-        /// </summary>
-        internal static Dictionary<string, PathfinderScene> Scenes { get; private set; }
-        /// <summary>
-        /// Key: Term, Value: Scenes
-        /// </summary>
-        internal static Dictionary<string, HashSet<string>> SceneLookup { get; private set; }
-        /// <summary>
-        /// Key: Transition, Value: Transition
-        /// </summary>
-        internal static Dictionary<string, string> AdjacencyLookup { get; private set; }
-        internal static HashSet<string> VanillaTransitions { get; private set; }
-        internal static HashSet<string> RandomizedTransitions { get; private set; }
-        internal static HashSet<string> SpecialTransitions { get; private set; }
+        public static ReadOnlyDictionary<string, string> Placements { get; private set; }
+        private static Dictionary<string, string> _placements;
 
         public override void OnEnterGame()
         {
-            Scenes = new();
-            SceneLookup = new();
-            AdjacencyLookup = new();
-            VanillaTransitions = new();
-            RandomizedTransitions = new();
-            SpecialTransitions = new();
+            _vanillaTransitions = new();
+            _randomizedTransitions = new();
+            _placements = new();
 
-            // Set custom logic
-            lmb = new(RM.RS.Context.LM);
-
-            foreach ((LogicManagerBuilder.JsonType type, string fileName) in files)
+            // Add transition placements
+            foreach ((string location, string item) in RM.RS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name)).Concat(ExtraVanillaTransitions))
             {
-                lmb.DeserializeJson(type, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.{fileName}.json"));
-            }
-
-            if (Interop.HasBenchwarp())
-            {
-                if (!Interop.HasBenchRando() || !BenchRandoInterop.BenchRandoEnabled())
+                if (RD.IsTransition(location) && RD.IsTransition(item))
                 {
-                    lmb.DeserializeJson(LogicManagerBuilder.JsonType.Transitions, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.vanillaBenchTransitions.json"));
-                    lmb.DeserializeJson(LogicManagerBuilder.JsonType.LogicEdit, RandoMapMod.Assembly.GetManifestResourceStream($"RandoMapMod.Resources.Pathfinder.Logic.vanillaBenchEdits.json"));
+                    _vanillaTransitions[location] = new(RD.GetTransitionDef(location));
+                    _vanillaTransitions[item] = new(RD.GetTransitionDef(item));
+                    _placements[location] = item;
+                    continue;
                 }
 
-                // Set Start warp logic
-                string[] startTerms = GetStartTerms();
-                if (startTerms.Length > 0)
+                // Connection-provided vanilla transitions, including extra ones
+                if (RmmTransitionDef.TryMake(location, out var locationTD)
+                    && RmmTransitionDef.TryMake(item, out var itemTD)
+                    && locationTD is not null && itemTD is not null)
                 {
-                    lmb.AddTransition(new(BenchwarpInterop.BENCH_WARP_START, "FALSE"));
-                    foreach (string term in startTerms)
-                    {
-                        lmb.DoLogicEdit(new(term, $"ORIG | {BenchwarpInterop.BENCH_WARP_START}"));
-                    }
+                    _vanillaTransitions[location] = locationTD;
+                    _vanillaTransitions[item] = itemTD;
+                    _placements[location] = item;
                 }
             }
-
-            // Use custom state variables that ignore the state. Low-effort approximation
-            lmb.VariableResolver = new RmmVariableResolver(RM.RS.Context.LM.VariableResolver);
-
-            LM = new(lmb);
-
-            // Import randomized transitions from Context
             if (RM.RS.Context.transitionPlacements is not null)
             {
-                foreach (TransitionPlacement tp in RM.RS.Context.transitionPlacements)
+                foreach ((TransitionDef source, TransitionDef target) in RM.RS.Context.transitionPlacements.Select(p => (p.Source.TransitionDef, p.Target.TransitionDef)))
                 {
-                    RandomizedTransitions.Add(tp.Source.Name);
-                    RandomizedTransitions.Add(tp.Target.Name);
-                    AddLogicToScene(tp.Source.TransitionDef.SceneName, tp.Source.Name);
-                    AddLogicToScene(tp.Target.TransitionDef.SceneName, tp.Target.Name);
-                    AddAdjacency(tp.Source.Name, tp.Target.Name);
+                    _randomizedTransitions[source.Name] = new(source);
+                    _randomizedTransitions[target.Name] = new(target);
+                    _placements[source.Name] = target.Name;
                 }
             }
 
-            // Import vanilla transitions from Context
-            // Currently doesn't include connection-provided vanilla transitions
-            foreach (GeneralizedPlacement gp in RM.RS.Context.Vanilla.Where(gp => RD.IsTransition(gp.Location.Name)))
-            {
-                VanillaTransitions.Add(gp.Location.Name);
-                VanillaTransitions.Add(gp.Item.Name);
-                AddLogicToScene(RD.GetTransitionDef(gp.Location.Name).SceneName, gp.Location.Name);
-                AddLogicToScene(RD.GetTransitionDef(gp.Item.Name).SceneName, gp.Item.Name);
-                AddAdjacency(gp.Location.Name, gp.Item.Name);
-            }
+            Placements = new(_placements);
 
-            // Fallback handling for connection-provided vanilla transitions
-            // e.g. Fungal city door
-            foreach (GeneralizedPlacement gp in RM.RS.Context.Vanilla.Where(gp => !RD.IsTransition(gp.Location.Name) && gp.Location.Name.Contains('[') && gp.Location.Name.Contains(']')))
-            {
-                VanillaTransitions.Add(gp.Location.Name);
-                VanillaTransitions.Add(gp.Item.Name);
-                if (gp.Location.Name.Split('[')[0] is string locationScene && locationScene.IsScene())
-                {
-                    AddLogicToScene(locationScene, gp.Location.Name);
-                }
-                if (gp.Item.Name.Split('[')[0] is string itemScene && itemScene.IsScene())
-                {
-                    AddLogicToScene(itemScene, gp.Item.Name);
-                }
-                AddAdjacency(gp.Location.Name, gp.Item.Name);
-            }
-
-            // Add waypoint logic to scenes
-            foreach (LogicWaypoint waypoint in LM.Waypoints)
-            {
-                if (waypoint.Name.IsScene())
-                {
-                    AddLogicToScene(waypoint.Name, waypoint.Name);
-                }
-                else if (waypoint.Name.IsWaypointProxy(out string scene))
-                {
-                    AddLogicToScene(scene, waypoint.Name);
-                    RandoMapMod.Instance.LogDebug($"Added waypoint proxy: {waypoint.Name}");
-                }
-            }
-
-            if (Interop.HasBenchwarp())
-            {
-                // Set benchwarp scene information
-                foreach ((string benchName, string scene) in BenchwarpInterop.BenchKeys.Select(kvp => (kvp.Key, kvp.Value.SceneName)))
-                {
-                    SpecialTransitions.Add(benchName);
-                    AddLogicToScene(scene, benchName);
-                    AddAdjacency(benchName, benchName);
-                }
-            }
-
-            // Import scene information for special transitions
-            foreach (KeyValuePair<string, string[]> kvp in JsonUtil.DeserializeFromAssembly<Dictionary<string, string[]>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.scenes.json"))
-            {
-                SpecialTransitions.Add(kvp.Key);
-                foreach (string scene in kvp.Value)
-                {
-                    AddLogicToScene(scene, kvp.Key);
-                }
-            }
-
-            // Import special adjacencies
-            foreach (KeyValuePair<string, string> kvp in JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.adjacencies.json"))
-            {
-                AddAdjacency(kvp.Key, kvp.Value);
-            }
-
-            // Set SceneLookup
-            foreach (PathfinderScene ps in Scenes.Values)
-            {
-                foreach (ILogicDef logic in ps.LogicDefs)
-                {
-                    if (SceneLookup.TryGetValue(logic.Name, out HashSet<string> scenes))
-                    {
-                        scenes.Add(ps.SceneName);
-                    }
-                    else
-                    {
-                        SceneLookup[logic.Name] = new() { ps.SceneName };
-                    }
-                }
-            }
-
-            // To remove transitions that are blocked by infection from being included in the pathfinder
-            VanillaInfectedTransitions = InfectionBlockedTransitions.All(t => VanillaTransitions.Contains(t));
+            Transitions = new(_vanillaTransitions.Values.Concat(_randomizedTransitions.Values).ToArray());
         }
 
         public override void OnQuitToMenu()
         {
-
+            _vanillaTransitions = null;
+            _randomizedTransitions = null;
+            _placements = null;
         }
 
-        internal static string[] GetStartTerms()
+        public static bool IsTransitionRando()
         {
-            if (RM.RS.Context.InitialProgression is not ProgressionInitializer pi || RM.RS.Context.LM is not LogicManager lm)
-            {
-                return new string[] { };
-            }
-
-            return pi.StartStateLinkedTerms.Select(t => t.Name).ToArray();
+            return _randomizedTransitions.Any();
         }
 
-        internal static void AddLogicToScene(string scene, string term)
+        public static bool IsVanillaTransition(string transition)
         {
-            if (!LM.LogicLookup.TryGetValue(term, out LogicDef logic))
-            {
-                RandoMapMod.Instance.LogWarn($"Logic not found in PathfinderData LM: {term}");
-                return;
-            }
-
-            if (Scenes.TryGetValue(scene, out PathfinderScene ps))
-            {
-                ps.LogicDefs.Add(logic);
-            }
-            else
-            {
-                Scenes[scene] = new()
-                { 
-                    SceneName = scene,
-                    LogicDefs = new() { logic }
-                };
-            }
+            return _vanillaTransitions.ContainsKey(transition);
         }
 
-        internal static void AddAdjacency(string transition, string term)
+        public static bool IsRandomizedTransition(string transition)
         {
-            if (AdjacencyLookup.ContainsKey(transition))
+            return _randomizedTransitions.ContainsKey(transition);
+        }
+
+        internal static bool IsVanillaOrCheckedTransition(string transition)
+        {
+            return RM.RS.TrackerData.HasVisited(transition)
+                || (_vanillaTransitions.ContainsKey(transition)
+                    && (RM.RS.TrackerData.lm.GetTerm(transition) is null || RM.RS.TrackerData.pm.Get(transition) > 0));
+        }
+
+        public static bool TryGetScene(string str, out string scene)
+        {
+            if (GetTransitionDef(str) is RmmTransitionDef td)
             {
-                RandoMapMod.Instance.LogWarn($"Key already exists in Adjacencies: {transition}");
-                return;
+                scene = td.SceneName;
+                return true;
             }
 
-            AdjacencyLookup[transition] = term;
+            scene = default;
+            return false;
+        }
+
+        public static RmmTransitionDef GetTransitionDef(string str)
+        {
+            if (_vanillaTransitions.TryGetValue(str, out var def)) return def;
+            if (_randomizedTransitions.TryGetValue(str, out def)) return def;
+
+            return null;
+        }
+
+        internal static string GetUncheckedVisited(string scene)
+        {
+            string text = "";
+
+            IEnumerable<string> uncheckedTransitions = RM.RS.TrackerData.uncheckedReachableTransitions
+                .Where(t => TryGetScene(t, out string s) && s == scene);
+
+            if (uncheckedTransitions.Any())
+            {
+                text += $"{L.Localize("Unchecked")}:";
+
+                foreach (string transition in uncheckedTransitions)
+                {
+                    if (GetTransitionDef(transition) is not RmmTransitionDef td) continue;
+
+                    text += "\n";
+
+                    if (!RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
+                    {
+                        text += "*";
+                    }
+
+                    text += td.DoorName;
+                }
+            }
+
+            Dictionary<RmmTransitionDef, RmmTransitionDef> visitedTransitions = RM.RS.TrackerData.visitedTransitions
+                .Where(t => TryGetScene(t.Key, out string s) && s == scene)
+                .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
+
+            text += BuildTransitionStringList(visitedTransitions, "Visited", false, text != "");
+
+            Dictionary<RmmTransitionDef, RmmTransitionDef> visitedTransitionsTo = RM.RS.TrackerData.visitedTransitions
+                .Where(t => TryGetScene(t.Value, out string s) && s == scene)
+                .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
+
+            // Display only one-way transitions in coupled rando
+            if (RM.RS.GenerationSettings.TransitionSettings.Coupled)
+            {
+                visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
+                    .ToDictionary(t => t.Key, t => t.Value);
+            }
+
+            text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
+
+            Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitions = RM.RS.Context.Vanilla
+                .Where(t => RD.IsTransition(t.Location.Name)
+                    && TryGetScene(t.Location.Name, out string s) && s == scene)
+                .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
+
+
+            text += BuildTransitionStringList(vanillaTransitions, "Vanilla", false, text != "");
+
+            Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitionsTo = RM.RS.Context.Vanilla
+                .Where(t => RD.IsTransition(t.Location.Name)
+                    && TryGetScene(t.Item.Name, out string s) && s == scene
+                    && !vanillaTransitions.Keys.Any(td => td.Name == t.Item.Name))
+                .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
+
+            text += BuildTransitionStringList(vanillaTransitionsTo, "Vanilla to", true, text != "");
+
+            return text;
+        }
+
+        private static string BuildTransitionStringList(Dictionary<RmmTransitionDef, RmmTransitionDef> transitions, string subtitle, bool to, bool addNewLines)
+        {
+            string text = "";
+
+            if (!transitions.Any()) return text;
+
+            if (addNewLines)
+            {
+                text += "\n\n";
+            }
+
+            text += $"{L.Localize(subtitle)}:";
+
+            foreach (KeyValuePair<RmmTransitionDef, RmmTransitionDef> kvp in transitions)
+            {
+                text += "\n";
+
+                if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(kvp.Key.Name))
+                {
+                    text += "*";
+                }
+
+                if (to)
+                {
+                    text += $"{kvp.Key.Name} -> {kvp.Value.DoorName}";
+                }
+                else
+                {
+                    text += $"{kvp.Key.DoorName} -> {kvp.Value.Name}";
+                }
+            }
+
+            return text;
         }
     }
 }

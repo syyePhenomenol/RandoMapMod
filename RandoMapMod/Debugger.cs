@@ -1,5 +1,4 @@
-﻿using System;
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.Defs;
 
 namespace RandoMapMod

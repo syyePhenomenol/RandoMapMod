@@ -1,8 +1,10 @@
-﻿using MagicUI.Core;
-using MagicUI.Elements;
+﻿using MagicUI.Elements;
+using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Modes;
-using RandoMapMod.Transition;
+using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Instructions;
+using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -26,7 +28,36 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            routeSummary.Text = RouteTracker.GetSummaryText();
+            routeSummary.Text = GetSummaryText();
+        }
+
+        private static string GetSummaryText()
+        {
+            string text = $"{L.Localize("Current route")}: ";
+
+            if (RouteManager.CurrentRoute is null)
+            {
+                return text += L.Localize("None");
+            }
+
+            Instruction first = RouteManager.CurrentRoute.FirstInstruction;
+            Instruction last = RouteManager.CurrentRoute.RemainingInstructions.Last();
+
+            if (last is TransitionInstruction ti)
+            {
+                text += $"{first.Text.ToCleanName()} ->...-> {ti.TargetTransition.ToCleanName()}";
+            }
+            else
+            {
+                text += first.Text.ToCleanName();
+
+                if (first != last)
+                {
+                    text += $" ->...-> {last.Text.ToCleanName()}";
+                }
+            }
+
+            return text += $"\n\n{L.Localize("Transitions")}: {RouteManager.CurrentRoute.TotalInstructionCount}";
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ConnectionMetadataInjector;
+﻿using ConnectionMetadataInjector;
 using ConnectionMetadataInjector.Util;
 using GlobalEnums;
 using ItemChanger;
@@ -121,7 +118,7 @@ namespace RandoMapMod.Pins
             string name = placement.Location.Name;
             if (Pins.ContainsKey(name))
             {
-                RandoMapMod.Instance.LogDebug($"Vanilla placement with the same name as existing key in Pins detected: {name}");
+                RandoMapMod.Instance.LogWarn($"Vanilla placement with the same name as existing key in Pins detected: {name}");
                 return;
             }
 

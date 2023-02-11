@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MapChanger;
+﻿using MapChanger;
 using RandoMapMod.Modes;
+using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Instructions;
+using RandomizerCore.Logic;
+using RCPathfinder;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RM = RandomizerMod.RandomizerMod;
@@ -10,6 +12,27 @@ namespace RandoMapMod.Transition
 {
     internal class TransitionTracker : HookModule
     {
+        private static readonly (string condition, string transitions)[] waypointTransitionPairs =
+        {
+            ("Opened_Black_Egg_Temple", "Room_temple[left1]"),
+            ("Opened_Black_Egg_Temple", "Room_Final_Boss_Atrium[left1]"),
+            ("GG_Atrium", "GG_Atrium[Door_Workshop]"),
+            ("GG_Workshop", "GG_Workshop[left1]"),
+        };
+
+        private static readonly (string waypoint, string scene)[] waypointScenePairs =
+        {
+            ("Bench-Black_Egg_Temple", "Room_Final_Boss_Atrium"),
+            ("Opened_Black_Egg_Temple", "Room_Final_Boss_Atrium"),
+            ("Can_Stag", "Room_Town_Stag_Station"),
+            ("Warp-Godhome_to_Junk_Pit", "GG_Atrium"),
+            ("Warp-Junk_Pit_to_Godhome", "GG_Waterways"),
+            ("GG_Workshop", "GG_Workshop"),
+            ("Upper_Tram", "Room_Tram_RG"),
+            ("Lower_Tram", "Room_Tram")
+        };
+
+        internal static HashSet<string> InLogicExtraTransitions { get; private set; }
         internal static HashSet<string> InLogicScenes { get; private set; } = new();
         internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = new();
         internal static HashSet<string> UncheckedReachableScenes { get; private set; } = new();
@@ -22,8 +45,6 @@ namespace RandoMapMod.Transition
 
         public override void OnQuitToMenu()
         {
-            RouteTracker.ResetRoute();
-
             RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate -= Update;
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
         }
@@ -40,52 +61,51 @@ namespace RandoMapMod.Transition
 
         internal static void Update()
         {
-            RandoMapMod.Instance.LogDebug("Update TransitionTracker");
-
+            //RandoMapMod.Instance.LogDebug("Update TransitionTracker");
+            InLogicExtraTransitions = new();
             InLogicScenes = new();
-            VisitedAdjacentScenes = new();
             UncheckedReachableScenes = new();
 
-            RandomizerCore.Logic.ProgressionManager pm = RM.RS.TrackerData.pm;
+            ProgressionManager pm = RM.RS.TrackerData.pm;
 
-            // Get in-logic scenes from randomized and vanilla transitions
-            foreach (string transition in TransitionData.RandomizedTransitions.Union(TransitionData.VanillaTransitions))
+            // Get in-logic extra transitions from waypoints
+            foreach ((string waypoint, string transition) in waypointTransitionPairs)
             {
-                string scene = transition.GetScene();
-
-                if (transition.IsIn(pm))
+                if (pm.lm.Terms.IsTerm(waypoint) && pm.Get(waypoint) > 0)
                 {
-                    InLogicScenes.Add(scene);
+                    InLogicExtraTransitions.Add(transition);
                 }
             }
 
-            // Get in-logic scenes from waypoints
+            // Get in-logic scenes from transitions
+            foreach (RmmTransitionDef transition in TransitionData.Transitions)
+            {
+                if ((pm.lm.Terms.IsTerm(transition.Name) && pm.Get(transition.Name) > 0) || InLogicExtraTransitions.Contains(transition.Name))
+                {
+                    InLogicScenes.Add(transition.SceneName);
+                }
+            }
+
+            // Get more in-logic scenes from waypoints
             foreach ((string waypoint, string scene) in waypointScenePairs)
             {
-                if (waypoint.IsIn(pm))
+                if (pm.lm.Terms.IsTerm(waypoint) && pm.Get(waypoint) > 0)
                 {
                     InLogicScenes.Add(scene);
                 }
             }
 
-            VisitedAdjacentScenes = Pathfinder.GetAdjacentReachableScenes(Utils.CurrentScene());
+            VisitedAdjacentScenes = GetVisitedAdjacentScenes();
 
             // Get scenes where there are unchecked reachable transitions
             foreach (string transition in RM.RS.TrackerData.uncheckedReachableTransitions)
             {
-                UncheckedReachableScenes.Add(transition.GetScene());
+                if (TransitionData.GetTransitionDef(transition) is RmmTransitionDef td)
+                {
+                    UncheckedReachableScenes.Add(td.SceneName);
+                }
             }
         }
-
-        private static readonly (string, string)[] waypointScenePairs =
-        {
-            ("Can_Stag", "Room_Town_Stag_Station"),
-            ("Warp-Godhome_to_Junk_Pit", "GG_Atrium"),
-            ("Warp-Junk_Pit_to_Godhome", "GG_Waterways"),
-            ("GG_Workshop", "GG_Workshop"),
-            ("Upper_Tram", "Room_Tram_RG"),
-            ("Lower_Tram", "Room_Tram")
-        };
 
         internal static bool GetRoomActive(string scene)
         {
@@ -127,6 +147,53 @@ namespace RandoMapMod.Transition
             }
 
             return color;
+        }
+
+        private static HashSet<string> GetVisitedAdjacentScenes()
+        {
+            string scene = Utils.CurrentScene();
+
+            if (scene is "Room_Tram") return new() { "Abyss_03", "Abyss_03_b", "Abyss_03_c" };
+            if (scene is "Room_Tram_RG") return new() { "Crossroads_46", "Crossroads_46b" };
+
+            StartPosition[] starts = RmmPathfinder.SD.GetPrunedStartTerms(scene);
+
+            if (!starts.Any()) return new();
+
+            SearchParams sp = new
+            (
+                starts,
+                RmmPathfinder.SD.CurrentState,
+                new Term[] { },
+                0.5f,
+                TerminationConditionType.None
+            );
+
+            SearchState ss = new(sp);
+            Algorithms.DijkstraSearch(RmmPathfinder.SD, sp, ss);
+
+            HashSet<string> scenes = new();
+
+            foreach (var (_, node) in ss.QueueNodes)
+            {
+                //RandoMapMod.Instance.LogDebug(item.Item2.PrintActions());
+
+                if (InstructionData.GetInstructions(node).FirstOrDefault() is Instruction i)
+                {
+                    //RandoMapMod.Instance.LogDebug(i.ArrowedText);
+
+                    if (i is TramInstruction ti)
+                    {
+                        if (ti.Waypoint is "Lower_Tram") scenes.Add("Room_Tram");
+                        if (ti.Waypoint is "Upper_Tram") scenes.Add("Room_Tram_RG");
+                        continue;
+                    }
+
+                    scenes.Add(i.TargetScene);
+                }
+            }
+
+            return scenes;
         }
     }
 }

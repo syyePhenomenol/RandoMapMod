@@ -1,50 +1,12 @@
 ﻿using ItemChanger;
-using RandomizerCore;
 using RandomizerMod.IC;
 using RandomizerMod.RC;
-using System.Collections.Generic;
-using System.Linq;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pins
 {
     internal static class PlacementExtensions
     {
-        internal static void LogDebug(this AbstractPlacement placement)
-        {
-            RandoMapMod.Instance.LogDebug($"- Name: {placement.Name}");
-            RandoMapMod.Instance.LogDebug($"- - Visited: {placement.Visited}");
-            RandoMapMod.Instance.LogDebug($"- - AllObtained: {placement.AllObtained()}");
-            RandoMapMod.Instance.LogDebug($"- - Tags: {placement.tags.Count}");
-
-            foreach (Tag tag in placement.tags)
-            {
-                RandoMapMod.Instance.LogDebug($"- - - String: {tag}");
-            }
-
-            RandoMapMod.Instance.LogDebug($"- - Items: {placement.Items.Count}");
-
-            foreach (AbstractItem item in placement.Items)
-            {
-                RandoMapMod.Instance.LogDebug($"- - - Name: {item.name}");
-                RandoMapMod.Instance.LogDebug($"- - - IsObtained: {item.IsObtained()}");
-                RandoMapMod.Instance.LogDebug($"- - - WasEverObtained: {item.WasEverObtained()}");
-                RandoMapMod.Instance.LogDebug($"- - - PreviewName: {item.GetPreviewName()}");
-                RandoMapMod.Instance.LogDebug($"- - - Tags: {item.tags.Count}");
-
-                foreach (Tag tag in item.tags)
-                {
-                    RandoMapMod.Instance.LogDebug($"- - - - String: {tag}");
-                }
-            }
-        }
-
-        internal static void LogDebug(this GeneralizedPlacement placement)
-        {
-            RandoMapMod.Instance.LogDebug($"- Location: {placement.Location.Name}");
-            RandoMapMod.Instance.LogDebug($"- - Item: {placement.Item.Name}");
-        }
-
         // Next five helper functions are based on BadMagic100's Rando4Stats RandoExtensions
         // MIT License
 

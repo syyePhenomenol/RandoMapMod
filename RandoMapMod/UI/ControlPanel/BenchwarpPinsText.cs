@@ -1,5 +1,4 @@
-﻿using RandoMapMod.Modes;
-using UnityEngine;
+﻿using UnityEngine;
 using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI

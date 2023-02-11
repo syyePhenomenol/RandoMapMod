@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.Map;
 using MapChanger.MonoBehaviours;
 using TMPro;

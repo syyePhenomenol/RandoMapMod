@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Benchwarp;
 using InControl;
 using Modding;
@@ -13,11 +11,11 @@ namespace RandoMapMod
     internal class BenchwarpInterop
     {
         internal const string BENCH_EXTRA_SUFFIX = "_Extra";
-        internal const string BENCH_WARP_START = "Warp-Start";
+        internal const string BENCH_WARP_START = "Start_Warp";
 
         internal static Dictionary<RmmBenchKey, string> BenchNames { get; private set; } = new();
-
         internal static Dictionary<string, RmmBenchKey> BenchKeys { get; private set; } = new();
+        internal static RmmBenchKey StartKey { get; private set; }
 
         internal static void Load()
         {
@@ -42,9 +40,9 @@ namespace RandoMapMod
                 }
             }
 
-            RmmBenchKey startKey = new(ItemChanger.Internal.Ref.Settings.Start.SceneName, "ITEMCHANGER_RESPAWN_MARKER");
+            StartKey = new(ItemChanger.Internal.Ref.Settings.Start.SceneName, "ITEMCHANGER_RESPAWN_MARKER");
 
-            BenchNames.Add(startKey, BENCH_WARP_START);
+            BenchNames.Add(StartKey, BENCH_WARP_START);
 
             BenchKeys = BenchNames.ToDictionary(t => t.Value, t => t.Key);
         }

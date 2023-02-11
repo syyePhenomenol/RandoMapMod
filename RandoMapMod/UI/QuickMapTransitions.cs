@@ -22,7 +22,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            uncheckedText.Text = Utils.CurrentScene().GetUncheckedVisited();
+            uncheckedText.Text = TransitionData.GetUncheckedVisited(Utils.CurrentScene());
         }
     }
 }

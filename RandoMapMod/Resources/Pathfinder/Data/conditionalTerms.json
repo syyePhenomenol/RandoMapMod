@@ -17,5 +17,6 @@
   "Town[room_divine]": "Town_Door_Divine_Opened",
   "Town[room_grimm]": "Town_Door_Grimm_Opened",
   "Waterways_01[top1]": "Opened_Waterways_Manhole",
-  "Waterways_07[right1]": "Lever-Dung_Defender"
+  "Waterways_07[right1]": "Lever-Dung_Defender",
+  "Can_Stag": "Dirtmouth_Stag"
 }

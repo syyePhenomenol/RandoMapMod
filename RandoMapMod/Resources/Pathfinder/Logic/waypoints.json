@@ -1,5 +1,10 @@
 ﻿[
   {
+    "name": "Left_Elevator_Activated",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
     "name": "Broke_Waterways_Bench_Ceiling",
     "logic": "FALSE",
     "Stateless": true
@@ -51,6 +56,11 @@
   },
   {
     "name": "Town_Lift_Activated",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Catacombs_Ceiling",
     "logic": "FALSE",
     "Stateless": true
   }

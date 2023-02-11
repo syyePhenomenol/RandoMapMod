@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ConnectionMetadataInjector.Util;
+﻿using ConnectionMetadataInjector.Util;
 using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;

@@ -7,7 +7,6 @@ using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Rooms;
-using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
