@@ -99,9 +99,9 @@ namespace RandoMapMod.Pins
         {
             //placement.LogDebug();
 
-            if (placement.Name is "Start" or "Remote")
+            if (placement.Name is "Start")
             {
-                RandoMapMod.Instance.LogDebug($"{placement.Name} detected - not including as a pin");
+                RandoMapMod.Instance.LogDebug($"Start placement detected - not including as a pin");
                 return;
             }
 
