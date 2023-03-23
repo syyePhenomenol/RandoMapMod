@@ -1,6 +1,4 @@
 ﻿using MapChanger;
-using RandomizerCore.Logic;
-using RandomizerCore.StringLogic;
 
 namespace RandoMapMod.Pathfinder
 {
@@ -17,6 +15,8 @@ namespace RandoMapMod.Pathfinder
             ID = new(SD);
 
             SD.UpdateProgression();
+
+            //Testing.LogProgressionData(SD);
 
             //Testing.DebugActions(SD);
 

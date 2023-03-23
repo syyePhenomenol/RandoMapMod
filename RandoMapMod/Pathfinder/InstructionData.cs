@@ -18,6 +18,9 @@ namespace RandoMapMod.Pathfinder
         internal ReadOnlyDictionary<string, BenchwarpInstruction> BenchwarpInstructions { get; }
         internal DreamgateInstruction DreamgateInstruction { get; private set; } = null;
 
+        //private readonly Dictionary<(string, string), MiscTransitionInstruction> miscTransitionInstructions = new();
+        //private readonly Dictionary<(string, string), MiscInstruction> miscInstructions = new();
+
         internal static void LoadWaypointInstructions()
         {
             WaypointInstruction[] waypointInstructions = JsonUtil.DeserializeFromAssembly<WaypointInstruction[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.waypointInstructions.json");
@@ -42,7 +45,7 @@ namespace RandoMapMod.Pathfinder
             {
                 if (action.IsOrIsSubclassInstanceOf<PlacementAction>())
                 {
-                    transitionInstructions[action.Name] = new((PlacementAction)action);
+                    transitionInstructions[action.Name] = new(action.Name, action.Destination.Name);
                 }
             }
 
@@ -68,11 +71,13 @@ namespace RandoMapMod.Pathfinder
                 if (position == Instance.StartWarpInstruction.Waypoint)
                 {
                     instructions.Add(Instance.StartWarpInstruction);
+                    scene = Instance.StartWarpInstruction.TargetScene;
                 }
 
                 if (Instance.BenchwarpInstructions.TryGetValue(position, out var benchWarp))
                 {
                     instructions.Add(benchWarp);
+                    scene = benchWarp.TargetScene;
                 }
             }
 
@@ -85,14 +90,16 @@ namespace RandoMapMod.Pathfinder
             {
                 if (TryGetInstruction(position, scene, action, out Instruction instruction))
                 {
+                    if (instruction is EmptyInstruction)
+                    {
+                        return new();
+                    }
+
                     instructions.Add(instruction);
+                    scene = instruction.TargetScene;
                 }
 
                 position = action.Destination.Name;
-                if (TransitionData.TryGetScene(position, out string newScene))
-                {
-                    scene = newScene;
-                }
             }
 
             return instructions;
@@ -131,16 +138,42 @@ namespace RandoMapMod.Pathfinder
                     return false;
                 }
 
-                if (scene != newScene
-                    && WaypointInstructions.TryGetValue((position, newScene), out WaypointInstruction wi))
+                if (scene != newScene)
                 {
-                    instruction = wi;
+                    if (WaypointInstructions.TryGetValue((position, newScene), out WaypointInstruction wi))
+                    {
+                        instruction = wi;
+                    }
+                    //// Fallback handling for when the position is a transition and its target is in the newScene - assume going through the transition
+                    //else if (TransitionData.Placements.TryGetValue(action.Name, out string target)
+                    //    && TransitionData.GetTransitionDef(target) is RmmTransitionDef targetTd
+                    //    && targetTd.SceneName == newScene)
+                    //{
+                    //    RandoMapMod.Instance?.LogDebug($"New best guess TransitionInstruction: {action.Name}-?>{target}-?>{action.Destination.Name}");
+                    //    instruction = Instance.TransitionInstructions[action.Name];
+                    //}
+                    //// The destination is a transition
+                    //else if (TransitionData.GetTransitionDef(action.Destination.Name) is not null)
+                    //{
+                    //    RandoMapMod.Instance?.LogDebug($"New MiscTranstisionInstruction: {scene}-?>{action.Destination.Name}");
+                    //    instruction = GetOrAddMiscTransitionInstruction(scene, action.Destination.Name);
+                    //}
+                    //else
+                    //{
+                    //    RandoMapMod.Instance?.LogDebug($"New MiscInstruction: {scene}-?>{newScene}");
+                    //    instruction = GetOrAddMiscInstruction(scene, newScene);
+                    //}
+                    else
+                    {
+                        instruction = new EmptyInstruction();
+                    }
+
                     return true;
                 }
 
-                //RandoMapMod.Instance?.LogDebug($"No instruction for action {action.Name}, {position}, {scene}, {newScene} {action.Destination.Name}");
+                //RandoMapMod.Instance?.LogDebug($"No instruction for action {action.Name}, {position}, {scene}, {newScene}, {action.Destination.Name}");
             }
-            
+
             instruction = default;
             return false;
         }
@@ -149,5 +182,25 @@ namespace RandoMapMod.Pathfinder
         {
             Instance.DreamgateInstruction = new(dreamgateTiedTransition);
         }
+
+        //private static MiscTransitionInstruction GetOrAddMiscTransitionInstruction(string scene, string destination)
+        //{
+        //    if (Instance.miscTransitionInstructions.TryGetValue((scene, destination), out var instruction))
+        //    {
+        //        return instruction;
+        //    }
+
+        //    return Instance.miscTransitionInstructions[(scene, destination)] = new MiscTransitionInstruction(scene, destination);
+        //}
+
+        //private static MiscInstruction GetOrAddMiscInstruction(string scene, string newScene)
+        //{
+        //    if (Instance.miscInstructions.TryGetValue((scene, newScene), out var instruction))
+        //    {
+        //        return instruction;
+        //    }
+
+        //    return Instance.miscInstructions[(scene, newScene)] = new MiscInstruction(scene, newScene);
+        //}
     }
 }

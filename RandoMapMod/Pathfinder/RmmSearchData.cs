@@ -295,8 +295,8 @@ namespace RandoMapMod.Pathfinder
 
             if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new StartPosition[] { };
 
-            List<Term> inLogicTransitions = new(transitions.Where(t => (RM.RS.TrackerData.pm.lm.GetTerm(t.Name) is null && TransitionTracker.InLogicExtraTransitions.Contains(t.Name))
-                || RM.RS.TrackerData.pm.Get(t.Name) > 0));
+            List<Term> inLogicTransitions = new(transitions.Where(t => (RM.RS.TrackerData.pm.lm.GetTerm(t.Name) is not null && RM.RS.TrackerData.pm.Get(t.Name) > 0)
+                || TransitionTracker.InLogicExtraTransitions.Contains(t.Name)));
 
             SearchParams sp = new
             (

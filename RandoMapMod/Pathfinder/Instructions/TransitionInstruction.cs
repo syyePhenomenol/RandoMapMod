@@ -1,13 +1,12 @@
 ﻿using RandoMapMod.Transition;
-using RCPathfinder.Actions;
 
 namespace RandoMapMod.Pathfinder.Instructions
 {
     internal class TransitionInstruction : Instruction
     {
-        internal TransitionInstruction(PlacementAction action) : base(action.Name, action.Destination.Name)
+        internal TransitionInstruction(string name, string destination) : base(name, destination)
         {
-            if (CompassObjects is null && TransitionData.GetTransitionDef(action.Name) is RmmTransitionDef td)
+            if (CompassObjects is null && TransitionData.GetTransitionDef(name) is RmmTransitionDef td)
             {
                 CompassObjects = new() { { td.SceneName, td.DoorName } };
             }

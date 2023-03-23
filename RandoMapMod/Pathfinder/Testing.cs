@@ -13,6 +13,18 @@ namespace RandoMapMod.Pathfinder
     {
         private static readonly Random rng = new(0);
 
+        internal static void LogProgressionData(RmmSearchData sd)
+        {
+            RandoMapMod.Instance?.LogDebug($"  Logging PMs");
+
+            foreach (Term term in sd.Positions)
+            {
+                RandoMapMod.Instance.LogDebug($"    {term.Name}");
+                RandoMapMod.Instance.LogDebug($"      Reference: {RM.RS.TrackerData.lm.Terms.IsTerm(term.Name) && RM.RS.TrackerData.pm.Has(term)}");
+                RandoMapMod.Instance.LogDebug($"      Local: {sd.LocalPM.Has(term)}");
+            }
+        }
+
         internal static void DebugActions(RmmSearchData sd)
         {
             sd.UpdateProgression();

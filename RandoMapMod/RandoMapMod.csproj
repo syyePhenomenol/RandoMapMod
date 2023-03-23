@@ -63,6 +63,11 @@
 	</Target>
 
 	<ItemGroup>
+	  <Compile Remove="Pathfinder\Instructions\MiscInstruction.cs" />
+	  <Compile Remove="Pathfinder\Instructions\MiscTransitionInstruction.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="Resources\benchwarp.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Compass\compassObjOverrides.json" />

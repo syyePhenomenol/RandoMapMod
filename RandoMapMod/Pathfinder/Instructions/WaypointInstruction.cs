@@ -1,5 +1,4 @@
-﻿using MapChanger;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace RandoMapMod.Pathfinder.Instructions
 {

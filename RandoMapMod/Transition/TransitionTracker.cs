@@ -12,9 +12,9 @@ namespace RandoMapMod.Transition
 {
     internal class TransitionTracker : HookModule
     {
-        private static readonly (string condition, string transitions)[] waypointTransitionPairs =
+        private static readonly (string condition, string transition)[] waypointTransitionPairs =
         {
-            ("Opened_Black_Egg_Temple", "Room_temple[left1]"),
+            ("Opened_Black_Egg_Temple", "Room_temple[door1]"),
             ("Opened_Black_Egg_Temple", "Room_Final_Boss_Atrium[left1]"),
             ("GG_Atrium", "GG_Atrium[Door_Workshop]"),
             ("GG_Workshop", "GG_Workshop[left1]"),

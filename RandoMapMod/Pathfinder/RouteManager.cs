@@ -85,6 +85,9 @@ namespace RandoMapMod.Pathfinder
 
                 if (!_routes.Contains(route))
                 {
+                    //RandoMapMod.Instance.LogDebug($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
+                    //RandoMapMod.Instance.LogDebug(route.Node.PrintActions());
+
                     _routes.Add(route);
                     CurrentRoute = route;
                     RouteCompass.Update();
