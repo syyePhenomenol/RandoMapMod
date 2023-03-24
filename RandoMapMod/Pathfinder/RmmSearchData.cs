@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using ItemChanger;
+﻿using System.Collections.ObjectModel;
 using MapChanger;
 using RandoMapMod.Transition;
 using RandomizerCore.Logic;
@@ -159,6 +157,47 @@ namespace RandoMapMod.Pathfinder
             }
 
             return actions;
+        }
+
+        private static readonly HashSet<string> extraRooms = new()
+        {
+            "Room_Final_Boss_Atrium",
+            "GG_Atrium",
+            "GG_Workshop"
+        };
+
+        /// <summary>
+        /// Remove miscellaneous logical connections for now.
+        /// </summary>
+        protected override Dictionary<Term, List<AbstractAction>> CreateActionLookup()
+        {
+            var actionLookup = base.CreateActionLookup();
+
+            Dictionary<Term, List<AbstractAction>> actionLookupCopy = actionLookup.ToDictionary(kvp => kvp.Key, kvp => new List<AbstractAction>(kvp.Value));
+
+            foreach (var kvp in actionLookup)
+            {
+                if (!TransitionData.TryGetScene(kvp.Key.Name, out string scene)) continue;
+
+                foreach (var action in kvp.Value)
+                {
+                    if (action is not StateLogicAction) continue;
+
+                    string newScene;
+                    if (extraRooms.Contains(action.Destination.Name) || RandomizerMod.RandomizerData.Data.IsRoom(action.Destination.Name))
+                    {
+                        newScene = action.Destination.Name;
+                    }
+                    else if (!TransitionData.TryGetScene(action.Destination.Name, out newScene))
+                    {
+                        continue;
+                    }
+
+                    if (scene != newScene) actionLookupCopy[kvp.Key].Remove(action);
+                }
+            }
+
+            return actionLookupCopy;
         }
 
         public override List<AbstractAction> GetActions(Node node)

@@ -63,6 +63,7 @@
 	</Target>
 
 	<ItemGroup>
+	  <Compile Remove="Pathfinder\Instructions\EmptyInstruction.cs" />
 	  <Compile Remove="Pathfinder\Instructions\MiscInstruction.cs" />
 	  <Compile Remove="Pathfinder\Instructions\MiscTransitionInstruction.cs" />
 	</ItemGroup>

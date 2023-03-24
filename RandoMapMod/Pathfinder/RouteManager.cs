@@ -5,7 +5,6 @@ using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using RandomizerCore.Logic;
 using RCPathfinder;
-using RCPathfinder.Actions;
 
 namespace RandoMapMod.Pathfinder
 {
@@ -81,19 +80,18 @@ namespace RandoMapMod.Pathfinder
             {
                 Route route = new(_ss.NewResultNodes[0]);
 
-                if (!route.RemainingInstructions.Any() || route.RemainingInstructions.First().Text == route.RemainingInstructions.Last().TargetTransition) continue;
+                //RandoMapMod.Instance.LogDebug($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
+                //RandoMapMod.Instance.LogDebug(route.Node.PrintActions());
 
-                if (!_routes.Contains(route))
-                {
-                    //RandoMapMod.Instance.LogDebug($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
-                    //RandoMapMod.Instance.LogDebug(route.Node.PrintActions());
+                if (!route.RemainingInstructions.Any() 
+                    || route.RemainingInstructions.First().Text == route.RemainingInstructions.Last().TargetTransition 
+                    || _routes.Contains(route)) continue;
 
-                    _routes.Add(route);
-                    CurrentRoute = route;
-                    RouteCompass.Update();
-                    UpdateRouteUI();
-                    return true;
-                }
+                _routes.Add(route);
+                CurrentRoute = route;
+                RouteCompass.Update();
+                UpdateRouteUI();
+                return true;
             }
 
             // Search exhausted, clear search state and reset

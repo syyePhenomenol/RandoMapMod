@@ -18,6 +18,8 @@ namespace RandoMapMod.Pathfinder
         internal ReadOnlyDictionary<string, BenchwarpInstruction> BenchwarpInstructions { get; }
         internal DreamgateInstruction DreamgateInstruction { get; private set; } = null;
 
+        //private readonly EmptyInstruction empty = new();
+
         //private readonly Dictionary<(string, string), MiscTransitionInstruction> miscTransitionInstructions = new();
         //private readonly Dictionary<(string, string), MiscInstruction> miscInstructions = new();
 
@@ -90,13 +92,10 @@ namespace RandoMapMod.Pathfinder
             {
                 if (TryGetInstruction(position, scene, action, out Instruction instruction))
                 {
-                    if (instruction is EmptyInstruction)
-                    {
-                        return new();
-                    }
-
                     instructions.Add(instruction);
                     scene = instruction.TargetScene;
+
+                    //if (instruction == Instance.empty) return new();
                 }
 
                 position = action.Destination.Name;
@@ -143,6 +142,7 @@ namespace RandoMapMod.Pathfinder
                     if (WaypointInstructions.TryGetValue((position, newScene), out WaypointInstruction wi))
                     {
                         instruction = wi;
+                        return true;
                     }
                     //// Fallback handling for when the position is a transition and its target is in the newScene - assume going through the transition
                     //else if (TransitionData.Placements.TryGetValue(action.Name, out string target)
@@ -163,12 +163,13 @@ namespace RandoMapMod.Pathfinder
                     //    RandoMapMod.Instance?.LogDebug($"New MiscInstruction: {scene}-?>{newScene}");
                     //    instruction = GetOrAddMiscInstruction(scene, newScene);
                     //}
-                    else
-                    {
-                        instruction = new EmptyInstruction();
-                    }
+                    //else
+                    //{
+                    //    //RandoMapMod.Instance?.LogDebug($"Empty instruction for action {action.Name}, {position}, {scene}, {newScene}, {action.Destination.Name}");
+                    //    instruction = Instance.empty;
+                    //}
 
-                    return true;
+                    //return true;
                 }
 
                 //RandoMapMod.Instance?.LogDebug($"No instruction for action {action.Name}, {position}, {scene}, {newScene}, {action.Destination.Name}");
