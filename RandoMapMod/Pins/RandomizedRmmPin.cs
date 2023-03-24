@@ -74,7 +74,14 @@ namespace RandoMapMod.Pins
             ModSource = SD.Of(placement).Get(InteropProperties.ModSource);
 
             LocationPoolGroup = SD.Of(placement).Get(InjectedProps.LocationPoolGroup);
-            locationSprite = SD.Of(placement).Get(InteropProperties.LocationPinSprite);
+            if (SD.Of(placement).Get(InteropProperties.LocationPinSpriteKey) is string locationKey)
+            {
+                locationSprite = new PinLocationSprite(locationKey);
+            }
+            else
+            {
+                locationSprite = SD.Of(placement).Get(InteropProperties.LocationPinSprite);
+            }
             locationSpriteScale = GetPinSpriteScale(locationSprite, SD.Of(placement).Get(InteropProperties.LocationPinSpriteSize));
 
             itemPoolGroups = new();
@@ -82,7 +89,15 @@ namespace RandoMapMod.Pins
             foreach (AbstractItem item in placement.Items)
             {
                 itemPoolGroups[item] = SD.Of(item).Get(InjectedProps.ItemPoolGroup);
-                ISprite sprite = SD.Of(item).Get(InteropProperties.ItemPinSprite);
+                ISprite sprite;
+                if (SD.Of(item).Get(InteropProperties.ItemPinSpriteKey) is string itemKey)
+                {
+                    sprite = new PinItemSprite(itemKey);
+                }
+                else
+                {
+                    sprite = SD.Of(item).Get(InteropProperties.ItemPinSprite);
+                }
                 itemSprites[item] = (sprite, GetPinSpriteScale(sprite, SD.Of(item).Get(InteropProperties.ItemPinSpriteSize)));
             }
 

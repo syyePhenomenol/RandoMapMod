@@ -12,7 +12,7 @@ namespace RandoMapMod.Pins
         // - RandomizableLevers
         // - RandoPlus
         // - BenchRando
-        
+
         // Other connection mods can inject their own pin position/behaviour by adding properties to an IInteropTag, and adding the tag to either the placement/location or item.
 
         // ConnectionMetadataInjector defines the "PoolGroup" string property for placements/locations and items.
@@ -42,6 +42,13 @@ namespace RandoMapMod.Pins
         internal static readonly MetadataProperty<AbstractPlacement, bool> DoNotMakePin = new("DoNotMakePin", (placement) => { return false; });
 
         /// <summary>
+        /// A key to access a built in sprite, for a placement's location.
+        /// Takes precedence over LocationPinSprite.
+        /// The built in sprites update their value properly depending on the PinStyle setting.
+        /// </summary>
+        internal static readonly MetadataProperty<AbstractPlacement, string> LocationPinSpriteKey = new("PinSpriteKey", (placement) => { return null; });
+
+        /// <summary>
         /// The sprite shown when spoilers are off and the pin is not previewed.
         /// If not provided, defaults to one based on the PoolGroup if possible. Otherwise, a question mark.
         /// </summary>
@@ -52,6 +59,12 @@ namespace RandoMapMod.Pins
         /// If not provided, defaults to the size of the LocationPinSprite's texture.
         /// </summary>
         internal static readonly MetadataProperty<AbstractPlacement, (int, int)?> LocationPinSpriteSize = new("PinSpriteSize", (placement) => { return null; });
+
+        /// <summary>
+        /// A key to access a built in sprite, for a placement's specific item.
+        /// Takes precedence over ItemPinSprite.
+        /// </summary>
+        internal static readonly MetadataProperty<AbstractItem, string> ItemPinSpriteKey = new("PinSpriteKey", (item) => { return null; });
 
         /// <summary>
         /// The sprite shown when spoilers are on or the pin is previewed, and this item is currently displayed in the animated cycle.
