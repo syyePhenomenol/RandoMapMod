@@ -1,4 +1,5 @@
-﻿using ItemChanger;
+﻿using ConnectionMetadataInjector;
+using ItemChanger;
 using RandoMapMod.Settings;
 using UnityEngine;
 
@@ -9,58 +10,34 @@ namespace RandoMapMod.Pins
     /// </summary>
     internal class PinLocationSprite : ISprite
     {
-        public string key;
-        public PinLocationSprite(string key)
+        public string Key { get; }
+
+        public Sprite Value => values.TryGetValue(RandoMapMod.GS.PinStyle, out var value) ? value : values[PinStyle.Normal];
+        private readonly Dictionary<PinStyle, Sprite> values = new();
+
+        /// <summary>
+        /// Sets the sprite based on a placement's PoolGroup.
+        /// </summary>
+        public PinLocationSprite(AbstractPlacement placement)
         {
-            this.key = key;
+            Key = SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup);
+
+            foreach (PinStyle style in Enum.GetValues(typeof(PinStyle)))
+            {
+                values[style] = PinSpriteManager.GetStyleDependentSprite(Key, style, true);
+            }
         }
 
-        public Sprite Value
+        /// <summary>
+        /// Sets the sprite based on a connection-provided key.
+        /// </summary>
+        public PinLocationSprite(string key)
         {
-            get
+            Key = key;
+
+            foreach (PinStyle style in Enum.GetValues(typeof(PinStyle)))
             {
-                string spriteName = "Unknown";
-
-                if (RandoMapMod.GS.PinStyle == PinStyle.Normal)
-                {
-                    return PinItemSprite.GetNormalSprite(key);
-                }
-                else if (RandoMapMod.GS.PinStyle == PinStyle.Q_Marks_1)
-                {
-                    spriteName = key switch
-                    {
-                        "Shops" => "Shop",
-                        _ => "Unknown",
-                    };
-                }
-                else if (RandoMapMod.GS.PinStyle == PinStyle.Q_Marks_2)
-                {
-                    spriteName = key switch
-                    {
-                        "Grubs" => "UnknownGrubInv",
-                        "Mimics" => "UnknownGrubInv",
-                        "Lifeblood Cocoons" => "UnknownLifebloodInv",
-                        "Geo Rocks" => "UnknownGeoRockInv",
-                        "Soul Totems" => "UnknownTotemInv",
-                        "Shops" => "Shop",
-                        _ => "Unknown",
-                    };
-                }
-                else if (RandoMapMod.GS.PinStyle == PinStyle.Q_Marks_3)
-                {
-                    spriteName = key switch
-                    {
-                        "Grubs" => "UnknownGrub",
-                        "Mimics" => "UnknownGrub",
-                        "Lifeblood Cocoons" => "UnknownLifeblood",
-                        "Geo Rocks" => "UnknownGeoRock",
-                        "Soul Totems" => "UnknownTotem",
-                        "Shops" => "Shop",
-                        _ => "Unknown",
-                    };
-                }
-
-                return MapChanger.SpriteManager.Instance.GetSprite($"Pins.{spriteName}");
+                values[style] = PinSpriteManager.GetStyleDependentSprite(key, style, false);
             }
         }
 

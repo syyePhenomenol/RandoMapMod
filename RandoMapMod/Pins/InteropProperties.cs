@@ -145,12 +145,12 @@ namespace RandoMapMod.Pins
 
         private static ISprite GetDefaultLocationSprite(AbstractPlacement placement)
         {
-            return new PinLocationSprite(SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup));
+            return new PinLocationSprite(placement);
         }
 
         private static ISprite GetDefaultItemSprite(AbstractItem item)
         {
-            return new PinItemSprite(SupplementalMetadata.Of(item).Get(InjectedProps.ItemPoolGroup));
+            return new PinItemSprite(item);
         }
     }
 }

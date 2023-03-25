@@ -1,4 +1,5 @@
-﻿using ItemChanger;
+﻿using ConnectionMetadataInjector;
+using ItemChanger;
 using UnityEngine;
 
 namespace RandoMapMod.Pins
@@ -8,50 +9,29 @@ namespace RandoMapMod.Pins
     /// </summary>
     internal class PinItemSprite : ISprite
     {
-        public string key;
-        public PinItemSprite(string key)
+        public string Key { get; }
+
+        public Sprite Value => value;
+        private readonly Sprite value;
+
+        /// <summary>
+        /// Sets the sprite based on an item's PoolGroup.
+        /// </summary>
+        public PinItemSprite(AbstractItem item)
         {
-            this.key = key;
+            Key = SupplementalMetadata.Of(item).Get(InjectedProps.ItemPoolGroup);
+
+            value = PinSpriteManager.GetSprite(Key, true);
         }
 
-        public Sprite Value => GetNormalSprite(key);
-
-        internal static Sprite GetNormalSprite(string key)
+        /// <summary>
+        /// Sets the sprite based on a connection-provided key.
+        /// </summary>
+        public PinItemSprite(string key)
         {
-            string spriteName = key switch
-            {
-                "Dreamers" => "Dreamer",
-                "Skills" => "Skill",
-                "Charms" => "Charm",
-                "Keys" => "Key",
-                "Mask Shards" => "Mask",
-                "Vessel Fragments" => "Vessel",
-                "Charm Notches" => "Notch",
-                "Pale Ore" => "Ore",
-                "Geo Chests" => "Geo",
-                "Rancid Eggs" => "Egg",
-                "Relics" => "Relic",
-                "Whispering Roots" => "Root",
-                "Boss Essence" => "EssenceBoss",
-                "Grubs" => "Grub",
-                "Mimics" => "Grub",
-                "Maps" => "Map",
-                "Stags" => "Stag",
-                "Lifeblood Cocoons" => "Cocoon",
-                "Grimmkin Flames" => "Flame",
-                "Journal Entries" => "Journal",
-                "Geo Rocks" => "Rock",
-                "Boss Geo" => "Geo",
-                "Soul Totems" => "Totem",
-                "Lore Tablets" => "Lore",
-                "Shops" => "Shop",
-                "Levers" => "Lever",
-                "Mr Mushroom" => "Lore",
-                "Benches" => "Bench",
-                _ => "Unknown",
-            };
+            Key = key;
 
-            return MapChanger.SpriteManager.Instance.GetSprite($"Pins.{spriteName}");
+            value = PinSpriteManager.GetSprite(Key, false);
         }
 
         public ISprite Clone()
