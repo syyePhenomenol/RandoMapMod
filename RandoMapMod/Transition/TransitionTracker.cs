@@ -5,7 +5,6 @@ using RandoMapMod.Pathfinder.Instructions;
 using RandomizerCore.Logic;
 using RCPathfinder;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Transition
@@ -39,24 +38,24 @@ namespace RandoMapMod.Transition
 
         public override void OnEnterGame()
         {
-            RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate += Update;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
+            Events.OnWorldMap += Events_OnWorldMap;
+            Events.OnQuickMap += Events_OnQuickMap;
         }
 
         public override void OnQuitToMenu()
         {
-            RandomizerMod.IC.TrackerUpdate.OnFinishedUpdate -= Update;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
+            Events.OnWorldMap -= Events_OnWorldMap;
+            Events.OnQuickMap -= Events_OnQuickMap;
         }
 
-        private void AfterSceneChange(Scene from, Scene to)
+        private void Events_OnQuickMap(GameMap arg1, GlobalEnums.MapZone arg2)
         {
-            if (to.name is "Quit_To_Menu") return;
+            Update();
+        }
 
-            if (GameManager.instance.IsGameplayScene())
-            {
-                Update();
-            }
+        private void Events_OnWorldMap(GameMap obj)
+        {
+            Update();
         }
 
         internal static void Update()
