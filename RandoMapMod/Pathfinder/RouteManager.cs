@@ -65,8 +65,6 @@ namespace RandoMapMod.Pathfinder
                 if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
                 {
                     ResetRoute();
-                    RouteCompass.Update();
-                    UpdateRouteUI();
                     return false;
                 }
 
@@ -96,8 +94,6 @@ namespace RandoMapMod.Pathfinder
 
             // Search exhausted, clear search state and reset
             ResetRoute();
-            RouteCompass.Update();
-            UpdateRouteUI();
             return false;
         }
 
@@ -169,16 +165,6 @@ namespace RandoMapMod.Pathfinder
             return false;
         }
 
-        internal static void ResetRoute()
-        {
-            CurrentRoute = null;
-            StartScene = null;
-            FinalScene = null;
-            Reevaluated = false;
-            _sp = null;
-            _routes = null;
-        }
-
         internal static void CheckRoute(ItemChanger.Transition lastTransition)
         {
             //RandoMapMod.Instance.LogDebug($"Last transition: {lastTransition}");
@@ -192,7 +178,11 @@ namespace RandoMapMod.Pathfinder
             if (instruction.IsFinished(lastTransition))
             {
                 CurrentRoute.RemainingInstructions.RemoveAt(0);
-                if (!CurrentRoute.RemainingInstructions.Any()) ResetRoute();
+                if (!CurrentRoute.RemainingInstructions.Any())
+                {
+                    ResetRoute();
+                    return;
+                }
                 UpdateRouteUI();
                 return;
             }
@@ -202,7 +192,6 @@ namespace RandoMapMod.Pathfinder
             {
                 case OffRouteBehaviour.Cancel:
                     ResetRoute();
-                    UpdateRouteUI();
                     break;
                 case OffRouteBehaviour.Reevaluate:
                     TryReevaluateRoute(lastTransition);
@@ -211,6 +200,19 @@ namespace RandoMapMod.Pathfinder
                 default:
                     break;
             }
+        }
+
+        internal static void ResetRoute()
+        {
+            CurrentRoute = null;
+            StartScene = null;
+            FinalScene = null;
+            Reevaluated = false;
+            _sp = null;
+            _routes = null;
+
+            RouteCompass.Update();
+            UpdateRouteUI();
         }
 
         private static void UpdateRouteUI()
