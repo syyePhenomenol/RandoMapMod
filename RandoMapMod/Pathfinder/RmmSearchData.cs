@@ -28,7 +28,8 @@ namespace RandoMapMod.Pathfinder
             ("Left_Elevator_Activated", "cityLift1"),
             ("Town_Lift_Activated", "mineLiftOpened"),
             ("Opened_Mawlek_Wall", "crossroadsMawlekWall"),
-            ("Opened_Dung_Defender_Wall", "dungDefenderWallBroken")
+            ("Opened_Dung_Defender_Wall", "dungDefenderWallBroken"),
+            ("Opened_Resting_Grounds_Floor", "openedRestingGrounds02")
         };
 
         private static Dictionary<string, string> conditionalTerms;
