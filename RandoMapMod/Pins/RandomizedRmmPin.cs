@@ -118,6 +118,8 @@ namespace RandoMapMod.Pins
                 }
             }
 
+            LocationHint ??= SD.Of(placement).Get(InteropProperties.LocationHint);
+
             // This has default behaviour when the CoordinateLocation exists and no other properties are provided
             if (!MapChanger.Finder.TryGetLocation(placement.Name, out MapLocationDef _)
                 && !SD.Of(placement).IsNonDefault(InteropProperties.MapLocations)

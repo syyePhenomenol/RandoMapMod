@@ -70,6 +70,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\benchwarp.json" />
+		<EmbeddedResource Include="Resources\locationHints.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Compass\compassObjOverrides.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\conditionalTerms.json" />

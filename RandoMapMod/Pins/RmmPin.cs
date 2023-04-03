@@ -51,6 +51,7 @@ namespace RandoMapMod.Pins
         internal MapZone MapZone { get; protected private set; } = MapZone.NONE;
         internal LogicDef Logic { get; private set; }
         internal int PinGridIndex { get; protected private set; }
+        internal string LocationHint { get; protected private set; }
 
         public override void Initialize()
         {
@@ -70,6 +71,11 @@ namespace RandoMapMod.Pins
             if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out LogicDef logic))
             {
                 Logic = logic;
+            }
+
+            if (RmmPinManager.LocationHints.TryGetValue(name, out string hint))
+            {
+                LocationHint = hint;
             }
 
             BorderSprite = new EmbeddedSprite("Pins.Border").Value;

@@ -10,12 +10,13 @@ using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.Pins
 {
-
     internal class RmmPinSelector : Selector
     {
         internal static RmmPinSelector Instance { get; private set; }
 
         internal static HashSet<ISelectable> HighlightedRooms { get; private set; } = new();
+
+        internal static bool ShowLocationHint { get; private set; }
 
         internal void Initialize(IEnumerable<RmmPin> pins)
         {
@@ -55,6 +56,16 @@ namespace RandoMapMod.Pins
             {
                 ToggleLockSelection();
                 SelectionPanels.UpdatePinPanel();
+            }
+
+            // Press quick cast for location hint
+            if (InputHandler.Instance.inputActions.quickCast.WasPressed)
+            {
+                if (!ShowLocationHint)
+                {
+                    ShowLocationHint = true;
+                    SelectionPanels.UpdatePinPanel();
+                }
             }
 
             // Hold attack to benchwarp
@@ -192,6 +203,7 @@ namespace RandoMapMod.Pins
 
         protected override void OnSelectionChanged()
         {
+            ShowLocationHint = false;
             SelectionPanels.UpdatePinPanel();
             SelectionPanels.UpdateRoomPanel();
         }
@@ -217,6 +229,20 @@ namespace RandoMapMod.Pins
                 if (BenchSelected())
                 {
                     text += $"\n\n{L.Localize("Hold")} {Utils.GetBindingsText(attackBindings)} {L.Localize("to benchwarp")}.";
+                }
+
+                List<InControl.BindingSource> quickCastBindings = new(InputHandler.Instance.inputActions.quickCast.Bindings);
+
+                if (pin.LocationHint is not null)
+                {
+                    if (ShowLocationHint)
+                    {
+                        text += $"\n\n{L.Localize("Hint")}: {pin.LocationHint}";
+                    }
+                    else 
+                    {
+                        text += $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(quickCastBindings)} {L.Localize("to reveal location hint")}.";
+                    }
                 }
 
                 List<InControl.BindingSource> dreamNailBindings = new(InputHandler.Instance.inputActions.dreamNail.Bindings);

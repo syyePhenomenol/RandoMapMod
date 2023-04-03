@@ -111,6 +111,11 @@ namespace RandoMapMod.Pins
         /// </summary>
         internal static readonly MetadataProperty<AbstractPlacement, int> PinGridIndex = new("PinGridIndex", (placement) => { return int.MaxValue; });
 
+        /// <summary>
+        /// Optional text that can be revealed to help players find the placement's location.
+        /// </summary>
+        internal static readonly MetadataProperty<AbstractPlacement, string> LocationHint = new("LocationHint", (placement) => { return null; });
+
         internal static (string, float, float)[] GetDefaultMapLocations(string name)
         {
             if (MapChanger.Finder.TryGetLocation(name, out MapLocationDef mld))
