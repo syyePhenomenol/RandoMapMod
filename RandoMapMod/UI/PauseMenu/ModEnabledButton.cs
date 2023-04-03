@@ -17,6 +17,16 @@ namespace RandoMapMod.UI
             MapChanger.Settings.ToggleModEnabled();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Toggle all map mod behavior on/off.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);

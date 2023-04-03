@@ -18,6 +18,16 @@ namespace RandoMapMod.UI
             MapChanger.Settings.ToggleMode();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Toggle to the next map mode.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             base.Update();

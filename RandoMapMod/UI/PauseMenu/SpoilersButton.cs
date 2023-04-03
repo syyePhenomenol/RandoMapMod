@@ -16,6 +16,16 @@ namespace RandoMapMod.UI
             RandoMapMod.LS.ToggleSpoilers();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Reveals the items at each location.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             base.Update();

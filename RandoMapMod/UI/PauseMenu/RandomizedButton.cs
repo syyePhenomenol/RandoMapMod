@@ -18,6 +18,16 @@ namespace RandoMapMod.UI
             RandoMapMod.LS.ToggleRandomized();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Toggle pins for randomized locations on/off.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             base.Update();

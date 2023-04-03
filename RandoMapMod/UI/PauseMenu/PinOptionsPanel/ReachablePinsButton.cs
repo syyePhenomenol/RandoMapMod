@@ -23,6 +23,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.ToggleReachablePins();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Pins for unreachable locations are smaller/grayed out.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Indicate\nreachable")}: ";

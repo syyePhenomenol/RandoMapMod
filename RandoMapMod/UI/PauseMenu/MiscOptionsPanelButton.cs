@@ -6,14 +6,26 @@ namespace RandoMapMod.UI
 {
     internal class MiscOptionsPanelButton : MainButton
     {
+        internal static MiscOptionsPanelButton Instance { get; private set; }
+
         public MiscOptionsPanelButton() : base(nameof(MiscOptionsPanelButton), RandoMapMod.MOD, 2, 1)
         {
-
+            Instance = this;
         }
 
         protected override void OnClick()
         {
             MiscOptionsPanel.Instance.Toggle();
+        }
+
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Some miscenalleous options.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
         }
 
         public override void Update()

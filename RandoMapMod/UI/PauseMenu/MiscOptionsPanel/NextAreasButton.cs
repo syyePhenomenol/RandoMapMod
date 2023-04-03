@@ -24,6 +24,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.ToggleNextAreas();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Show next area indicators (text/arrow) on the quick map.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Show next\nareas")}: ";

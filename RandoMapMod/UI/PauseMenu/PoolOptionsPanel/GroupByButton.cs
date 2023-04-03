@@ -24,6 +24,16 @@ namespace RandoMapMod.UI
             RandoMapMod.LS.ToggleGroupBy();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Group pools by either location (normal) or by item (spoilers).";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Group by")}:\n";

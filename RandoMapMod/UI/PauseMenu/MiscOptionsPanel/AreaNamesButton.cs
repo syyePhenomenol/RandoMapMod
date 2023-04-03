@@ -23,6 +23,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.ToggleAreaNames();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Show area names on the world/quick map.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Show area\nnames")}: ";

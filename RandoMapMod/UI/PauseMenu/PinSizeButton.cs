@@ -17,6 +17,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.TogglePinSize();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Toggle overall size of pins.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             base.Update();

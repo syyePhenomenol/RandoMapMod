@@ -17,6 +17,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.TogglePinStyle();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Toggle the sprites used per pool.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             base.Update();

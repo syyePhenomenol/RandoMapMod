@@ -6,14 +6,26 @@ namespace RandoMapMod.UI
 {
     internal class PinOptionsPanelButton : MainButton
     {
+        internal static PinOptionsPanelButton Instance { get; private set; }
+
         public PinOptionsPanelButton() : base(nameof(PinOptionsPanelButton), RandoMapMod.MOD, 2, 0)
         {
-
+            Instance = this;
         }
 
         protected override void OnClick()
         {
             PinOptionsPanel.Instance.Toggle();
+        }
+
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "More options for pin behavior.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
         }
 
         public override void Update()

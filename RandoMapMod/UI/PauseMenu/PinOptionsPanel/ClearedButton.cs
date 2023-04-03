@@ -23,6 +23,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.ToggleCleared();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Forces cleared locations to always show.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Cleared\nlocations")}: ";

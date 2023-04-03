@@ -23,6 +23,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.ToggleMapMarkers();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Enable vanilla map marker behaviour.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Show map\nmarkers")}: ";

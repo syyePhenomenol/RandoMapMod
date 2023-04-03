@@ -6,14 +6,26 @@ namespace RandoMapMod.UI
 {
     internal class PoolOptionsPanelButton : MainButton
     {
+        internal static PoolOptionsPanelButton Instance { get; private set; }
+
         public PoolOptionsPanelButton() : base(nameof(PoolOptionsPanelButton), RandoMapMod.MOD, 1, 3)
         {
-
+            Instance = this;
         }
 
         protected override void OnClick()
         {
             PoolOptionsPanel.Instance.Toggle();
+        }
+
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Customize which item/location pools to display.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
         }
 
         public override void Update()

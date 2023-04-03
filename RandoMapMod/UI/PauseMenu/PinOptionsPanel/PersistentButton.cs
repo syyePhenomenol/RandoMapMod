@@ -23,6 +23,16 @@ namespace RandoMapMod.UI
             RandoMapMod.GS.TogglePersistent();
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = "Forces persistent items to always show.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             string text = $"{L.Localize("Persistent\nitems")}: ";
