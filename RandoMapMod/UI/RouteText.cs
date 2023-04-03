@@ -57,6 +57,12 @@ namespace RandoMapMod.UI
                 text += instruction.ArrowedText;
             }
 
+            if ((States.WorldMapOpen || States.QuickMapOpen)
+                && RouteManager.CurrentRoute.GetHint() is string hint)
+            {
+                text += $"\n\n{hint}";
+            }
+
             return text;
         }
     }

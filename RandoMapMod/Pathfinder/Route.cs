@@ -32,6 +32,24 @@ namespace RandoMapMod.Pathfinder
                 && RemainingInstructions.Any();
         }
 
+        internal string GetHint()
+        {
+            // Make hint based on waypoints that need to unlocked somewhere outside the room
+            if (RemainingInstructions.Any(i => i.Text is "Town[door_sly]")
+                && !PlayerData.instance.GetBool(nameof(PlayerData.slyRescued)))
+            {
+                return "You need to rescue Sly first.";
+            }
+
+            if (RemainingInstructions.Any(i => i.Text is "Town[door_bretta]")
+                && !PlayerData.instance.GetBool(nameof(PlayerData.brettaRescued)))
+            {
+                return "You need to rescue Bretta first.";
+            }
+
+            return default;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is not Route route) return false;
