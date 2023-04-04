@@ -22,6 +22,7 @@ Optional and compatible:
 - [RandoPlus](https://github.com/flibber-hk/HollowKnight.RandoPlus). Shows Mr Mushroom and nail upgrade checks on map
 - [BenchRando](https://github.com/homothetyhk/BenchRando/tree/master/BenchRando). Shows bench checks on map
 - [TheRealJournalRando](https://github.com/BadMagic100/TheRealJournalRando). Shows journal entry checks on map
+- Various other connection mods.
 
 # Screenshots
 <details>
@@ -52,6 +53,7 @@ Optional and compatible:
     - Check out the [Map Legend](./MAPLEGEND.md) for more details on each pin style.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
+    - For some locations, you can press the indicated key/controller bind to reveal a hint to find it.
     - Press the indicated key/controller bind to lock and pan away from the current selection.
 - ``CTRL-S``: Toggle selector reticle on/off.
 - ``CTRL-W``: Toggle benchwarp pins on/off.
