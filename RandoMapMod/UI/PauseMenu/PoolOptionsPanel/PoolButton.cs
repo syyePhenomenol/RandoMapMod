@@ -18,6 +18,16 @@ namespace RandoMapMod.UI
             RandoMapMod.LS.TogglePoolGroupSetting(PoolGroup);
         }
 
+        protected override void OnHover()
+        {
+            RmmTitle.Instance.HoveredText = $"Toggle {PoolGroup} on/off.";
+        }
+
+        protected override void OnUnhover()
+        {
+            RmmTitle.Instance.HoveredText = null;
+        }
+
         public override void Update()
         {
             Button.Content = PoolGroup.Replace(" ", "\n");

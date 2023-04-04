@@ -7,6 +7,7 @@ using RandomizerMod.RC;
 using RCPathfinder;
 using RCPathfinder.Actions;
 using RM = RandomizerMod.RandomizerMod;
+using SN = ItemChanger.SceneNames;
 
 namespace RandoMapMod.Pathfinder
 {
@@ -21,15 +22,6 @@ namespace RandoMapMod.Pathfinder
             "Crossroads_06[right1]",
             "Crossroads_10[left1]",
             "Crossroads_19[top1]"
-        };
-
-        private static readonly (string term, string pdBool)[] pdBoolTerms =
-        {
-            ("Left_Elevator_Activated", "cityLift1"),
-            ("Town_Lift_Activated", "mineLiftOpened"),
-            ("Opened_Mawlek_Wall", "crossroadsMawlekWall"),
-            ("Opened_Dung_Defender_Wall", "dungDefenderWallBroken"),
-            ("Opened_Resting_Grounds_Floor", "openedRestingGrounds02")
         };
 
         private static Dictionary<string, string> conditionalTerms;
@@ -88,8 +80,8 @@ namespace RandoMapMod.Pathfinder
                 }
             }
 
-            transitionsByScene["Room_Tram"] = new() { PositionLookup["Lower_Tram"] };
-            transitionsByScene["Room_Tram_RG"] = new() { PositionLookup["Upper_Tram"] };
+            transitionsByScene[SN.Room_Tram] = new() { PositionLookup["Lower_Tram"] };
+            transitionsByScene[SN.Room_Tram_RG] = new() { PositionLookup["Upper_Tram"] };
 
             TransitionTermsByScene = new(transitionsByScene.ToDictionary(kvp => kvp.Key, kvp => new ReadOnlyCollection<Term>(kvp.Value.ToArray())));
 
@@ -162,9 +154,9 @@ namespace RandoMapMod.Pathfinder
 
         private static readonly HashSet<string> extraRooms = new()
         {
-            "Room_Final_Boss_Atrium",
-            "GG_Atrium",
-            "GG_Workshop"
+            SN.Room_Final_Boss_Atrium,
+            SN.GG_Atrium,
+            SN.GG_Workshop
         };
 
         /// <summary>
@@ -216,6 +208,17 @@ namespace RandoMapMod.Pathfinder
             return actions;
         }
 
+        private static readonly (string term, string pdBool)[] pdBoolTerms =
+        {
+            ("Left_Elevator_Activated", nameof(PlayerData.cityLift1)),
+            ("Town_Lift_Activated", nameof(PlayerData.mineLiftOpened)),
+            ("Opened_Mawlek_Wall", nameof(PlayerData.crossroadsMawlekWall)),
+            ("Opened_Dung_Defender_Wall", nameof(PlayerData.dungDefenderWallBroken)),
+            ("Opened_Resting_Grounds_Floor", nameof(PlayerData.openedRestingGrounds02)),
+            ("Opened_Gardens_Stag_Exit", nameof(PlayerData.openedGardensStagStation)),
+            ("Opened_Glade_Door", nameof(PlayerData.gladeDoorOpened))
+        };
+
         public override void UpdateProgression()
         {
             PlayerData pd = PlayerData.instance;
@@ -242,36 +245,47 @@ namespace RandoMapMod.Pathfinder
 
             if (LocalPM.lm.GetTerm("Opened_Shaman_Pillar") is Term shamanPillar)
             {
-                LocalPM.Set(shamanPillar, pd.GetBool("shamanPillar") || pd.GetBool("crossroadsInfected") ? 1 : 0);
+                LocalPM.Set(shamanPillar, pd.GetBool(nameof(PlayerData.shamanPillar)) || pd.GetBool(nameof(PlayerData.crossroadsInfected)) ? 1 : 0);
             }
 
             foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
             {
-                if (pbd.sceneName is "Waterways_02" && pbd.id is "Quake Floor (1)")
+                switch (pbd.sceneName)
                 {
-                    LocalPM.Set("Broke_Waterways_Bench_Ceiling", pbd.activated ? 1 : 0);
-                }
-                else if (pbd.sceneName is "Ruins1_31" && pbd.id is "Breakable Wall Ruin Lift")
-                {
-                    LocalPM.Set("City_Toll_Wall_Broken", pbd.activated ? 1 : 0);
-                }
-                else if (pbd.sceneName is "Ruins1_31" && pbd.id is "Ruins Lever")
-                {
-                    LocalPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
-                }
-                else if (pbd.sceneName is "RestingGrounds_10" && pbd.id is "Collapser Small (5)")
-                {
-                    LocalPM.Set("Broke_Catacombs_Ceiling", pbd.activated ? 1 : 0);
-                }
-                else if (pbd.sceneName is "Crossroads_10" && pbd.id is "Battle Scene")
-                {
-                    LocalPM.Set("Defeated_False_Knight", pbd.activated ? 1 : 0);
+                    case SN.Waterways_02:
+                        if (pbd.id is "Quake Floor (1)")
+                        {
+                            LocalPM.Set("Broke_Waterways_Bench_Ceiling", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.Ruins1_31:
+                        if (pbd.id is "Breakable Wall Ruin Lift")
+                        {
+                            LocalPM.Set("City_Toll_Wall_Broken", pbd.activated ? 1 : 0);
+                        }
+                        if (pbd.id is "Ruins Lever")
+                        {
+                            LocalPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.RestingGrounds_10:
+                        if (pbd.id is "Collapser Small (5)")
+                        {
+                            LocalPM.Set("Broke_Catacombs_Ceiling", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.Crossroads_10:
+                        if (pbd.id is "Battle Scene")
+                        {
+                            LocalPM.Set("Defeated_False_Knight", pbd.activated ? 1 : 0);
+                        }
+                        break;
                 }
             }
 
             foreach (PersistentIntData pid in SceneData.instance.persistentIntItems)
             {
-                if (pid.sceneName is "Ruins1_31" && pid.id is "Ruins Lift")
+                if (pid.sceneName is SN.Ruins1_31 && pid.id is "Ruins Lift")
                 {
                     LocalPM.Set("City_Toll_Elevator_Up", pid.value % 2 is 1 ? 1 : 0);
                     LocalPM.Set("City_Toll_Elevator_Down", pid.value % 2 is 0 ? 1 : 0);
@@ -288,17 +302,17 @@ namespace RandoMapMod.Pathfinder
             PlayerData pd = PlayerData.instance;
 
             // USEDSHADE
-            sb.SetBool(sm.GetBoolStrict("OVERCHARMED"), pd.GetBool("overcharmed"));
-            sb.SetBool(sm.GetBoolStrict("SPENTALLSOUL"), pd.GetInt("MPCharge") is 0 && pd.GetInt("MPReserve") is 0);
+            sb.SetBool(sm.GetBoolStrict("OVERCHARMED"), pd.GetBool(nameof(PlayerData.overcharmed)));
+            sb.SetBool(sm.GetBoolStrict("SPENTALLSOUL"), pd.GetInt(nameof(PlayerData.MPCharge)) is 0 && pd.GetInt(nameof(PlayerData.MPReserve)) is 0);
             // CANNOTREGAINSOUL
             // CANNOTSHADESKIP
             // HASTAKENDAMAGE
             // HASTAKENDOUBLEDAMAGE
             // HASALMOSTDIED
-            sb.SetBool(sm.GetBoolStrict("BROKEHEART"), pd.GetBool("brokenCharm_23"));
-            sb.SetBool(sm.GetBoolStrict("BROKEGREED"), pd.GetBool("brokenCharm_24"));
-            sb.SetBool(sm.GetBoolStrict("BROKESTRENGTH"), pd.GetBool("brokenCharm_25"));
-            sb.SetBool(sm.GetBoolStrict("NOFLOWER"), !pd.GetBool("hasXunFlower"));
+            sb.SetBool(sm.GetBoolStrict("BROKEHEART"), pd.GetBool(nameof(PlayerData.brokenCharm_23)));
+            sb.SetBool(sm.GetBoolStrict("BROKEGREED"), pd.GetBool(nameof(PlayerData.brokenCharm_24)));
+            sb.SetBool(sm.GetBoolStrict("BROKESTRENGTH"), pd.GetBool(nameof(PlayerData.brokenCharm_25)));
+            sb.SetBool(sm.GetBoolStrict("NOFLOWER"), !pd.GetBool(nameof(PlayerData.hasXunFlower)));
             // NOPASSEDCHARMEQUIP
             for (int i = 1; i <= 40; i++)
             {
@@ -312,8 +326,8 @@ namespace RandoMapMod.Pathfinder
             // REQUIREDMAXSOUL
             // SPENTHP
             // SPENTBLUEHP
-            sb.SetInt(sm.GetIntStrict("USEDNOTCHES"), pd.GetInt("charmSlotsFilled"));
-            sb.SetInt(sm.GetIntStrict("MAXNOTCHCOST"), pd.GetInt("charmSlots"));
+            sb.SetInt(sm.GetIntStrict("USEDNOTCHES"), pd.GetInt(nameof(PlayerData.charmSlotsFilled)));
+            sb.SetInt(sm.GetIntStrict("MAXNOTCHCOST"), pd.GetInt(nameof(PlayerData.charmSlots)));
 
             CurrentState = new((State)new(sb));
         }
@@ -322,7 +336,7 @@ namespace RandoMapMod.Pathfinder
         {
             return infectionTransitions.Contains(transition)
                 && VanillaInfectedTransitions
-                && PlayerData.instance.GetBool("crossroadsInfected");
+                && PlayerData.instance.GetBool(nameof(PlayerData.crossroadsInfected));
         }
 
         /// <summary>
@@ -330,8 +344,8 @@ namespace RandoMapMod.Pathfinder
         /// </summary>
         internal StartPosition[] GetPrunedStartTerms(string scene)
         {
-            if (scene is "Room_Tram") return new StartPosition[] { new("Lower_Tram", RmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f) };
-            if (scene is "Room_Tram_RG") return new StartPosition[] { new("Upper_Tram", RmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f) };
+            if (scene is SN.Room_Tram) return new StartPosition[] { new("Lower_Tram", RmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f) };
+            if (scene is SN.Room_Tram_RG) return new StartPosition[] { new("Upper_Tram", RmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f) };
 
             if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new StartPosition[] { };
 
@@ -374,7 +388,7 @@ namespace RandoMapMod.Pathfinder
                 prunedTransitions.Add(new(transition.Name, transition, 0f));
             }
 
-            if (scene is "Room_Town_Stag_Station"
+            if (scene is SN.Room_Town_Stag_Station
                 && !inLogicTransitions.Any(t => t.Name is "Room_Town_Stag_Station[left1]")
                 && ReferencePM.Get("Can_Stag") > 0)
             {

@@ -17,7 +17,7 @@ namespace RandoMapMod.UI
         protected override bool Condition()
         {
             return Conditions.TransitionRandoModeEnabled()
-                && MapChanger.States.WorldMapOpen;
+                && States.WorldMapOpen;
         }
 
         public override void BuildLayout()
