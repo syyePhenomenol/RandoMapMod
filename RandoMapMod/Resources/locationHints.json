@@ -2,11 +2,91 @@
   // One location can have multiple hints, of which each one's relevancy depends on the settings/progression of your save.
   // "logic" doesn't necessarily indicate what is required for the hint's instructions, just what makes it relevant.
   // "TRUE" means the hint is general.
-
+  "Ancient_Basin_Map": [
+    {
+      //https://www.youtube.com/watch?v=DkrMCT0l3_8&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=224
+      "name": "Reachable with a precise (not full height) jump from an upper platform.",
+      "logic": "PRECISEMOVEMENT"
+    }
+  ],
+  "Arcane_Egg-Lifeblood_Core": [
+    {
+      //https://www.youtube.com/watch?v=tbx4_bi_5b4&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=194
+      "name": "Reachable without left Dash with precise double jumps when falling.",
+      "logic": "PRECISEMOVEMENT"
+    }
+  ],
+  "Baldur_Shell": [
+    {
+      //https://www.youtube.com/watch?v=nDYTNkCTqT4&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=170
+      "name": "To get across the pit with a low ceiling without items, you can make a Shade and damage boost across.",
+      "logic": "SHADESKIPS"
+    },
+    {
+      //https://www.youtube.com/watch?v=HgzJBZt1EGM&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=171
+      "name": "To get across the pit with a low ceiling with only Claw, you can wall-jump across to the right lip.",
+      "logic": "LEFTCLAW + RIGHTCLAW"
+    }
+  ],
+  "Boss_Essence-Failed_Champion": [
+    {
+      //https://www.youtube.com/watch?v=L8DBIyyVuOo&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=38
+      "name": "From the left side, double jump upwards while pogo-ing the infection bubbles.",
+      "logic": "WINGS + INFECTED"
+    }
+  ],
+  "Boss_Essence-Xero": [
+    {
+      //https://www.youtube.com/watch?v=kbyPeAn3TtU&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=12
+      "name": "You can do a background object pogo.",
+      "logic": "BACKGROUNDPOGOS"
+    }
+  ],
+  "Charm_Notch-Fog_Canyon": [
+    {
+      //https://www.youtube.com/watch?v=PPMDEFvtERo&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=60
+      //https://www.youtube.com/watch?v=6z0-7U-_dgw&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=61
+      //https://www.youtube.com/watch?v=SWjB_2uFong&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=215
+      "name": "Reachable without acid and with various other movement. eg. left Super Dash from right wall below starting platform.",
+      "logic": "ACIDSKIPS"
+    }
+  ],
+  "Crystal_Heart": [
+    {
+      //https://www.youtube.com/watch?v=h5LSxnPKiIc&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=124
+      "name": "To reach the middle vertical shaft, you can Airstall to the lowest crystal platform.",
+      "logic": "LEFTCLAW + SPELLAIRSTALL"
+    },
+    {
+      //https://www.youtube.com/watch?v=65qKHNPfiyc&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=126
+      "name": "To climb the middle vertical shaft with only Wings, you can pogo a Shade from the platforms below.",
+      "logic": "WINGS + SHADESKIPS"
+    }
+  ],
+  //"Geo_Chest-Crystal_Peak": [
+  //  {
+  //    // Missing DASH in logic?
+  //    //https://www.youtube.com/watch?v=RIGkdVNVHVU&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=90
+  //    "name": "Make a Shade just left of the bottom transition. Slash left with Grubberfly's Elegy to lure the Shade",
+  //    "logic": "Mines_37[bot1] + WINGS + GRUBBERFLYSELEGY + LEFTSLASH + SHADESKIPS + COMPLEXSKIPS"
+  //  }
+  //],
+  "Descending_Dark": [
+    {
+      //https://www.youtube.com/watch?v=H1OLuSkMgGs&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=91
+      "name": "Reachable with just wings. For the final jumps, you need a full height pogo + double jump off the background crystal.",
+      "logic": "WINGS + OBSCURESKIPS"
+    }
+  ],
   "Geo_Chest-Weavers_Den": [
     {
       "name": "From the Weaversong check, Super Dash left to a hidden breakable wall. Use Fireball to break the wall quickly.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=fGuYkusf628&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=157
+      "name": "You can pogo off the Deephunters while double jumping upwards.",
+      "logic": "WINGS + ENEMYPOGOS"
     }
   ],
   "Geo_Rock-Ancestral_Mound_Tree": [
@@ -207,10 +287,65 @@
       "logic": "TRUE"
     }
   ],
+  "Grub-Basin_Requires_Wings": [
+    {
+      //https://www.youtube.com/watch?v=wYV8eSMj-nY&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=188
+      "name": "Reachable by pogo-ing the Infected Balloons and double jumping.",
+      "logic": "WINGS + ENEMYPOGOS"
+    }
+  ],
   "Grub-Beast's_Den": [
     {
       "name": "From the dreamer check, go past it to the right. Keep going down past the breakable floor.",
       "logic": "TRUE"
+    }
+  ],
+  "Grub-City_of_Tears_Left": [
+    {
+      //https://www.youtube.com/watch?v=xqcfNfqETnU&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=109
+      "name": "Pogo off the Winged Sentry.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Grub-Crossroads_Center": [
+    {
+      //https://www.youtube.com/watch?v=RuQrwXfCJRQ&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=14
+      "name": "Lure the Vengefly to the right and pogo twice off of it.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Grub-Crystal_Heart": [
+    {
+      //https://www.youtube.com/watch?v=e_RCL7vCUu4&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=127
+      //https://www.youtube.com/watch?v=j-rru4nku6A&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=128
+      "name": "From the left wall, dash right, Airstall 3x and dash right again to grab the right wall.",
+      "logic": "LEFTCLAW + RIGHTCLAW + RIGHTDASH + SPELLAIRSTALL"
+    }
+  ],
+  "Grub-Greenpath_Cornifer": [
+    {
+      //https://www.youtube.com/watch?v=dRJ9M5cm1_8&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=45
+      "name": "Reachable by breaking a vine, hidden above the opening to Cornifer and the Grub. Great and Cyclone Slash also work.",
+      "logic": "LEFTSLASH | RIGHTSLASH | GREATSLASH | CYCLONE"
+    },
+    {
+      //https://www.youtube.com/watch?v=SaNg-H1xbUY&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=209
+      "name": "Reachable luring a Squit and pogo-ing off it to the upper platform.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Grub-Isma's_Grove": [
+    {
+      //https://www.youtube.com/watch?v=R3q9YyAD7Bo&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=120
+      "name": "May require an acid skip from the central area.",
+      "logic": "LEFTCLAW + RIGHTCLAW + LEFTDASH + RIGHTDASH + RIGHTSUPERDASH + ACIDSKIPS"
+    }
+  ],
+  "Grub-King's_Station": [
+    {
+      //https://www.youtube.com/watch?v=5Cr4fOT73Iw&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=114
+      "name": "May require an acid skip from the left side.",
+      "logic": "LEFTCLAW + RIGHTCLAW + LEFTDASH + RIGHTDASH + RIGHTSUPERDASH + ACIDSKIPS"
     }
   ],
   "Grub-Queen's_Gardens_Stag": [
@@ -219,10 +354,24 @@
       "logic": "TRUE"
     }
   ],
+  "Grub-Waterways_Requires_Tram": [
+    {
+      //https://www.youtube.com/watch?v=rYM7LatQg6M&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=141
+      "name": "May require first luring a Hwurmp downwards and pogo-ing off of it.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
   "Hallownest_Seal-Beast's_Den": [
     {
       "name": "After breaking free, walk to the right and down the first breakable floor.",
       "logic": "TRUE"
+    }
+  ],
+  "Hallownest_Seal-Crossroads_Well": [
+    {
+      //https://www.youtube.com/watch?v=wXJWyX4BJ-I&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=34
+      "name": "Lure a Furious Vengefly to the well and pogo with double jumps all the way up.",
+      "logic": "WINGS + INFECTED"
     }
   ],
   "Hallownest_Seal-Deepnest_By_Mantis_Lords": [
@@ -231,22 +380,73 @@
       "logic": "TRUE"
     }
   ],
+  "Hallownest_Seal-Fog_Canyon_East": [
+    {
+      //https://www.youtube.com/watch?v=fjlUn77umPI&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=15
+      "name": "Damage boost off the Charged Lumaflies.",
+      "logic": "DAMAGEBOOSTS"
+    }
+  ],
+  "Hallownest_Seal-Fungal_Wastes_Sporgs": [
+    {
+      //https://www.youtube.com/watch?v=vB5o7Z49Ido&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=46
+      "name": "Reachable itemless. The last jump is very precise.",
+      "logic": "PRECISEMOVEMENT"
+    }
+  ],
+  "Hallownest_Seal-Greenpath": [
+    {
+      //https://www.youtube.com/watch?v=XcpSEda7Ab0&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=4
+      //https://www.youtube.com/watch?v=TH-TIFQGvaA&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=16
+      "name": "Dash off the platform, Airstall, and Dash.",
+      "logic": "LEFTDASH + SPELLAIRSTALL"
+    },
+    {
+      //https://www.youtube.com/watch?v=us3TKY63KxQ&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=5
+      "name": "Dash off the platform, and dash again when recharged.",
+      "logic": "LEFTDASH + DASHMASTER + OBSCURESKIPS"
+    },
+    {
+      //https://www.youtube.com/watch?v=DiLA6U0sW-Y&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=212
+      "name": "Dash off the platform, dash again when recharged and climb off the left wall.",
+      "logic": "LEFTDASH + LEFTCLAW"
+    }
+  ],
   "Hallownest_Seal-King's_Station": [
     {
       "name": "Climb on top of the roof and to the left.",
       "logic": "TRUE"
     }
   ],
+  "Hallownest_Seal-Queen's_Gardens": [
+    {
+      //https://www.youtube.com/watch?v=T-Ui8NokBWY&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=164
+      "name": "Reachable by pogo-ing the Mantis Petras and their attacks",
+      "logic": "ENEMYPOGOS + DANGEROUSSKIPS"
+    }
+  ],
   "Journal_Entry-Charged_Lumafly": [
     {
       "name": "After defeating Uumuu, go down the left side and up from the acid to the second alcove.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=hEUNWCloTlA&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=214
+      "name": "Reachable from the left side without Isma's tear. Grab the tiny right wall near the ceiling to recharge double jump.",
+      "logic": "RIGHTCLAW + RIGHTDASH + WINGS"
     }
   ],
   "Journal_Entry-Garpede": [
     {
       "name": "From the top transition, go directly left to a hidden alcove.",
       "logic": "TRUE"
+    }
+  ],
+  "King's_Idol-Crystal_Peak": [
+    {
+      //https://www.youtube.com/watch?v=JHdj4XuT9BA&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=79
+      "name": "Pogo off the barrels, dash to the right wall and wall-jump to the left.",
+      "logic": "RIGHTCLAW + RIGHTDASH + BACKGROUNDPOGOS"
     }
   ],
   "King's_Idol-Glade_of_Hope": [
@@ -259,6 +459,25 @@
     {
       "name": "From the bottom right of the room, swim through the acid.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=4YyaXBwZrGc&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=180
+      "name": "You may need to use an acid skip.",
+      "logic": "ACIDSKIPS"
+    }
+  ],
+  "Lifeblood_Cocoon-Failed_Tramway": [
+    {
+      //https://www.youtube.com/watch?v=BAvJCon9e5w&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=142
+      "name": "Once a Carver Hatcher has spit out five Dirtcarvers, you can lure it to the left side to pogo off it.",
+      "logic": "WINGS + ENEMYPOGOS"
+    }
+  ],
+  "Lifeblood_Core": [
+    {
+      //https://www.youtube.com/watch?v=IF59XOPVs2g&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=192
+      "name": "Reachable itemless with some precise pogos and movement.",
+      "logic": "PRECISEMOVEMENT"
     }
   ],
   "Lore_Tablet-Archives_Left": [
@@ -277,6 +496,11 @@
     {
       "name": "From the top transition (before Uumuu), go downwards while hugging the right side.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=TUeWZD25MbE&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=63
+      "name": "You can pogo the Ooma to get to the upper platform.",
+      "logic": "ENEMYPOGOS"
     }
   ],
   "Lore_Tablet-Fungal_Core": [
@@ -327,16 +551,66 @@
       "logic": "TRUE"
     }
   ],
+  "Love_Key": [
+    {
+      //https://www.youtube.com/watch?v=GVfTpYNDikM&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=143
+      //https://www.youtube.com/watch?v=euH8rja4Vd0&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=144
+      "name": "Reachable via one or more acid skips.",
+      "logic": "ACIDSKIPS"
+    }
+  ],
+  "Mask_Shard-Crossroads_Goam": [
+    {
+      //https://www.youtube.com/watch?v=xYYR9DSuLaI&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=26
+      "name": "Lure the Vengefly to the left while pogo-ing the Goams. Then pogo off the Vengefly.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
   "Mask_Shard-Queen's_Station": [
     {
-      "name": "Getting this check is definitely possible with just Monarch Wings.",
+      "name": "Getting this check is definitely possible with just Wings. Use full height double jumps.",
       "logic": "WINGS"
+    }
+  ],
+  "Mask_Shard-Waterways": [
+    {
+      //https://www.youtube.com/watch?v=4Tc9dazg8wY&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=139
+      "name": "Reachable from the left side without Swim. Drop down and hug the left wall with Claw as much as you can while dashing left.",
+      "logic": "LEFTCLAW + LEFTDASH"
+    }
+  ],
+  "Monomon": [
+    {
+      //https://www.youtube.com/watch?v=uUEFoMFijXE&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=220
+      "name": "You can get across the acid from the left side with Sharp Shadow and three Airstalls.",
+      "logic": "LEFTCLAW + RIGHTCLAW + WINGS + RIGHTSHADOWDASH + FIREBALL + FIREBALLSKIPS + ACIDSKIPS + COMPLEXSKIPS"
+    }
+  ],
+  "Pale_Ore-Basin": [
+    {
+      //https://www.youtube.com/watch?v=cGWlS1uvWds&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=151
+      "name": "Reachable by damage boosting off a Lesser Mawlek's spit attack.",
+      "logic": "DAMAGEBOOSTS"
     }
   ],
   "Rancid_Egg-Beast's_Den": [
     {
       "name": "There is an alcove in a wall on the right side of the room.",
       "logic": "TRUE"
+    }
+  ],
+  "Rancid_Egg-Blue_Lake": [
+    {
+      //https://www.youtube.com/watch?v=EHX1Zhexz9w&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=132
+      "name": "Lure a Vengefly from the water below and pogo it upwards with double jumps.",
+      "logic": "SWIM + WINGS + ENEMYPOGOS"
+    }
+  ],
+  "Rancid_Egg-City_of_Tears_Left": [
+    {
+      //https://www.youtube.com/watch?v=H4E46N2z4zE&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=107
+      "name": "From the alcove, it is reachable by pogo-ing the background object, or by damage boosting off the rightmost Belfly.",
+      "logic": "BACKGROUNDPOGOS | DAMAGEBOOSTS"
     }
   ],
   "Rancid_Egg-Tuk_Defender's_Crest": [
@@ -355,6 +629,43 @@
     {
       "name": "From the left transition, walk right, down a pit and to the left.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=cUZViuH26Nw&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=159
+      "name": "Reachable with some precise pogos.",
+      "logic": "SPIKETUNNELS"
+    }
+  ],
+  "Shade_Cloak": [
+    {
+      //https://www.youtube.com/watch?v=P5rAEl2E-wM&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=196
+      "name": "Reachable with only Wings by pogo-ing your Shade with double jumps.",
+      "logic": "WINGS + SHADESKIPS"
+    }
+  ],
+  "Simple_Key-City": [
+    {
+      //https://www.youtube.com/watch?v=xqcfNfqETnU&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=109
+      "name": "May require pogo-ing a flying enemy.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Sly": [
+    {
+      "name": "You must talk to Sly in Crossroads first.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Catcher": [
+    {
+      //https://www.youtube.com/watch?v=k_bIly3GW98&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=78
+      "name": "Reachable with Claw, and breaking the wooden beams from below.",
+      "logic": "(LEFTCLAW | RIGHTCLAW) + UPWALLBREAK"
+    },
+    {
+      //https://www.youtube.com/watch?v=T_GxhFrVv54&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=28
+      "name": "From below, pogo off your Shade and double jump.",
+      "logic": "WINGS + SHADESKIPS"
     }
   ],
   "Soul_Totem-Beast's_Den": [
@@ -405,6 +716,34 @@
       "logic": "TRUE"
     }
   ],
+  "Soul_Totem-Waterways_Entrance": [
+    {
+      //https://www.youtube.com/watch?v=xqcfNfqETnU&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=109
+      "name": "May require pogo-ing a Pilflip while it is jumping.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Soul_Totem-Waterways_Flukemarm": [
+    {
+      //https://www.youtube.com/watch?v=HJzN8XrdoVo&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=136
+      "name": "May require pogo-ing an enemy over a wall.",
+      "logic": "ENEMYPOGOS"
+    }
+  ],
+  "Split_Crystal_Heart": [
+    {
+      //https://www.youtube.com/watch?v=h5LSxnPKiIc&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=124
+      "name": "To reach the middle vertical shaft, you can Airstall to the lowest crystal platform.",
+      "logic": "LEFTCLAW + SPELLAIRSTALL"
+    }
+  ],
+  "Thorns_of_Agony": [
+    {
+      //https://www.youtube.com/watch?v=kKyDkB_TpIo&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=42
+      "name": "Reachable with just left Claw and right Super Dash.",
+      "logic": "LEFTCLAW + RIGHTSUPERDASH"
+    }
+  ],
   "Unbreakable_Greed": [
     {
       "name": "You need Fragile Greed or Unbreakable Greed equipped.",
@@ -435,16 +774,42 @@
       "logic": "WINGS + DAMAGEBOOSTS"
     }
   ],
+  "Wanderer's_Journal-Ancient_Basin": [
+    {
+      //https://www.youtube.com/watch?v=InIEvN1fowE&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=213
+      "name": "Reachable from the right side itemless with some precise spike pogos.",
+      "logic": "SPIKETUNNELS"
+    }
+  ],
+  "Wanderer's_Journal-Fungal_Wastes_Thorns_Gauntlet": [
+    {
+      //https://www.youtube.com/watch?v=7Io0a26GvYc&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=49
+      "name": "Reachable with right Claw and spells. Stand just to the left of the thorns and Airstall three times",
+      "logic": "RIGHTCLAW + SPELLAIRSTALL"
+    }
+  ],
   "Wanderer's_Journal-Greenpath_Lower": [
     {
       "name": "From the bottom transition, follow the right wall up to a hidden alcove.",
       "logic": "TRUE"
     }
   ],
+  "Weaversong": [
+    {
+      //https://www.youtube.com/watch?v=AEtgu-5Fxck&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=156
+      "name": "Pogo off the Deephunter on the right wall while double jumping upwards.",
+      "logic": "WINGS + ENEMYPOGOS"
+    }
+  ],
   "Whispering_Root-Ancestral_Mound": [
     {
       "name": "In the top left of the room, jump up through the light to a hidden alcove.",
       "logic": "TRUE"
+    },
+    {
+      //https://www.youtube.com/watch?v=B8mg3yOQVvA&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=81
+      "name": "Lure a Vengefly all the way to the top left and pogo off it.",
+      "logic": "LEFTCLAW + RIGHTCLAW + ENEMYPOGOS"
     }
   ]
 }
