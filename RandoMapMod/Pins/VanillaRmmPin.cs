@@ -5,6 +5,7 @@ using MapChanger.Defs;
 using RandomizerCore;
 using UnityEngine;
 using L = RandomizerMod.Localization;
+using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pins
 {
@@ -35,6 +36,8 @@ namespace RandoMapMod.Pins
             {
                 RmmPinManager.GridPins.Add(this);
             }
+
+            hints = InteropProperties.GetDefaultLocationHints(placement.Location.Name).Select(RM.RS.TrackerData.lm.CreateDNFLogicDef).ToArray();
         }
 
         private protected override bool ActiveBySettings()

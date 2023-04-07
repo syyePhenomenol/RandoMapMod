@@ -3,6 +3,7 @@ using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Placements;
 using MapChanger.Defs;
+using RandomizerCore.Logic;
 
 namespace RandoMapMod.Pins
 {
@@ -58,7 +59,7 @@ namespace RandoMapMod.Pins
         /// The pixel dimensions (x, y) of the location pin sprite, not including transparent pixels that may be in the texture.
         /// If not provided, defaults to the size of the LocationPinSprite's texture.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (int, int)?> LocationPinSpriteSize = new("PinSpriteSize", (placement) => { return null; });
+        internal static readonly MetadataProperty<AbstractPlacement, (int x, int y)?> LocationPinSpriteSize = new("PinSpriteSize", (placement) => { return null; });
 
         /// <summary>
         /// A key to access a built in sprite, for a placement's specific item.
@@ -76,7 +77,7 @@ namespace RandoMapMod.Pins
         /// The pixel dimensions (x, y) of the item pin sprite, not including transparent pixels that may be in the texture.
         /// If not provided, defaults to the size of the ItemPinSprite's texture.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractItem, (int, int)?> ItemPinSpriteSize = new("PinSpriteSize", (item) => { return null; });
+        internal static readonly MetadataProperty<AbstractItem, (int x, int y)?> ItemPinSpriteSize = new("PinSpriteSize", (item) => { return null; });
 
         /// <summary>
         /// The scenes for a multi-scene placement. The corresponding rooms are highlighted when the pin is selected.
@@ -90,21 +91,21 @@ namespace RandoMapMod.Pins
         /// You can use Ctrl-D with Debug level logging to get the offset values from the knight's world position.
         /// The mod will attempt to place the pin at the first scene in the array that has a corresponding room sprite.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (string, float, float)[]> MapLocations = new("MapLocations", (placement) => { return GetDefaultMapLocations(placement.Name); });
+        internal static readonly MetadataProperty<AbstractPlacement, (string scene, float x, float y)[]> MapLocations = new("MapLocations", (placement) => { return GetDefaultMapLocations(placement.Name); });
 
         /// <summary>
         /// Array of (scene, x-offset, y-offset) tuples to position the pin based on offset from the center of a room sprite.
         /// The offset is interpreted as the world coordinate in the actual room.
         /// The mod will attempt to place the pin at the first scene in the array that has a corresponding room sprite.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (string, float, float)[]> WorldMapLocations = new("WorldMapLocations", (placement) => { return GetDefaultWorldMapLocations(placement); });
+        internal static readonly MetadataProperty<AbstractPlacement, (string scene, float x, float y)[]> WorldMapLocations = new("WorldMapLocations", (placement) => { return GetDefaultWorldMapLocations(placement); });
 
         /// <summary>
         /// (x-offset, y-offset) to position the pin based on absolute offset from the center of the map.
         /// The offset is interpreted as unscaled (raw LocalPosition).
         /// You can use Ctrl-D with Debug level logging to get the offset values from the knight's world position.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (float, float)?> AbsMapLocation = new("AbsMapLocation", (placement) => { return null; });
+        internal static readonly MetadataProperty<AbstractPlacement, (float x, float y)?> AbsMapLocation = new("AbsMapLocation", (placement) => { return null; });
 
         /// <summary>
         /// Value to sort pins in the miscellaneous grid on the map.
@@ -112,9 +113,10 @@ namespace RandoMapMod.Pins
         internal static readonly MetadataProperty<AbstractPlacement, int> PinGridIndex = new("PinGridIndex", (placement) => { return int.MaxValue; });
 
         /// <summary>
-        /// Optional text that can be revealed to help players find the placement's location.
+        /// Optional text that can be revealed to help players find the placement's location. name = hint, logic = requirements for the hint to be relevant.
+        /// If you always want the hint to show, set logic to TRUE.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, string> LocationHint = new("LocationHint", (placement) => { return null; });
+        internal static readonly MetadataProperty<AbstractPlacement, RawLogicDef[]> LocationHints = new("LocationHints", (placement) => { return GetDefaultLocationHints(placement.Name); });
 
         internal static (string, float, float)[] GetDefaultMapLocations(string name)
         {
@@ -156,6 +158,16 @@ namespace RandoMapMod.Pins
         private static ISprite GetDefaultItemSprite(AbstractItem item)
         {
             return new PinItemSprite(item);
+        }
+
+        internal static RawLogicDef[] GetDefaultLocationHints(string name)
+        {
+            if (RmmPinManager.LocationHints.TryGetValue(name, out var hints))
+            {
+                return hints;
+            }
+
+            return new RawLogicDef[] { };
         }
     }
 }

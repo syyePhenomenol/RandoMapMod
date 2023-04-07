@@ -51,7 +51,9 @@ namespace RandoMapMod.Pins
         internal MapZone MapZone { get; protected private set; } = MapZone.NONE;
         internal LogicDef Logic { get; private set; }
         internal int PinGridIndex { get; protected private set; }
-        internal string LocationHint { get; protected private set; }
+
+        private protected DNFLogicDef[] hints;
+        internal string HintText { get; private set; }
 
         public override void Initialize()
         {
@@ -71,11 +73,6 @@ namespace RandoMapMod.Pins
             if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out LogicDef logic))
             {
                 Logic = logic;
-            }
-
-            if (RmmPinManager.LocationHints.TryGetValue(name, out string hint))
-            {
-                LocationHint = hint;
             }
 
             BorderSprite = new EmbeddedSprite("Pins.Border").Value;
@@ -100,6 +97,7 @@ namespace RandoMapMod.Pins
             UpdatePinSize();
             UpdatePinColor();
             UpdateBorderColor();
+            UpdateHintText();
         }
 
         protected private abstract void UpdatePinSprite();
@@ -109,6 +107,23 @@ namespace RandoMapMod.Pins
         protected private abstract void UpdatePinColor();
 
         protected private abstract void UpdateBorderColor();
+
+        private void UpdateHintText()
+        {
+            if (hints is null || !hints.Any()) return;
+
+            string text = "\n";
+
+            foreach (var hint in hints)
+            {
+                if (hint.CanGet(RandomizerMod.RandomizerMod.RS.TrackerData.pm))
+                {
+                    text += $"\n{hint.Name}";
+                }
+            }
+
+            HintText = (text is not "\n") ? text : null;
+        }
 
         protected private bool CorrectMapOpen()
         {

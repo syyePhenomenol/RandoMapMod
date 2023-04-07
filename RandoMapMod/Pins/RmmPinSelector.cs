@@ -16,7 +16,7 @@ namespace RandoMapMod.Pins
 
         internal static HashSet<ISelectable> HighlightedRooms { get; private set; } = new();
 
-        internal static bool ShowLocationHint { get; private set; }
+        internal static bool ShowHint { get; private set; }
 
         internal void Initialize(IEnumerable<RmmPin> pins)
         {
@@ -61,9 +61,9 @@ namespace RandoMapMod.Pins
             // Press quick cast for location hint
             if (InputHandler.Instance.inputActions.quickCast.WasPressed)
             {
-                if (!ShowLocationHint)
+                if (!ShowHint)
                 {
-                    ShowLocationHint = true;
+                    ShowHint = true;
                     SelectionPanels.UpdatePinPanel();
                 }
             }
@@ -203,7 +203,7 @@ namespace RandoMapMod.Pins
 
         protected override void OnSelectionChanged()
         {
-            ShowLocationHint = false;
+            ShowHint = false;
             SelectionPanels.UpdatePinPanel();
             SelectionPanels.UpdateRoomPanel();
         }
@@ -233,11 +233,11 @@ namespace RandoMapMod.Pins
 
                 List<InControl.BindingSource> quickCastBindings = new(InputHandler.Instance.inputActions.quickCast.Bindings);
 
-                if (pin.LocationHint is not null)
+                if (pin.HintText is not null)
                 {
-                    if (ShowLocationHint)
+                    if (ShowHint)
                     {
-                        text += $"\n\n{L.Localize("Hint")}: {pin.LocationHint}";
+                        text += pin.HintText;
                     }
                     else 
                     {

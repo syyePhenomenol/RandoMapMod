@@ -118,7 +118,7 @@ namespace RandoMapMod.Pins
                 }
             }
 
-            LocationHint ??= SD.Of(placement).Get(InteropProperties.LocationHint);
+            hints = SD.Of(placement).Get(InteropProperties.LocationHints).Select(RM.RS.TrackerData.lm.CreateDNFLogicDef).ToArray();
 
             // This has default behaviour when the CoordinateLocation exists and no other properties are provided
             if (!MapChanger.Finder.TryGetLocation(placement.Name, out MapLocationDef _)

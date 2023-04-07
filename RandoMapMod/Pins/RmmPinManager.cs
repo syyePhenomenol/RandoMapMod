@@ -8,6 +8,7 @@ using MapChanger.MonoBehaviours;
 using Newtonsoft.Json;
 using RandoMapMod.Modes;
 using RandomizerCore;
+using RandomizerCore.Logic;
 using RandomizerMod.IC;
 using UnityEngine;
 using RD = RandomizerMod.RandomizerData;
@@ -26,7 +27,7 @@ namespace RandoMapMod.Pins
         private const float OFFSETZ_RANGE = 0.4f;
 
         private static Dictionary<MapZone, QuickMapGridDef> quickMapGridDefs;
-        internal static Dictionary<string, string> LocationHints;
+        internal static Dictionary<string, RawLogicDef[]> LocationHints;
 
         internal static MapObject MoPins { get; private set; }
         internal static Dictionary<string, RmmPin> Pins { get; private set; } = new();
@@ -41,7 +42,7 @@ namespace RandoMapMod.Pins
         internal static void Load()
         {
             quickMapGridDefs = JsonUtil.DeserializeFromAssembly<Dictionary<MapZone, QuickMapGridDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.quickMapGrids.json");
-            LocationHints = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.locationHints.json");
+            LocationHints = JsonUtil.DeserializeFromAssembly<Dictionary<string, RawLogicDef[]>>(RandoMapMod.Assembly, "RandoMapMod.Resources.locationHints.json");
         }
 
         public override void OnEnterGame()

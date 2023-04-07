@@ -1,74 +1,450 @@
 ﻿{
-  "Geo_Chest-Weavers_Den": "From the Weaversong check, Super Dash left to a hidden breakable wall. Use Fireball to break the wall quickly.",
-  "Geo_Rock-Ancestral_Mound_Tree": "In the top left of the room, jump up through the light to a hidden alcove.",
-  "Geo_Rock-Ancestral_Mound_Tree_Dupe": "In the top left of the room, jump up through the light to a hidden alcove.",
-  "Geo_Rock-Beast's_Den_Above_Trilobite": "From the bench, climb upwards to the second alcove on the right side.",
-  "Geo_Rock-Beast's_Den_Above_Trilobite_Dupe": "From the bench, climb upwards to the second alcove on the right side.",
-  "Geo_Rock-Beast's_Den_After_Herrah": "From the dreamer check, go past it to the right.",
-  "Geo_Rock-Beast's_Den_Below_Egg": "From the top of the largest vertical shaft, climb up to an alcove on the right.",
-  "Geo_Rock-Beast's_Den_Below_Egg_Dupe": "From the top of the largest vertical shaft, climb up to an alcove on the right.",
-  "Geo_Rock-Beast's_Den_Below_Herrah": "From the dreamer check, go past it to the right. Go down through the breakable floor.",
-  "Geo_Rock-Beast's_Den_Bottom": "After breaking free, walk to the right and down the second breakable floor.",
-  "Geo_Rock-Beast's_Den_Bottom_Dupe": "After breaking free, walk to the right and down the second breakable floor.",
-  "Geo_Rock-Below_Gorb": "In the cave just below Gorb, there is a hidden alcove on the right.",
-  "Geo_Rock-Crossroads_Tram": "Directly underneath the tram.",
-  "Geo_Rock-Dark_Deepnest_Above_Grub_2": "From the top transition, find the spike pit just below. There is a hidden tunnel in the pit.",
-  "Geo_Rock-Deepnest_Below_Spike_Grub": "The spike pit at the top left of the room has a small hole. There are two checks next to each other.",
-  "Geo_Rock-Deepnest_Below_Spike_Grub_Dupe": "The spike pit at the top left of the room has a small hole. There are two checks next to each other.",
-  "Geo_Rock-Fungal_Above_City_Entrance": "From the right transition, climb upwards.",
-  "Geo_Rock-Greenpath_Toll_Hidden": "There is a breakable wall above the bench/toll and to the left.",
-  "Geo_Rock-Greenpath_Toll_Hidden_Dupe": "There is a breakable wall above the bench/toll and to the left.",
-  "Geo_Rock-Hallownest_Crown_Dive": "Go through the breakable Dive floor in the middle of the room.",
-  "Geo_Rock-Hallownest_Crown_Dive_Dupe": "Go through the breakable Dive floor in the middle of the room.",
-  "Geo_Rock-King's_Station": "From the lower right transition, climb up through a hidden shaft.",
-  "Geo_Rock-Pale_Lurker": "From the left transition, drop down, hug the right wall, and dash/jump up to an alcove.",
-  "Grimmkin_Flame-Ancient_Basin": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Brumm": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-City_Storerooms": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Crystal_Peak": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Fungal_Core": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Greenpath": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Hive": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Kingdom's_Edge": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-King's_Pass": "You need Grimmchild equipped.",
-  "Grimmkin_Flame-Resting_Grounds": "You need Grimmchild equipped.",
-  "Grub-Basin_Requires_Dive": "From the rightmost transition, go left to a pit. At the bottom of the pit is a breakable Dive floor.",
-  "Grub-Beast's_Den": "From the dreamer check, go past it to the right. Keep going down past the breakable floor.",
-  "Grub-Queen's_Gardens_Stag": "From the top transition, go all the way left to a hidden alcove.",
-  "Hallownest_Seal-Beast's_Den": "After breaking free, walk to the right and down the first breakable floor.",
-  "Hallownest_Seal-Deepnest_By_Mantis_Lords": "At the top and center of the room, there is a hidden tunnel at the very top of the right wall.",
-  "Hallownest_Seal-King's_Station": "Climb on top of the roof and to the left.",
-  "Journal_Entry-Charged_Lumafly": "After defeating Uumuu, go down the left side and up from the acid to the second alcove.",
-  "Journal_Entry-Garpede": "From the top transition, go directly left to a hidden alcove.",
-  "King's_Idol-Glade_of_Hope": "On the right side, find a hidden alcove at the top of a waterfall.",
-  "King's_Idol-Pale_Lurker": "From the bottom right of the room, swim through the acid.",
-  "Lore_Tablet-Archives_Left": "After defeating Uumuu, go down the left side and up from the acid to the third alcove.",
-  "Lore_Tablet-Archives_Right": "After defeating Uumu, go down the right side to the second alcove.",
-  "Lore_Tablet-Archives_Upper": "From the top transition (before Uumuu), go downwards while hugging the right side.",
-  "Lore_Tablet-Fungal_Core": "You need Spore Shroom equipped.",
-  "Lore_Tablet-Fungal_Wastes_Below_Shrumal_Ogres": "You need Spore Shroom equipped.",
-  "Lore_Tablet-Fungal_Wastes_Hidden": "From the left transition, climb the left wall. You need Spore Shroom equipped.",
-  "Lore_Tablet-Greenpath_Upper_Hidden": "From the right transition, get to the top level and jump off to the right.",
-  "Lore_Tablet-Kingdom's_Edge": "You need Spore Shroom equipped.",
-  "Lore_Tablet-Palace_Throne": "From the King Fragment check/throne, there is a breakable wall all the way to the right.",
-  "Lore_Tablet-Sanctum_Past_Soul_Master": "At the very top right corner of the room, there is a breakable Dive floor.",
-  "Lore_Tablet-Spore_Shroom": "You need Spore Shroom equipped.",
-  "Rancid_Egg-Beast's_Den": "There is an alcove in a wall on the right side of the room.",
-  "Rancid_Egg-Tuk_Defender's_Crest": "You need Defender's Crest equipped.",
-  "Rancid_Egg-Upper_Kingdom's_Edge": "Find a large floating strcture around the top right. Inside it is a hidden alcove accessible from below.",
-  "Rancid_Egg-Weaver's_Den": "From the left transition, walk right, down a pit and to the left.",
-  "Soul_Totem-Beast's_Den": "The widest vertical shaft has an alcove on the left wall.",
-  "Soul_Totem-Below_Xero": "There is a breakable wall above the lower left transition.",
-  "Soul_Totem-Crossroads_Goam_Journal": "From the lower right transition, facing left, there is a breakable wall.",
-  "Soul_Totem-Deepnest_Vessel": "Before pogo-ing the vertical Garpede, there is a breakable wall on the right.",
-  "Soul_Totem-Hallownest_Crown": "Go through the breakable Dive floor in the middle of the room.",
-  "Soul_Totem-Kingdom's_Edge_Camp": "From the upper left transition, jump up two small platforms and jump left to a hidden alcove.",
-  "Soul_Totem-Path_of_Pain_Entrance": "From the beginning of Path of Pain, Super Dash to the left.",
-  "Soul_Totem-Pilgrim's_Way": "From the lever check on the middle of the bridge, climb upwards to an alcove.",
-  "Unbreakable_Greed": "You need Fragile Greed or Unbreakable Greed equipped.",
-  "Unbreakable_Heart": "You need Fragile Heart or Unbreakable Heart equipped.",
-  "Unbreakable_Strength": "You need Fragile Strength or Unbreakable Strength equipped.",
-  "Vengeful_Spirit": "You may need to exhaust Snail Shaman's dialogue.",
-  "Wanderer's_Journal-Greenpath_Lower": "From the bottom transition, follow the right wall up to a hidden alcove.",
-  "Whispering_Root-Ancestral_Mound": "In the top left of the room, jump up through the light to a hidden alcove."
+  // One location can have multiple hints, of which each one's relevancy depends on the settings/progression of your save.
+  // "logic" doesn't necessarily indicate what is required for the hint's instructions, just what makes it relevant.
+  // "TRUE" means the hint is general.
+
+  "Geo_Chest-Weavers_Den": [
+    {
+      "name": "From the Weaversong check, Super Dash left to a hidden breakable wall. Use Fireball to break the wall quickly.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Ancestral_Mound_Tree": [
+    {
+      "name": "In the top left of the room, jump up through the light to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Ancestral_Mound_Tree_Dupe": [
+    {
+      "name": "In the top left of the room, jump up through the light to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Above_Trilobite": [
+    {
+      "name": "From the bench, climb upwards to the second alcove on the right side.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Above_Trilobite_Dupe": [
+    {
+      "name": "From the bench, climb upwards to the second alcove on the right side.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_After_Herrah": [
+    {
+      "name": "From the dreamer check, go past it to the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Below_Egg": [
+    {
+      "name": "From the top of the largest vertical shaft, climb up to an alcove on the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Below_Egg_Dupe": [
+    {
+      "name": "From the top of the largest vertical shaft, climb up to an alcove on the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Below_Herrah": [
+    {
+      "name": "From the dreamer check, go past it to the right. Go down through the breakable floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Bottom": [
+    {
+      "name": "After breaking free, walk to the right and down the second breakable floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Beast's_Den_Bottom_Dupe": [
+    {
+      "name": "After breaking free, walk to the right and down the second breakable floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Below_Gorb": [
+    {
+      "name": "In the cave just below Gorb, there is a hidden alcove on the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Crossroads_Tram": [
+    {
+      "name": "Directly underneath the tram.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Dark_Deepnest_Above_Grub_2": [
+    {
+      "name": "From the top transition, find the spike pit just below. There is a hidden tunnel in the pit.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Deepnest_Below_Spike_Grub": [
+    {
+      "name": "The spike pit at the top left of the room has a small hole. There are two checks next to each other.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Deepnest_Below_Spike_Grub_Dupe": [
+    {
+      "name": "The spike pit at the top left of the room has a small hole. There are two checks next to each other.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Fungal_Above_City_Entrance": [
+    {
+      "name": "From the right transition, climb upwards.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Greenpath_Toll_Hidden": [
+    {
+      "name": "There is a breakable wall above the bench/toll and to the left.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Greenpath_Toll_Hidden_Dupe": [
+    {
+      "name": "There is a breakable wall above the bench/toll and to the left.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Hallownest_Crown_Dive": [
+    {
+      "name": "Go through the breakable Dive floor in the middle of the room.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Hallownest_Crown_Dive_Dupe": [
+    {
+      "name": "Go through the breakable Dive floor in the middle of the room.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-King's_Station": [
+    {
+      "name": "From the lower right transition, climb up through a hidden shaft.",
+      "logic": "TRUE"
+    }
+  ],
+  "Geo_Rock-Pale_Lurker": [
+    {
+      "name": "From the left transition, drop down, hug the right wall, and dash/jump up to an alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Ancient_Basin": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Brumm": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-City_Storerooms": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Crystal_Peak": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Fungal_Core": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Greenpath": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Hive": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Kingdom's_Edge": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-King's_Pass": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grimmkin_Flame-Resting_Grounds": [
+    {
+      "name": "You need Grimmchild equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grub-Basin_Requires_Dive": [
+    {
+      "name": "From the rightmost transition, go left to a pit. At the bottom of the pit is a breakable Dive floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grub-Beast's_Den": [
+    {
+      "name": "From the dreamer check, go past it to the right. Keep going down past the breakable floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Grub-Queen's_Gardens_Stag": [
+    {
+      "name": "From the top transition, go all the way left to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Hallownest_Seal-Beast's_Den": [
+    {
+      "name": "After breaking free, walk to the right and down the first breakable floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Hallownest_Seal-Deepnest_By_Mantis_Lords": [
+    {
+      "name": "At the top and center of the room, there is a hidden tunnel at the very top of the right wall.",
+      "logic": "TRUE"
+    }
+  ],
+  "Hallownest_Seal-King's_Station": [
+    {
+      "name": "Climb on top of the roof and to the left.",
+      "logic": "TRUE"
+    }
+  ],
+  "Journal_Entry-Charged_Lumafly": [
+    {
+      "name": "After defeating Uumuu, go down the left side and up from the acid to the second alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Journal_Entry-Garpede": [
+    {
+      "name": "From the top transition, go directly left to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "King's_Idol-Glade_of_Hope": [
+    {
+      "name": "On the right side, find a hidden alcove at the top of a waterfall.",
+      "logic": "TRUE"
+    }
+  ],
+  "King's_Idol-Pale_Lurker": [
+    {
+      "name": "From the bottom right of the room, swim through the acid.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Archives_Left": [
+    {
+      "name": "After defeating Uumuu, go down the left side and up from the acid to the third alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Archives_Right": [
+    {
+      "name": "After defeating Uumu, go down the right side to the second alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Archives_Upper": [
+    {
+      "name": "From the top transition (before Uumuu), go downwards while hugging the right side.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Fungal_Core": [
+    {
+      "name": "You need Spore Shroom equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Fungal_Wastes_Below_Shrumal_Ogres": [
+    {
+      "name": "You need Spore Shroom equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Fungal_Wastes_Hidden": [
+    {
+      "name": "From the left transition, climb the left wall. You need Spore Shroom equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Greenpath_Upper_Hidden": [
+    {
+      "name": "From the right transition, get to the top level and jump off to the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Kingdom's_Edge": [
+    {
+      "name": "You need Spore Shroom equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Palace_Throne": [
+    {
+      "name": "From the King Fragment check/throne, there is a breakable wall all the way to the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Sanctum_Past_Soul_Master": [
+    {
+      "name": "At the very top right corner of the room, there is a breakable Dive floor.",
+      "logic": "TRUE"
+    }
+  ],
+  "Lore_Tablet-Spore_Shroom": [
+    {
+      "name": "You need Spore Shroom equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Mask_Shard-Queen's_Station": [
+    {
+      "name": "Getting this check is definitely possible with just Monarch Wings.",
+      "logic": "WINGS"
+    }
+  ],
+  "Rancid_Egg-Beast's_Den": [
+    {
+      "name": "There is an alcove in a wall on the right side of the room.",
+      "logic": "TRUE"
+    }
+  ],
+  "Rancid_Egg-Tuk_Defender's_Crest": [
+    {
+      "name": "You need Defender's Crest equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Rancid_Egg-Upper_Kingdom's_Edge": [
+    {
+      "name": "Find a large floating strcture around the top right. Inside it is a hidden alcove accessible from below.",
+      "logic": "TRUE"
+    }
+  ],
+  "Rancid_Egg-Weaver's_Den": [
+    {
+      "name": "From the left transition, walk right, down a pit and to the left.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Beast's_Den": [
+    {
+      "name": "The widest vertical shaft has an alcove on the left wall.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Below_Xero": [
+    {
+      "name": "There is a breakable wall above the lower left transition.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Crossroads_Goam_Journal": [
+    {
+      "name": "From the lower right transition, facing left, there is a breakable wall.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Deepnest_Vessel": [
+    {
+      "name": "Before pogo-ing the vertical Garpede, there is a breakable wall on the right.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Hallownest_Crown": [
+    {
+      "name": "Go through the breakable Dive floor in the middle of the room.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Kingdom's_Edge_Camp": [
+    {
+      "name": "From the upper left transition, jump up two small platforms and jump left to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Path_of_Pain_Entrance": [
+    {
+      "name": "From the beginning of Path of Pain, Super Dash to the left.",
+      "logic": "TRUE"
+    }
+  ],
+  "Soul_Totem-Pilgrim's_Way": [
+    {
+      "name": "From the lever check on the middle of the bridge, climb upwards to an alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Unbreakable_Greed": [
+    {
+      "name": "You need Fragile Greed or Unbreakable Greed equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Unbreakable_Heart": [
+    {
+      "name": "You need Fragile Heart or Unbreakable Heart equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Unbreakable_Strength": [
+    {
+      "name": "You need Fragile Strength or Unbreakable Strength equipped.",
+      "logic": "TRUE"
+    }
+  ],
+  "Vengeful_Spirit": [
+    {
+      "name": "You may need to exhaust Snail Shaman's dialogue.",
+      "logic": "TRUE"
+    }
+  ],
+  "Vessel_Fragment-Greenpath": [
+    {
+      "name": "Jump far left until you hit the wall and hazard respawn, either in the thorns back to the right or in the acid.",
+      "logic": "WINGS + DAMAGEBOOSTS"
+    }
+  ],
+  "Wanderer's_Journal-Greenpath_Lower": [
+    {
+      "name": "From the bottom transition, follow the right wall up to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ],
+  "Whispering_Root-Ancestral_Mound": [
+    {
+      "name": "In the top left of the room, jump up through the light to a hidden alcove.",
+      "logic": "TRUE"
+    }
+  ]
 }
