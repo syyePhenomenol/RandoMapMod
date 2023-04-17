@@ -91,7 +91,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.3.1";
+        public override string GetVersion() => "3.3.2";
 
         public override int LoadPriority() => 10;
 
@@ -189,6 +189,8 @@ namespace RandoMapMod
 
         private static void OnQuitToMenu()
         {
+            if (!RandomizerMod.RandomizerMod.IsRandoSave) return;
+
             Events.OnSetGameMap -= OnSetGameMap;
 
             foreach (HookModule hookModule in hookModules)
