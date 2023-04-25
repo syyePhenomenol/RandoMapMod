@@ -134,7 +134,10 @@ namespace RandoMapMod.Pins
         {
             return MapZone is MapZone.NONE
                 || MapChanger.Settings.CurrentMode() is FullMapMode or AllPinsMode
-                || (MapChanger.Settings.CurrentMode() is PinsOverMapMode && Utils.HasMapSetting(MapZone))
+                || (MapChanger.Settings.CurrentMode() is PinsOverAreaMode && Utils.HasMapSetting(MapZone))
+                || (MapChanger.Settings.CurrentMode() is PinsOverRoomMode && Utils.HasMapSetting(MapZone)
+                    && ((Tracker.HasVisitedScene(Finder.GetMappedScene(SceneName)) && (PlayerData.instance.GetBool(nameof(PlayerData.hasQuill)) || RandoMapMod.GS.AlwaysHaveQuill))
+                        || Finder.IsMinimalMapScene(Finder.GetMappedScene(SceneName))))
                 || (Conditions.TransitionRandoModeEnabled() && TransitionTracker.GetRoomActive(SceneName))
                 || (Interop.HasBenchwarp() && RandoMapMod.GS.ShowBenchwarpPins && IsVisitedBench());
         }

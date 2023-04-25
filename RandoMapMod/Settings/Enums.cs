@@ -33,7 +33,8 @@
     {
         Full_Map,
         All_Pins,
-        Pins_Over_Map,
+        Pins_Over_Area,
+        Pins_Over_Room,
         Transition_Normal,
         Transition_Visited_Only,
         Transition_All_Rooms,

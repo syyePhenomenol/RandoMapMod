@@ -31,7 +31,8 @@ namespace RandoMapMod
         {
             new FullMapMode(),
             new AllPinsMode(),
-            new PinsOverMapMode(),
+            new PinsOverAreaMode(),
+            new PinsOverRoomMode(),
             new TransitionNormalMode(),
             new TransitionVisitedOnlyMode(),
             new TransitionAllRoomsMode()
@@ -91,7 +92,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.3.3";
+        public override string GetVersion() => "3.4.0";
 
         public override int LoadPriority() => 10;
 

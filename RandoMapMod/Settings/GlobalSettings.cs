@@ -22,6 +22,7 @@ namespace RandoMapMod.Settings
         public bool ShowAreaNames = true;
         public NextAreaSetting ShowNextAreas = NextAreaSetting.Full;
         public bool ShowMapMarkers = false;
+        public bool AlwaysHaveQuill = true;
 
         /// <summary>
         /// By default, the mode is set to Full Map in item rando, and Transition in a transition rando (at
@@ -123,6 +124,11 @@ namespace RandoMapMod.Settings
         internal void ToggleMapMarkers()
         {
             ShowMapMarkers = !ShowMapMarkers;
+        }
+
+        internal void ToggleAlwaysHaveQuill()
+        {
+            AlwaysHaveQuill = !AlwaysHaveQuill;
         }
 
         internal static void ResetToDefaultSettings()

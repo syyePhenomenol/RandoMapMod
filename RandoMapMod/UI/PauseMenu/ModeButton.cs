@@ -34,44 +34,50 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            string text = $"{L.Localize("Mode")}:\n";
+            string text = $"{L.Localize("Mode")}:";
 
             MapMode mode = MapChanger.Settings.CurrentMode();
 
             if (mode is FullMapMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += L.Localize("Full Map");
+                text += '\n' + L.Localize("Full Map");
             }
 
             if (mode is AllPinsMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += L.Localize("All Pins");
+                text += '\n' + L.Localize("All Pins");
             }
 
-            if (mode is PinsOverMapMode)
+            if (mode is PinsOverAreaMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += L.Localize("Pins Over Map");
+                text += L.Localize(" Pins\nOver Area");
+            }
+
+            if (mode is PinsOverRoomMode)
+            {
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                text += L.Localize(" Pins\nOver Room");
             }
 
             if (mode is TransitionNormalMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += L.Localize("Transition") + " 1";
+                text += '\n' + L.Localize("Transition") + " 1";
             }
 
             if (mode is TransitionVisitedOnlyMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += L.Localize("Transition") + " 2";
+                text += '\n' + L.Localize("Transition") + " 2";
             }
 
             if (mode is TransitionAllRoomsMode)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += L.Localize("Transition") + " 3";
+                text += '\n' + L.Localize("Transition") + " 3";
             }
 
             Button.Content = text;

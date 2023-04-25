@@ -98,15 +98,20 @@ namespace RandoMapMod.Modes
     {
         public override string Mod => RandoMapMod.MOD;
         public override string ModeName => RmmMode.All_Pins.ToString().ToCleanName();
-        public override bool ForceHasQuill => false;
         public override bool FullMap => false;
     }
 
-    internal class PinsOverMapMode : ItemRandoMode
+    internal class PinsOverAreaMode : ItemRandoMode
     {
         public override string Mod => RandoMapMod.MOD;
-        public override string ModeName => RmmMode.Pins_Over_Map.ToString().ToCleanName();
-        public override bool ForceHasQuill => false;
+        public override string ModeName => RmmMode.Pins_Over_Area.ToString().ToCleanName();
+        public override bool FullMap => false;
+    }
+
+    internal class PinsOverRoomMode : ItemRandoMode
+    {
+        public override string Mod => RandoMapMod.MOD;
+        public override string ModeName => RmmMode.Pins_Over_Room.ToString().ToCleanName();
         public override bool FullMap => false;
     }
 }
