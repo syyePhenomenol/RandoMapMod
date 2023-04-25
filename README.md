@@ -10,6 +10,7 @@ This version is the successor to MapModS, updated to work with the MapChanger li
 
 # Dependencies:
 - [Randomizer 4](https://github.com/homothetyhk/RandomizerMod) and all of its dependencies.
+- [RCPathfinder](https://github.com/syyePhenomenol/RCPathfinder)
 - [MapChanger](https://github.com/syyePhenomenol/MapChanger)
 - [MagicUI](https://github.com/BadMagic100/HollowKnight.MagicUI)
 - [ConnectionMetadataInjector](https://github.com/BadMagic100/ConnectionMetadataInjector)
@@ -101,7 +102,7 @@ Optional and compatible:
 - `CTRL-C`: Toggle the route compass on/off.
 
 ## Customization
-- To customize map and UI colors, download the [template file](https://github.com/syyePhenomenol/HollowKnight.RandoMapMod/releases/download/v3.0.0/colors.json) and copy it to the same folder that contains the mod file ``RandoMapMod.dll``. You only need to quit a save and re-enter one to reload the colors.
+- To customize map and UI colors, download the [template file](https://github.com/syyePhenomenol/RandoMapMod/releases/download/v3.0.0/colors.json) and copy it to the same folder that contains the mod file ``RandoMapMod.dll``. You only need to quit a save and re-enter one to reload the colors.
     - For Steam + Scarab users on Windows, the default folder is `...\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\RandoMapMod`.
     - Colors will be interpreted in standard RGBA format ``[r, g, b, a]``.
     - If you want to keep the default color of something, delete the corresponding line in the file (or change ``[r, g, b, a]`` to ``[]``).
