@@ -98,6 +98,7 @@ namespace RandoMapMod.Modes
     {
         public override string Mod => RandoMapMod.MOD;
         public override string ModeName => RmmMode.All_Pins.ToString().ToCleanName();
+        public override bool ForceHasQuill => false;
         public override bool FullMap => false;
     }
 
@@ -105,6 +106,7 @@ namespace RandoMapMod.Modes
     {
         public override string Mod => RandoMapMod.MOD;
         public override string ModeName => RmmMode.Pins_Over_Map.ToString().ToCleanName();
+        public override bool ForceHasQuill => false;
         public override bool FullMap => false;
     }
 }
