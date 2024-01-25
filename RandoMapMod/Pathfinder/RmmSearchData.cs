@@ -1,11 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using MapChanger;
 using RandoMapMod.Transition;
+using RandomizerCore.Json;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 using RandomizerMod.RC;
 using RCPathfinder;
 using RCPathfinder.Actions;
+using JU = RandomizerCore.Json.JsonUtil;
 using RM = RandomizerMod.RandomizerMod;
 using SN = ItemChanger.SceneNames;
 
@@ -34,7 +36,7 @@ namespace RandoMapMod.Pathfinder
 
         internal static void LoadConditionalTerms()
         {
-            conditionalTerms = JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json");
+            conditionalTerms = JU.DeserializeFromEmbeddedResource<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json");
         }
 
         public RmmSearchData(ProgressionManager reference) : base(reference)
@@ -100,15 +102,16 @@ namespace RandoMapMod.Pathfinder
             }
 
             // Inject new terms
-            lmb.DeserializeJson(LogicManagerBuilder.JsonType.Transitions, RandoMapMod.Assembly.GetManifestResourceStream("RandoMapMod.Resources.Pathfinder.Logic.transitions.json"));
-            lmb.DeserializeJson(LogicManagerBuilder.JsonType.Waypoints, RandoMapMod.Assembly.GetManifestResourceStream("RandoMapMod.Resources.Pathfinder.Logic.waypoints.json"));
+            ILogicFormat fmt = new JsonLogicFormat();
+            lmb.DeserializeFile(LogicFileType.Transitions, fmt, RandoMapMod.Assembly.GetManifestResourceStream("RandoMapMod.Resources.Pathfinder.Logic.transitions.json"));
+            lmb.DeserializeFile(LogicFileType.Waypoints, fmt, RandoMapMod.Assembly.GetManifestResourceStream("RandoMapMod.Resources.Pathfinder.Logic.waypoints.json"));
 
             // Do rest of edits
-            foreach (RawLogicDef rld in JsonUtil.DeserializeFromAssembly<RawLogicDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Logic.edits.json"))
+            foreach (RawLogicDef rld in JU.DeserializeFromEmbeddedResource<RawLogicDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Logic.edits.json"))
             {
                 if (lmb.IsTerm(rld.name)) lmb.DoLogicEdit(rld);
             }
-            foreach (RawSubstDef rsd in JsonUtil.DeserializeFromAssembly<RawSubstDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Logic.substitutions.json"))
+            foreach (RawSubstDef rsd in JU.DeserializeFromEmbeddedResource<RawSubstDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Logic.substitutions.json"))
             {
                 if (lmb.IsTerm(rsd.name)) lmb.DoSubst(rsd);
             }
