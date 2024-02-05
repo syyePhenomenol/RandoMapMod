@@ -404,7 +404,7 @@
     {
       //https://www.youtube.com/watch?v=us3TKY63KxQ&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=5
       "name": "Dash off the platform, and dash again when recharged.",
-      "logic": "LEFTDASH + DASHMASTER + OBSCURESKIPS"
+      "logic": "LEFTDASH + Dashmaster + OBSCURESKIPS"
     },
     {
       //https://www.youtube.com/watch?v=DiLA6U0sW-Y&list=PL7dXvvR7Ohco2Hs91_9K-yQ6Gusll6_62&index=212
