@@ -31,7 +31,7 @@ namespace RandoMapMod.UI
 
         private protected override string GetText()
         {
-            return $"{L.Localize("Mode")} (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName}";
+            return $"{L.Localize("Mode")} (Ctrl-T): {L.Localize(MapChanger.Settings.CurrentMode().ModeName)}";
         }
     }
 }

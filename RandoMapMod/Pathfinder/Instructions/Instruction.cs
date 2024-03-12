@@ -1,6 +1,7 @@
 ﻿using ItemChanger.Extensions;
 using MapChanger;
 using UnityEngine;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.Pathfinder.Instructions
 {
@@ -22,7 +23,7 @@ namespace RandoMapMod.Pathfinder.Instructions
         /// </summary>
         internal string TargetTransition { get; }
 
-        internal string ArrowedText => $" -> {Text.ToCleanName()}";
+        internal string ArrowedText => $" -> {Text.ToLocalizeInstructionName().ToCleanName()}";
 
         internal string Text { get; }
 

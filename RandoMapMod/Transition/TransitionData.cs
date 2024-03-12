@@ -137,7 +137,7 @@ namespace RandoMapMod.Transition
                         text += "*";
                     }
 
-                    text += td.DoorName;
+                    text += L.Localize(td.DoorName);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace RandoMapMod.Transition
                 .Where(t => TryGetScene(t.Key, out string s) && s == scene)
                 .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
 
-            text += BuildTransitionStringList(visitedTransitions, "Visited", false, text != "");
+            text += BuildTransitionStringList(visitedTransitions, L.Localize("Visited"), false, text != "");
 
             Dictionary<RmmTransitionDef, RmmTransitionDef> visitedTransitionsTo = RM.RS.TrackerData.visitedTransitions
                 .Where(t => TryGetScene(t.Value, out string s) && s == scene)
@@ -158,7 +158,7 @@ namespace RandoMapMod.Transition
                     .ToDictionary(t => t.Key, t => t.Value);
             }
 
-            text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
+            text += BuildTransitionStringList(visitedTransitionsTo, L.Localize("Visited to"), true, text != "");
 
             Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitions = RM.RS.Context.Vanilla
                 .Where(t => RD.IsTransition(t.Location.Name)
@@ -166,7 +166,7 @@ namespace RandoMapMod.Transition
                 .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
 
 
-            text += BuildTransitionStringList(vanillaTransitions, "Vanilla", false, text != "");
+            text += BuildTransitionStringList(vanillaTransitions, L.Localize("Vanilla"), false, text != "");
 
             Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitionsTo = RM.RS.Context.Vanilla
                 .Where(t => RD.IsTransition(t.Location.Name)
@@ -174,7 +174,7 @@ namespace RandoMapMod.Transition
                     && !vanillaTransitions.Keys.Any(td => td.Name == t.Item.Name))
                 .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
 
-            text += BuildTransitionStringList(vanillaTransitionsTo, "Vanilla to", true, text != "");
+            text += BuildTransitionStringList(vanillaTransitionsTo, L.Localize("Vanilla to"), true, text != "");
 
             return text;
         }
@@ -203,11 +203,11 @@ namespace RandoMapMod.Transition
 
                 if (to)
                 {
-                    text += $"{kvp.Key.Name} -> {kvp.Value.DoorName}";
+                    text += $"{$"{L.Localize(kvp.Key.SceneName)}[{L.Localize(kvp.Key.DoorName)}]"} -> {L.Localize(kvp.Value.DoorName)}";
                 }
                 else
                 {
-                    text += $"{kvp.Key.DoorName} -> {kvp.Value.Name}";
+                    text += $"{L.Localize(kvp.Key.DoorName)} -> {$"{L.Localize(kvp.Value.SceneName)}[{L.Localize(kvp.Value.DoorName)}]"}";
                 }
             }
 
