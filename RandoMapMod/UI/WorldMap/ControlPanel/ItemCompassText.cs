@@ -22,10 +22,10 @@ namespace RandoMapMod.UI
         {
             return $"{"Toggle item compass".L()} (Ctrl-C): " + RandoMapMod.GS.ShowItemCompass switch
             {
-                ItemCompassSetting.Reachable => "reachable".L(),
-                ItemCompassSetting.ReachableOutOfLogic => "sequence break reachable".L(),
-                ItemCompassSetting.All => "all items".L(),
-                _ => "off".L()
+                ItemCompassSetting.Reachable => "Reachable".L(),
+                ItemCompassSetting.ReachableOutOfLogic => "Reachable sequence break".L(),
+                ItemCompassSetting.All => "All items".L(),
+                _ => "Off".L()
             };
         }
     }

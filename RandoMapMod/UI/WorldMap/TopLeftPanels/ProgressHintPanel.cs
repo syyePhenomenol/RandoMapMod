@@ -9,6 +9,9 @@ using RandomizerMod.Extensions;
 using RandomizerMod.RandomizerData;
 using static RandomizerMod.Settings.TrackerData;
 using RandoMapMod.Localization;
+using ItemChanger.Extensions;
+using RandoMapMod.Settings;
+using MapChanger.MonoBehaviours;
 
 namespace RandoMapMod.UI
 {
@@ -82,34 +85,28 @@ namespace RandoMapMod.UI
 
             string text = "";
 
-            if (RandoMapMod.GS.ProgressHint is Settings.ProgressHintSetting.Location)
+            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
             {
                 text += $"\n{"at".L()} {location.Name.LC()}";
             }
 
-            if (RandoMapMod.GS.ProgressHint is Settings.ProgressHintSetting.Location or Settings.ProgressHintSetting.Room)
+            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location or ProgressHintSetting.Room)
             {
                 text += $"\n{"in".L()} ";
 
                 if (location.SceneName is not null)
                 {
                     text += location.SceneName.L();
-                    MapChanger.MonoBehaviours.MapPanner.PanTo(location.SceneName);
                 }
                 else if (ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(location.Name, out var placement))
                 {
                     if (SupplementalMetadata.Of(placement).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
                     {
                         text += string.Join($" {"or".L()} ", highlightScenes.Select(s => s.L()));
-                        if (RmmPinManager.Pins.TryGetValue(placement.Name, out var pin))
-                        {
-                            MapChanger.MonoBehaviours.MapPanner.PanTo(pin.gameObject.transform.position);
-                        }
                     }
                     else if (placement.GetScene() is string placementScene)
                     {
                         text += placementScene.L();
-                        MapChanger.MonoBehaviours.MapPanner.PanTo(placementScene);
                     }
                     else
                     {
@@ -132,6 +129,8 @@ namespace RandoMapMod.UI
             }
 
             progressHintText.Text = $"{"You will find progress".L()}" + text + ".";
+
+            PanTo(location);
         }
 
         private static LocationDef GetProgressLocation()
@@ -189,6 +188,78 @@ namespace RandoMapMod.UI
             }
 
             return null;
+        }
+
+        private static void PanTo(LocationDef ld)
+        {
+            switch (RandoMapMod.GS.ProgressHint)
+            {
+                case ProgressHintSetting.Area:
+                    TryPanToArea(ld);
+                    break;
+                case ProgressHintSetting.Room:
+                    if (!TryPanToRoom(ld))
+                    {
+                        TryPanToArea(ld);
+                    }
+                    break;
+                case ProgressHintSetting.Location:
+                    if (!TryPanToLocation(ld) && !TryPanToRoom(ld))
+                    {
+                        TryPanToArea(ld);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static bool TryPanToArea(LocationDef location)
+        {
+            if (location.MapArea is null) return false;
+
+            var gameMap = GameManager.instance.gameMap.GetComponent<GameMap>();
+            var go = location.MapArea switch
+            {
+                "Ancient Basin" => gameMap.areaAncientBasin,
+                "City of Tears" => gameMap.areaCity,
+                "Howling Cliffs" => gameMap.areaCliffs,
+                "Forgotten Crossroads" => gameMap.areaCrossroads,
+                "Crystal Peak" => gameMap.areaCrystalPeak,
+                "Deepnest" => gameMap.areaDeepnest,
+                "Dirtmouth" => gameMap.areaDirtmouth,
+                "Fog Canyon" => gameMap.areaFogCanyon,
+                "Fungal Wastes" => gameMap.areaFungalWastes,
+                "Greenpath" => gameMap.areaGreenpath,
+                "Kingdom's Edge" => gameMap.areaKingdomsEdge,
+                "Queen's Gardens" => gameMap.areaQueensGardens,
+                "Resting Grounds" => gameMap.areaRestingGrounds,
+                "Royal Waterways" => gameMap.areaWaterways,
+                "White Palace" => gameMap.gameObject.FindChild("WHITE_PALACE") ?? gameMap.areaAncientBasin,
+                "Godhome" => gameMap.gameObject.FindChild("GODS_GLORY") ?? gameMap.areaWaterways,
+                _ => null,
+            };
+
+            if (go == null) return false;
+
+            MapPanner.PanTo(go.transform.position);
+            return true;
+        }
+
+        private static bool TryPanToRoom(LocationDef location)
+        {
+            if (location.SceneName is null) return false;
+
+            MapPanner.PanTo(location.SceneName);
+            return true;
+        }
+
+        private static bool TryPanToLocation(LocationDef location)
+        {
+            if (!RmmPinManager.Pins.TryGetValue(location.Name, out var pin)) return false;
+
+            MapPanner.PanTo(pin.gameObject.transform.position);
+            return true;
         }
     }
 }

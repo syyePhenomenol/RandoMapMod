@@ -22,9 +22,9 @@ namespace RandoMapMod.UI
         {
             return $"{"Toggle progress hint".L()} (Ctrl-G): " + RandoMapMod.GS.ProgressHint switch
             {
-                ProgressHintSetting.Area => "Reveal area".L(),
-                ProgressHintSetting.Room => "Reveal room".L(),
-                ProgressHintSetting.Location => "Reveal location".L(),
+                ProgressHintSetting.Area => "Area".L(),
+                ProgressHintSetting.Room => "Room".L(),
+                ProgressHintSetting.Location => "Location".L(),
                 _ => "Off".L()
             };
         }

@@ -92,7 +92,7 @@
   },
   "CITY": {
     "MapZone": "CITY",
-    "OrientateVertical": true,
+    "OrientateVertical": false,
     "GridBaseX": 5.0,
     "GridBaseY": 2.5,
     "RollOverCount": 5
