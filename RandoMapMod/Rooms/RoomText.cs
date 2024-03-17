@@ -4,6 +4,7 @@ using RandoMapMod.Modes;
 using RandoMapMod.Transition;
 using TMPro;
 using UnityEngine;
+using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.Rooms
 {
@@ -74,8 +75,10 @@ namespace RandoMapMod.Rooms
             tmp.sortingLayerID = 629535577;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.font = font;
-            tmp.fontSize = 2.4f;
-            tmp.text = Rtd.Name;
+            tmp.fontSize = 2.4f; 
+            if (Language.Language.CurrentLanguage() == Language.LanguageCode.ZH)
+                tmp.fontSize = 3;
+            tmp.text = L.Localize(Rtd.Name);
         }
 
         private bool ActiveByMap()

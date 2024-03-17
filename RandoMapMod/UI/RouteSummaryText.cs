@@ -4,6 +4,7 @@ using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pathfinder.Instructions;
+using RandoMapMod.Localization;
 using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
@@ -45,15 +46,15 @@ namespace RandoMapMod.UI
 
             if (last is TransitionInstruction ti)
             {
-                text += $"{first.Text.ToCleanName()} ->...-> {ti.TargetTransition.ToCleanName()}";
+                text += $"{first.Text.ToLocalizeInstructionName().ToCleanName()} ->...-> {ti.TargetTransition.ToLocalizeInstructionName().ToCleanName()}";
             }
             else
             {
-                text += first.Text.ToCleanName();
+                text += first.Text.ToLocalizeInstructionName().ToCleanName();
 
                 if (first != last)
                 {
-                    text += $" ->...-> {last.Text.ToCleanName()}";
+                    text += $" ->...-> {last.Text.ToLocalizeInstructionName().ToCleanName()}";
                 }
             }
 

@@ -106,7 +106,7 @@ namespace RandoMapMod.Rooms
             string selectedScene = Instance.SelectedObjectKey;
             string text = "";
 
-            text += $"{L.Localize("Selected room")}: {selectedScene}.";
+            text += $"{L.Localize("Selected room")}: {L.Localize(selectedScene)}.";
 
             List<InControl.BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
 

@@ -116,7 +116,7 @@ namespace RandoMapMod.Pins
 
             if (SceneName is not null)
             {
-                text += $"\n\n{L.Localize("Room")}: {SceneName}";
+                text += $"\n\n{L.Localize("Room")}: {L.Localize(SceneName)}";
             }
 
             text += $"\n\n{L.Localize("Status")}:";

@@ -1,6 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
+using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -30,7 +31,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            Button.Content = PoolGroup.Replace(" ", "\n");
+            Button.Content = L.Localize(PoolGroup).Replace(" ", "\n");
 
             Button.ContentColor = RandoMapMod.LS.GetPoolGroupSetting(PoolGroup) switch
             {
