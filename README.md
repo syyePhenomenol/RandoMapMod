@@ -51,21 +51,23 @@ Optional and compatible:
 - ``CTRL-T``: Toggle map mode
 - ``SHIFT``: Pan faster (same as right thumbstick on controller).
 - ``CTRL-K``: Toggle a panel for the map key.
-    - Check out the [Map Legend](./MAPLEGEND.md) for more details on each pin style.
+- ``CTRL-G``: Toggle progress hint between revealing area/room/item location or off.
+    - If enabled, press the indicated key/controller bind to reveal a hint of where to check to unlock further progression. It will automatically pan to the relevant area on the map.
+- ``CTRL-C``: Toggle item compass between pointing to reachable/reachable with sequence break/all items or off.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
     - For some locations, you can press the indicated key/controller bind to reveal a hint to find it.
     - Press the indicated key/controller bind to lock and pan away from the current selection.
-- ``CTRL-S``: Toggle selector reticle on/off.
 - ``CTRL-W``: Toggle benchwarp pins on/off.
     - With pin selection on, you can press the indicated key/controller bind to warp to the selected bench.
+- ``CTRL-S``: Toggle selector reticles on/off.
 
 ## Pause Menu
 - "Map Mod Enabled/Disabled" `CTRL-M`: Toggle the mod on/off
 - "Spoilers" `CTRL-1`: Toggle pins between vanilla (non-spoiler) and spoiler item pools. For most gameplay, leave this setting off.
 - "Randomized" `CTRL-2`: Toggle all pins for randomized items on/off
 - "Vanilla" `CTRL-3`: Toggle all pins for non-randomized items on/off
-- "Pin Style" `CTRL-4`: Toggle the style of the pins
+- "Pin Shape" `CTRL-4`: Toggle the shape of the pins
 - "Pin Size" `CTRL-5`: Toggle the size of the pins
 - "Mode": Toggle the map mode
     - "Full Map": Shows all pins and the full map regardless of map items obtained
@@ -79,9 +81,13 @@ Optional and compatible:
     - Toggle showing each pool of pins on/off.
     - "Group by": Toggle the pools to be grouped by location, or by item (spoiler).
 - "More Pin Options":
-    - "Cleared Locations": Toggle showing pins for all cleared locations
-    - "Persistent Items": Toggle showing pins for persistent items, even when cleared
+    - "Cleared Locations": Toggle showing pins between all cleared locations/persistent locations/neither.
     - "Indicate Reachable": Toggle indicating (by shading and shrinking pins) if locations are reachable in logic or not
+    - "Q Marks": Toggle between normal and question mark pins. Check out the [Map Legend](./MAPLEGEND.md) for more details on each style.
+- "Pathfinder Options":
+    - "Route Compass": Toggle showing the route compass when a path is selected.
+    - "Route Text": Toggle the route to be displayed in-game to full/next transition only/off.
+    - "Off Route": Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
 - "Misc. Options":
     - "Show Area Names": Toggle showing area names on the world map
     - "Show Next Areas": Toggle showing names/arrows for adjacent map areas on the quick map
@@ -99,9 +105,6 @@ Optional and compatible:
     - A compass arrow will point to the next transition you need to go to. The shown route gets updated after every transition.
     - The Quick Map also shows the list of unchecked/visited/vanilla transitions for the current room.
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
-- `CTRL-G`: Toggle the route to be displayed in-game to full/next transition only/off.
-- `CTRL-E`: Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
-- `CTRL-C`: Toggle the route compass on/off.
 
 ## Customization
 - To customize map and UI colors, download the [template file](https://github.com/syyePhenomenol/RandoMapMod/releases/download/v3.0.0/colors.json) and copy it to the same folder that contains the mod file ``RandoMapMod.dll``. You only need to quit a save and re-enter one to reload the colors.
