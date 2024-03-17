@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Pathfinder.Instructions;
+﻿using RandoMapMod.Localization;
+using RandoMapMod.Pathfinder.Instructions;
 using RandomizerCore.Logic;
 using RCPathfinder;
 
@@ -38,13 +39,13 @@ namespace RandoMapMod.Pathfinder
             if (RemainingInstructions.Any(i => i.Text is "Town[door_sly]")
                 && !PlayerData.instance.GetBool(nameof(PlayerData.slyRescued)))
             {
-                return "You need to rescue Sly first.";
+                return "You need to rescue Sly first.".L();
             }
 
             if (RemainingInstructions.Any(i => i.Text is "Town[door_bretta]")
                 && !PlayerData.instance.GetBool(nameof(PlayerData.brettaRescued)))
             {
-                return "You need to rescue Bretta first.";
+                return "You need to rescue Bretta first.".L();
             }
 
             return default;

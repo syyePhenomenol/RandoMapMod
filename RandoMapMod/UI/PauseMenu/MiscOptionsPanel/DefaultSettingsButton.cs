@@ -1,7 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -22,11 +22,12 @@ namespace RandoMapMod.UI
         protected override void OnClick()
         {
             GlobalSettings.ResetToDefaultSettings();
+            MapUILayerUpdater.Update();
         }
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Resets all global settings of RandoMapMod.";
+            RmmTitle.Instance.HoveredText = "Resets all global settings of RandoMapMod.".L();
         }
 
         protected override void OnUnhover()
@@ -36,11 +37,9 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Reset global\nsettings")}";
+            Button.Content = "Reset global\nsettings".L();
 
             Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-
-            Button.Content = text;
         }
     }
 }

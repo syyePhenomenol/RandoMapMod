@@ -1,6 +1,6 @@
 # RandoMapMod Legend
 <table>
-<tr><th>Style: Normal</th><th>Style: Q Marks 1</th><th>Style: Q Marks 2</th><th>Style: Q Marks 3</th><th>Pin Borders</th><th>Transition Mode Rooms</th></tr>
+<tr><th>Style: Normal</th><th>Style: Q Marks Red</th><th>Style: Q Marks Mixed</th><th>Pin Borders</th><th>Transition Mode Rooms</th></tr>
 <tr valign=top><td>
 
 |Pin|Pool|
@@ -48,18 +48,7 @@
 |![](./LegendAssets/Pins/UnknownTotemInv.png)|Soul Totems|
 |![](./LegendAssets/Pins/Shop.png)|Shops|
 |![](./LegendAssets/Pins/Unknown.png)|Everything else|
-  
-</td><td>
-  
-|Pin|Pool|
-|--|--|
-|![](./LegendAssets/Pins/UnknownGrub.png)|Grubs and Mimics|
-|![](./LegendAssets/Pins/UnknownLifeblood.png)|Lifeblood Cocoons|
-|![](./LegendAssets/Pins/UnknownGeoRock.png)|Geo Rocks|
-|![](./LegendAssets/Pins/UnknownTotem.png)|Soul Totems|
-|![](./LegendAssets/Pins/Shop.png)|Shops|
-|![](./LegendAssets/Pins/Unknown.png)|Everything else|
-  
+
 </td><td>
   
 |Color|Example|Meaning|

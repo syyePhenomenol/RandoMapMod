@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -8,7 +8,7 @@ namespace RandoMapMod.UI
     {
         internal static MiscOptionsPanelButton Instance { get; private set; }
 
-        public MiscOptionsPanelButton() : base(nameof(MiscOptionsPanelButton), RandoMapMod.MOD, 2, 1)
+        public MiscOptionsPanelButton() : base(nameof(MiscOptionsPanelButton), RandoMapMod.MOD, 2, 2)
         {
             Instance = this;
         }
@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Some miscenalleous options.";
+            RmmTitle.Instance.HoveredText = "Some miscenalleous options.".L();
         }
 
         protected override void OnUnhover()
@@ -43,7 +43,7 @@ namespace RandoMapMod.UI
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 
-            Button.Content = $"{L.Localize("Misc.")}\n{L.Localize("Options")}";
+            Button.Content = "Misc.\nOptions".L();
         }
     }
 }

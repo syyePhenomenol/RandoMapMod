@@ -2,17 +2,61 @@
 {
     public enum PinSize
     {
+        Tiny,
         Small,
         Medium,
-        Large
+        Large,
+        Huge
     }
 
-    public enum PinStyle
+    public enum PinShape
     {
-        Normal,
-        Q_Marks_1,
-        Q_Marks_2,
-        Q_Marks_3
+        Circle,
+        Diamond,
+        Square,
+        Pentagon,
+        Hexagon
+    }
+
+    public enum PinShapeSetting
+    {
+        Mixed,
+        All_Circle,
+        All_Diamond,
+        All_Square,
+        All_Pentagon,
+        All_Hexagon,
+        No_Border
+    }
+
+    public enum ClearedPinsSetting
+    {
+        Off,
+        Persistent,
+        All
+    }
+
+    public enum QMarkSetting
+    {
+        Off,
+        Red,
+        Mix
+    }
+
+    public enum ProgressHintSetting
+    {
+        Off,
+        Area,
+        Room,
+        Location
+    }
+
+    public enum ItemCompassSetting
+    {
+        Off,
+        Reachable,
+        ReachableOutOfLogic,
+        All
     }
 
     public enum RouteTextInGame
@@ -44,6 +88,12 @@
     {
         Location,
         Item
+    }
+
+    public enum PoolsCollection
+    {
+        Randomized,
+        Vanilla
     }
 
     public enum PoolState

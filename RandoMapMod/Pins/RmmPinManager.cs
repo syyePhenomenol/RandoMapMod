@@ -1,5 +1,4 @@
 ﻿using ConnectionMetadataInjector;
-using ConnectionMetadataInjector.Util;
 using GlobalEnums;
 using ItemChanger;
 using MapChanger;
@@ -33,12 +32,6 @@ namespace RandoMapMod.Pins
         internal static Dictionary<string, RmmPin> Pins { get; private set; } = new();
         internal static List<RmmPin> GridPins { get; private set; } = new();
 
-        internal static List<string> AllPoolGroups { get; private set; }
-        internal static HashSet<string> RandoLocationPoolGroups { get; private set; }
-        internal static HashSet<string> RandoItemPoolGroups { get; private set; }
-        internal static HashSet<string> VanillaLocationPoolGroups { get; private set; }
-        internal static HashSet<string> VanillaItemPoolGroups { get; private set; }
-
         internal static void Load()
         {
             quickMapGridDefs = JsonUtil.DeserializeFromAssembly<Dictionary<MapZone, QuickMapGridDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.quickMapGrids.json");
@@ -47,14 +40,14 @@ namespace RandoMapMod.Pins
 
         public override void OnEnterGame()
         {
-            TrackerUpdate.OnFinishedUpdate += UpdateRandoPins;
+            TrackerUpdate.OnFinishedUpdate += OnTrackerUpdate;
             MapChanger.Events.OnWorldMap += ArrangeWorldMapPinGrid;
             MapChanger.Events.OnQuickMap += ArrangeQuickMapPinGrid;
         }
 
         public override void OnQuitToMenu()
         {
-            TrackerUpdate.OnFinishedUpdate -= UpdateRandoPins;
+            TrackerUpdate.OnFinishedUpdate -= OnTrackerUpdate;
             MapChanger.Events.OnWorldMap -= ArrangeWorldMapPinGrid;
             MapChanger.Events.OnQuickMap -= ArrangeQuickMapPinGrid;
         }
@@ -70,10 +63,25 @@ namespace RandoMapMod.Pins
 
             MapObjectUpdater.Add(MoPins);
 
-            foreach (AbstractPlacement placement in ItemChanger.Internal.Ref.Settings.Placements.Values.Where(placement => placement.HasTag<RandoPlacementTag>()))
+            Dictionary<AbstractPlacement, AbstractPlacement> overlapPlacements = new();
+
+            foreach (AbstractPlacement placement in ItemChanger.Internal.Ref.Settings.Placements.Values)
             {
+                if (placement.Name is "Start")
+                {
+                    RandoMapMod.Instance.LogDebug($"Start placement detected - not including as a pin");
+                    continue;
+                }
+
                 if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
-                MakeRandoPin(placement);
+
+                if (SupplementalMetadata.Of(placement).Get(InteropProperties.OverlapWith) is AbstractPlacement other)
+                {
+                    overlapPlacements.Add(placement, other);
+                    continue;
+                }
+
+                MakeAbstractPlacementPin(placement);
             }
             foreach (GeneralizedPlacement placement in RM.RS.Context.Vanilla.Where(placement => RD.Data.IsLocation(placement.Location.Name) && !Pins.ContainsKey(placement.Location.Name)))
             {
@@ -87,33 +95,70 @@ namespace RandoMapMod.Pins
                 }
             }
 
+            foreach (var (placement, other) in overlapPlacements.Select(kvp => (kvp.Key, kvp.Value)))
+            {
+                if (Pins.TryGetValue(other.Name, out RmmPin pin) && pin is AbstractPlacementsPin app)
+                {
+                    app.AddPlacement(new(placement));
+                    continue;
+                }
+
+                RandoMapMod.Instance.LogWarn($"No pin for OverlapWith property found: {other}");
+                MakeAbstractPlacementPin(placement);
+            }
+
             // If you are planning to place pins into the grid on the world map, please refer to the following ordering hierarchy.
-            GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroup).ThenBy(pin => pin.PinGridIndex).ThenBy(pin => pin.name).ToList();
+            GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroups.First()).ThenBy(pin => pin.PinGridIndex).ThenBy(pin => pin.name).ToList();
 
             StaggerPins();
-            InitializePoolGroups();
-            UpdateRandoPins();
+
+            // Force certain updates to happen
+            OnTrackerUpdate();
 
             RmmPinSelector pinSelector = Utils.MakeMonoBehaviour<RmmPinSelector>(null, "RandoMapMod Pin Selector");
             pinSelector.Initialize(Pins.Values);
         }
 
-        private static void MakeRandoPin(AbstractPlacement placement)
+        private static void MakeAbstractPlacementPin(AbstractPlacement placement)
         {
-            //placement.LogDebug();
-
-            if (placement.Name is "Start")
+            if (placement.HasTag<RandoPlacementTag>())
             {
-                RandoMapMod.Instance.LogDebug($"Start placement detected - not including as a pin");
+                MakeRandoPin(placement);
                 return;
             }
 
-            RandomizedRmmPin randoPin = Utils.MakeMonoBehaviour<RandomizedRmmPin>(MoPins.gameObject, placement.Name);
-            randoPin.Initialize(placement);
-            MoPins.AddChild(randoPin);
-            Pins[placement.Name] = randoPin;
+            if (SupplementalMetadata.Of(placement).Get(InteropProperties.MakeVanillaPin))
+            {
+                MakeModdedVanillaPin(placement);
+            }
         }
 
+        private static void MakeRandoPin(AbstractPlacement placement)
+        {
+            AbstractPlacementsPin randoPin;
+            if (Interop.HasBenchwarp() && SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup) is "Benches")
+            {
+                randoPin = Utils.MakeMonoBehaviour<RandomizedBenchPin>(MoPins.gameObject, placement.Name);
+            }
+            else
+            {
+                randoPin = Utils.MakeMonoBehaviour<RandomizedPin>(MoPins.gameObject, placement.Name);
+            }
+
+            randoPin.Initialize(placement);
+            MoPins.AddChild(randoPin);
+            Pins.Add(placement.Name, randoPin);
+        }
+
+        private static void MakeModdedVanillaPin(AbstractPlacement placement)
+        {
+            ModdedVanillaPin moddedVanillaRmmPin = Utils.MakeMonoBehaviour<ModdedVanillaPin>(MoPins.gameObject, placement.Name);
+            moddedVanillaRmmPin.Initialize(placement);
+            MoPins.AddChild(moddedVanillaRmmPin);
+            Pins.Add(placement.Name, moddedVanillaRmmPin);
+        }
+
+        // GeneralizedPlacements are one-to-one, but some may share the same location (e.g. shops)
         private static void MakeVanillaPin(GeneralizedPlacement placement)
         {
             //placement.LogDebug();
@@ -131,22 +176,21 @@ namespace RandoMapMod.Pins
                 return;
             }
 
-            VanillaRmmPin vanillaPin = Utils.MakeMonoBehaviour<VanillaRmmPin>(MoPins.gameObject, placement.Location.Name);
+            VanillaPin vanillaPin = Utils.MakeMonoBehaviour<VanillaPin>(MoPins.gameObject, placement.Location.Name);
             vanillaPin.Initialize(placement);
             MoPins.AddChild(vanillaPin);
-            Pins[placement.Location.Name] = vanillaPin;
+            Pins.Add(placement.Location.Name, vanillaPin);
         }
 
         private static void MakeBenchPin(string benchName, string sceneName)
         {
-            string objectName = $"{benchName}{BenchwarpInterop.BENCH_EXTRA_SUFFIX}";
-            BenchPin benchPin = Utils.MakeMonoBehaviour<BenchPin>(MoPins.gameObject, objectName);
-            benchPin.Initialize(benchName, sceneName);
+            BenchPin benchPin = Utils.MakeMonoBehaviour<BenchPin>(MoPins.gameObject, benchName);
+            benchPin.Initialize(sceneName);
             MoPins.AddChild(benchPin);
-            Pins[objectName] = benchPin;
+            Pins.Add(benchName, benchPin);
         }
 
-        internal static void Update()
+        internal static void MainUpdate()
         {
             foreach (RmmPin pin in Pins.Values)
             {
@@ -154,14 +198,12 @@ namespace RandoMapMod.Pins
             }
         }
 
-        internal static void UpdateRandoPins()
+        private static void OnTrackerUpdate()
         {
+            RandoMapMod.Instance.LogDebug("On Tracker Update");
             foreach (RmmPin pin in Pins.Values)
             {
-                if (pin is RandomizedRmmPin randoPin)
-                {
-                    randoPin.UpdatePlacementState();
-                }
+                pin.OnTrackerUpdate();
             }
         }
 
@@ -188,21 +230,18 @@ namespace RandoMapMod.Pins
 
             string currentScene = Utils.CurrentScene();
 
-            IEnumerable<RandomizedRmmPin> highlightScenePins = GridPins.Where(pin => pin is RandomizedRmmPin)
-                .Select(pin => (RandomizedRmmPin)pin)
-                .Where(pin => pin.HighlightScenes is not null);
-
             int gridIndex = 0;
 
-            foreach (RandomizedRmmPin pin in highlightScenePins)
+            foreach (var pin in GridPins)
             {
-                if (!pin.HighlightScenes.Contains(currentScene))
+                if (pin is not AbstractPlacementsPin app || app.HighlightScenes is null
+                    || !app.HighlightScenes.Contains(currentScene))
                 {
                     qmgd.SetPinHidden(pin);
                     continue;
                 }
 
-                qmgd.SetPinPosition(pin, gridIndex);
+                qmgd.SetPinPosition(app, gridIndex);
                 gridIndex++;
             }
         }
@@ -223,51 +262,6 @@ namespace RandoMapMod.Pins
             }
         }
 
-        /// <summary>
-        /// Sets all the sorted, randomized/vanilla location/item PoolGroups.
-        /// </summary>
-        private static void InitializePoolGroups()
-        {
-            AllPoolGroups = new();
-            RandoLocationPoolGroups = new();
-            RandoItemPoolGroups = new();
-            VanillaLocationPoolGroups = new();
-            VanillaItemPoolGroups = new();
-
-            foreach (RmmPin pin in Pins.Values)
-            {
-                if (pin is RandomizedRmmPin)
-                {
-                    RandoLocationPoolGroups.Add(pin.LocationPoolGroup);
-                    RandoItemPoolGroups.UnionWith(pin.ItemPoolGroups);
-                }
-                if (pin is VanillaRmmPin)
-                {
-                    VanillaLocationPoolGroups.Add(pin.LocationPoolGroup);
-                    VanillaItemPoolGroups.UnionWith(pin.ItemPoolGroups);
-                }
-            }
-
-            foreach (string poolGroup in Enum.GetValues(typeof(PoolGroup))
-                .Cast<PoolGroup>()
-                .Select(poolGroup => poolGroup.FriendlyName())
-                .Where(poolGroup => RandoLocationPoolGroups.Contains(poolGroup)
-                    || RandoItemPoolGroups.Contains(poolGroup)
-                    || VanillaLocationPoolGroups.Contains(poolGroup)
-                    || VanillaItemPoolGroups.Contains(poolGroup)))
-            {
-                AllPoolGroups.Add(poolGroup);
-            }
-            foreach (string poolGroup in RandoLocationPoolGroups
-                .Union(RandoItemPoolGroups)
-                .Union(VanillaLocationPoolGroups)
-                .Union(VanillaItemPoolGroups)
-                .Where(poolGroup => !AllPoolGroups.Contains(poolGroup)))
-            {
-                AllPoolGroups.Add(poolGroup);
-            }
-        }
-
         private record QuickMapGridDef
         {
             [JsonProperty]
@@ -283,7 +277,7 @@ namespace RandoMapMod.Pins
             [JsonProperty]
             internal int RollOverCount { get; init; }
 
-            internal void SetPinPosition(RandomizedRmmPin randoPin, int gridIndex)
+            internal void SetPinPosition(RmmPin pin, int gridIndex)
             {
                 float x;
                 float y;
@@ -299,12 +293,12 @@ namespace RandoMapMod.Pins
                     y = GridBaseY - gridIndex / RollOverCount * Spacing;
                 }
 
-                randoPin.MapPosition = new QuickMapPosition(new Vector2(x, y));
+                pin.MapPosition = new QuickMapPosition(new Vector2(x, y));
             }
 
-            internal void SetPinHidden(RandomizedRmmPin randoPin)
+            internal void SetPinHidden(RmmPin pin)
             {
-                randoPin.MapPosition = new QuickMapPosition(new Vector2(-11f, 11f));
+                pin.MapPosition = new QuickMapPosition(new Vector2(-11f, 11f));
             }
         }
     }

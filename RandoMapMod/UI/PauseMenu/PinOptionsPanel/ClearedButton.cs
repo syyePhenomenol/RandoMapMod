@@ -1,6 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Settings;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -20,12 +21,12 @@ namespace RandoMapMod.UI
 
         protected override void OnClick()
         {
-            RandoMapMod.GS.ToggleCleared();
+            RandoMapMod.GS.ToggleShowClearedPins();
         }
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Forces cleared locations to always show.";
+            RmmTitle.Instance.HoveredText = "Show pins for persistent or all cleared locations.".L();
         }
 
         protected override void OnUnhover()
@@ -35,18 +36,26 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Cleared\nlocations")}: ";
+            string text = $"{"Show cleared".L()}:\n";
 
-            if (RandoMapMod.GS.ShowClearedPins)
+            switch (RandoMapMod.GS.ShowClearedPins)
             {
-                text += L.Localize("On");
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                case ClearedPinsSetting.Off:
+                    text += "off".L();
+                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                    break;
+
+                case ClearedPinsSetting.Persistent:
+                    text += "persistent".L();
+                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                    break;
+
+                case ClearedPinsSetting.All:
+                    text += "all".L();
+                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                    break;
             }
-            else
-            {
-                text += L.Localize("Off");
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
+
 
             Button.Content = text;
         }

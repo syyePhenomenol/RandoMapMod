@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -18,7 +18,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Reveals the items at each location.";
+            RmmTitle.Instance.HoveredText = "Reveals the items at each location.".L();
         }
 
         protected override void OnUnhover()
@@ -35,12 +35,12 @@ namespace RandoMapMod.UI
             if (RandoMapMod.LS.SpoilerOn)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("on")}";
+                Button.Content = $"{"Spoilers".L()}:\n{"on".L()}";
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("off")}";
+                Button.Content = $"{"Spoilers".L()}:\n{"off".L()}";
             }
         }
     }

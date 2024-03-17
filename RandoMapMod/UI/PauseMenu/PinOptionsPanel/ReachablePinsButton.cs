@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -25,7 +25,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Pins for unreachable locations are smaller/grayed out.";
+            RmmTitle.Instance.HoveredText = "Pins for unreachable locations are smaller/grayed out.".L();
         }
 
         protected override void OnUnhover()
@@ -35,16 +35,16 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Indicate\nreachable")}: ";
+            string text = $"{"Indicate\nreachable".L()}: ";
 
             if (RandoMapMod.GS.ReachablePins)
             {
-                text += L.Localize("On");
+                text += "On".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
             }
             else
             {
-                text += L.Localize("Off");
+                text += "Off".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 

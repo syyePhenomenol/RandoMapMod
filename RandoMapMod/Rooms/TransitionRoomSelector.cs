@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using MapChanger;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
-using L = RandomizerMod.Localization;
 
 namespace RandoMapMod.Rooms
 {
@@ -34,7 +34,7 @@ namespace RandoMapMod.Rooms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by Unity")]
         private void Update()
         {
-            if (InputHandler.Instance.inputActions.menuSubmit.WasPressed
+            if (InputHandler.Instance.inputActions.menuSubmit.WasPressed && Hotkeys.NoCtrl()
                 && SelectedObjectKey is not NONE_SELECTED)
             {
                 attackHoldTimer.Reset();
@@ -43,10 +43,10 @@ namespace RandoMapMod.Rooms
 
                 RouteText.Instance.Update();
                 RouteSummaryText.Instance.Update();
-                SelectionPanels.UpdateRoomPanel();
+                RoomSelectionPanel.Instance.Update();
             }
 
-            if (InputHandler.Instance.inputActions.attack.WasPressed)
+            if (InputHandler.Instance.inputActions.attack.WasPressed && Hotkeys.NoCtrl())
             {
                 attackHoldTimer.Restart();
             }
@@ -80,7 +80,7 @@ namespace RandoMapMod.Rooms
 
         protected override void OnSelectionChanged()
         {
-            SelectionPanels.UpdateRoomPanel();
+            RoomSelectionPanel.Instance.Update();
         }
 
         internal string GetText()
@@ -106,31 +106,31 @@ namespace RandoMapMod.Rooms
             string selectedScene = Instance.SelectedObjectKey;
             string text = "";
 
-            text += $"{L.Localize("Selected room")}: {selectedScene}.";
+            text += $"{"Selected room".L()}: {selectedScene.LC()}.";
 
             List<InControl.BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
 
             if (selectedScene == Utils.CurrentScene())
             {
-                text += $" {L.Localize("You are here")}.";
+                text += $" {"You are here".L()}.";
             }
 
-            text += $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(bindings)}";
+            text += $"\n\n{"Press".L()} {Utils.GetBindingsText(bindings)}";
 
             if (RouteManager.CanCycleRoute(selectedScene))
             {
-                text += $" {L.Localize("to change starting / final transitions of current route")}.";
+                text += $" {"to change starting / final transitions of current route".L()}.";
             }
             else
             {
-                text += $" {L.Localize("to find a new route")}.";
+                text += $" {"to find a new route".L()}.";
             }
 
             if (!RmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 
-                text += $" {L.Localize("Hold")} {Utils.GetBindingsText(bindings)} {L.Localize("to benchwarp")}.";
+                text += $" {"Hold".L()} {Utils.GetBindingsText(bindings)} {"to benchwarp".L()}.";
             }
 
             return text;

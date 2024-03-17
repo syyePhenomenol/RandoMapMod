@@ -1,6 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -20,7 +21,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = $"Toggle {PoolGroup} on/off.";
+            RmmTitle.Instance.HoveredText = $"{"Toggle".L()} {PoolGroup.L()} {"on/off".L()}.";
         }
 
         protected override void OnUnhover()
@@ -30,7 +31,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            Button.Content = PoolGroup.Replace(" ", "\n");
+            Button.Content = PoolGroup.L().Replace(" ", "\n");
 
             Button.ContentColor = RandoMapMod.LS.GetPoolGroupSetting(PoolGroup) switch
             {

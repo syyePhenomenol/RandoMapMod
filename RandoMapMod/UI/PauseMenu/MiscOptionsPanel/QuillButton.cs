@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -25,7 +25,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Doesn't affect Full Map and Transition modes.";
+            RmmTitle.Instance.HoveredText = "Doesn't affect Full Map and Transition modes.".L();
         }
 
         protected override void OnUnhover()
@@ -35,16 +35,16 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Always have\nQuill")}: ";
+            string text = $"{"Always have\nQuill".L()}: ";
 
             if (RandoMapMod.GS.AlwaysHaveQuill)
             {
-                text += L.Localize("On");
+                text += "On".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
             }
             else
             {
-                text += L.Localize("Off");
+                text += "Off".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 

@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Customize which item/location pools to display.";
+            RmmTitle.Instance.HoveredText = "Customize which item/location pools to display.".L();
         }
 
         protected override void OnUnhover()
@@ -43,7 +43,7 @@ namespace RandoMapMod.UI
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 
-            Button.Content = $"{L.Localize("Customize")}\n{L.Localize("Pools")}";
+            Button.Content = "Customize\nPools".L();
         }
     }
 }

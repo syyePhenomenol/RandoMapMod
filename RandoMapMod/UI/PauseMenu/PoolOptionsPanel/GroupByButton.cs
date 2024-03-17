@@ -1,7 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -26,7 +26,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Group pools by either location (normal) or by item (spoilers).";
+            RmmTitle.Instance.HoveredText = "Group pools by either location (normal) or by item (spoilers).".L();
         }
 
         protected override void OnUnhover()
@@ -36,16 +36,16 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Group by")}:\n";
+            string text = $"{"Group by".L()}:\n";
 
             switch (RandoMapMod.LS.GroupBy)
             {
                 case GroupBySetting.Location:
-                    text += L.Localize("Location");
+                    text += "Location".L();
                     break;
 
                 case GroupBySetting.Item:
-                    text += L.Localize("Item");
+                    text += "Item".L();
                     break;
             }
 

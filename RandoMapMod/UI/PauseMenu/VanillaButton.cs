@@ -1,8 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using RandoMapMod.Pins;
-using RandoMapMod.Settings;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -20,7 +18,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Toggle pins for vanilla locations on/off.";
+            RmmTitle.Instance.HoveredText = "Toggle pins for vanilla locations on/off.".L();
         }
 
         protected override void OnUnhover()
@@ -34,44 +32,26 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            string text = $"{L.Localize("Vanilla")}:\n";
+            string text = $"{"Vanilla".L()}:\n";
 
             if (RandoMapMod.LS.VanillaOn)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += L.Localize("on");
+                text += "on".L();
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += L.Localize("off");
+                text += "off".L();
             }
 
-            if (IsVanillaCustom())
+            if (RandoMapMod.LS.IsVanillaCustom())
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
-                text += $" ({L.Localize("custom")})";
+                text += "custom".L();
             }
 
             Button.Content = text;
-        }
-
-        internal static bool IsVanillaCustom()
-        {
-            if (RandoMapMod.LS.GroupBy == GroupBySetting.Item)
-            {
-                if (!RmmPinManager.VanillaItemPoolGroups.Any()) return false;
-
-                return (!RandoMapMod.LS.VanillaOn && RmmPinManager.VanillaItemPoolGroups.Any(group => RandoMapMod.LS.GetPoolGroupSetting(group) == PoolState.On))
-                || (RandoMapMod.LS.VanillaOn && RmmPinManager.VanillaItemPoolGroups.Any(group => RandoMapMod.LS.GetPoolGroupSetting(group) == PoolState.Off));
-            }
-            else
-            {
-                if (!RmmPinManager.RandoLocationPoolGroups.Any()) return false;
-
-                return (!RandoMapMod.LS.VanillaOn && RmmPinManager.VanillaLocationPoolGroups.Any(group => RandoMapMod.LS.GetPoolGroupSetting(group) == PoolState.On))
-                || (RandoMapMod.LS.VanillaOn && RmmPinManager.VanillaLocationPoolGroups.Any(group => RandoMapMod.LS.GetPoolGroupSetting(group) == PoolState.Off));
-            }
         }
     }
 }

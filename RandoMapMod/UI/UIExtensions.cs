@@ -1,6 +1,6 @@
 ﻿using MagicUI.Core;
 using MagicUI.Elements;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -53,12 +53,12 @@ namespace RandoMapMod.UI
             if (value)
             {
                 textObj.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += L.Localize("On");
+                text += "On".L();
             }
             else
             {
                 textObj.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += L.Localize("Off");
+                text += "Off".L();
             }
 
             textObj.Text = text;

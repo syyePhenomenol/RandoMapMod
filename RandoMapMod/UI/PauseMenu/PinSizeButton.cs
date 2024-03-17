@@ -1,7 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -19,7 +19,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Toggle overall size of pins.";
+            RmmTitle.Instance.HoveredText = "Toggle overall size of pins.".L();
         }
 
         protected override void OnUnhover()
@@ -33,20 +33,28 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            string text = $"{L.Localize("Pin Size")}:\n";
+            string text = $"{"Pin Size".L()}:\n";
 
             switch (RandoMapMod.GS.PinSize)
             {
+                case PinSize.Tiny:
+                    text += "tiny".L();
+                    break;
+
                 case PinSize.Small:
-                    text += L.Localize("small");
+                    text += "small".L();
                     break;
 
                 case PinSize.Medium:
-                    text += L.Localize("medium");
+                    text += "medium".L();
                     break;
 
                 case PinSize.Large:
-                    text += L.Localize("large");
+                    text += "large".L();
+                    break;
+
+                case PinSize.Huge:
+                    text += "huge".L();
                     break;
             }
 

@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Pins;
+﻿using ConnectionMetadataInjector.Util;
+using RandoMapMod.Pins;
 
 namespace RandoMapMod.Settings
 {
@@ -10,6 +11,12 @@ namespace RandoMapMod.Settings
         public bool RandomizedOn = true;
         public bool VanillaOn = false;
 
+        public List<string> AllPoolGroups;
+        public HashSet<string> RandoLocationPoolGroups;
+        public HashSet<string> RandoItemPoolGroups;
+        public HashSet<string> VanillaLocationPoolGroups;
+        public HashSet<string> VanillaItemPoolGroups;
+
         public Dictionary<string, PoolState> PoolSettings;
 
         public GroupBySetting GroupBy = GroupBySetting.Location;
@@ -18,7 +25,47 @@ namespace RandoMapMod.Settings
         {
             if (InitializedPreviously) return;
 
-            PoolSettings = RmmPinManager.AllPoolGroups.ToDictionary(poolGroup => poolGroup, poolGroup => PoolState.On);
+            AllPoolGroups = new();
+            RandoLocationPoolGroups = new();
+            RandoItemPoolGroups = new();
+            VanillaLocationPoolGroups = new();
+            VanillaItemPoolGroups = new();
+
+            foreach (RmmPin pin in RmmPinManager.Pins.Values)
+            {
+                if (pin is RandomizedPin)
+                {
+                    RandoLocationPoolGroups.UnionWith(pin.LocationPoolGroups);
+                    RandoItemPoolGroups.UnionWith(pin.ItemPoolGroups);
+                }
+                if (pin is VanillaPin or ModdedVanillaPin)
+                {
+                    VanillaLocationPoolGroups.UnionWith(pin.LocationPoolGroups);
+                    VanillaItemPoolGroups.UnionWith(pin.ItemPoolGroups);
+                }
+            }
+
+            foreach (string poolGroup in Enum.GetValues(typeof(PoolGroup))
+                .Cast<PoolGroup>()
+                .Select(poolGroup => poolGroup.FriendlyName())
+                .Where(poolGroup => RandoLocationPoolGroups.Contains(poolGroup)
+                    || RandoItemPoolGroups.Contains(poolGroup)
+                    || VanillaLocationPoolGroups.Contains(poolGroup)
+                    || VanillaItemPoolGroups.Contains(poolGroup)))
+            {
+                AllPoolGroups.Add(poolGroup);
+            }
+            foreach (string poolGroup in RandoLocationPoolGroups
+                .Union(RandoItemPoolGroups)
+                .Union(VanillaLocationPoolGroups)
+                .Union(VanillaItemPoolGroups)
+                .Where(poolGroup => !AllPoolGroups.Contains(poolGroup)))
+            {
+                AllPoolGroups.Add(poolGroup);
+            }
+
+            PoolSettings = AllPoolGroups.ToDictionary(poolGroup => poolGroup, poolGroup => PoolState.On);
+            
             ResetPoolSettings();
 
             InitializedPreviously = true;
@@ -45,6 +92,58 @@ namespace RandoMapMod.Settings
         {
             VanillaOn = !VanillaOn;
             ResetPoolSettings();
+        }
+
+        internal bool IsActivePoolGroup(string poolGroup, PoolsCollection poolsCollection)
+        {
+            return GetPoolGroupSetting(poolGroup) switch
+            {
+                PoolState.On => true,
+                PoolState.Off => false,
+                PoolState.Mixed => poolsCollection switch
+                {
+                    PoolsCollection.Randomized => RandomizedOn,
+                    PoolsCollection.Vanilla => VanillaOn,
+                    _ => true
+                },
+                _ => true,
+            };
+        }
+
+        internal bool IsRandomizedCustom()
+        {
+            if (GroupBy == GroupBySetting.Item)
+            {
+                if (!RandoItemPoolGroups.Any()) return false;
+
+                return (!RandomizedOn && RandoItemPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.On))
+                || (RandomizedOn && RandoItemPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.Off));
+            }
+            else
+            {
+                if (!RandoLocationPoolGroups.Any()) return false;
+
+                return (!RandomizedOn && RandoLocationPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.On))
+                || (RandomizedOn && RandoLocationPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.Off));
+            }
+        }
+
+        internal bool IsVanillaCustom()
+        {
+            if (GroupBy == GroupBySetting.Item)
+            {
+                if (!VanillaItemPoolGroups.Any()) return false;
+
+                return (!VanillaOn && VanillaItemPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.On))
+                || (VanillaOn && VanillaItemPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.Off));
+            }
+            else
+            {
+                if (!RandoLocationPoolGroups.Any()) return false;
+
+                return (!VanillaOn && VanillaLocationPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.On))
+                || (VanillaOn && VanillaLocationPoolGroups.Any(group => GetPoolGroupSetting(group) == PoolState.Off));
+            }
         }
 
         internal PoolState GetPoolGroupSetting(string poolGroup)
@@ -85,32 +184,32 @@ namespace RandoMapMod.Settings
         /// </summary>
         private void ResetPoolSettings()
         {
-            foreach (string poolGroup in RmmPinManager.AllPoolGroups)
+            foreach (string poolGroup in AllPoolGroups)
             {
                 SetPoolGroupSetting(poolGroup, GetResetPoolState(poolGroup));
             }
 
             PoolState GetResetPoolState(string poolGroup)
             {
-                bool IsRando;
-                bool IsVanilla;
+                bool isRando;
+                bool isVanilla;
 
                 if (GroupBy == GroupBySetting.Item)
                 {
-                    IsRando = RmmPinManager.RandoItemPoolGroups.Contains(poolGroup);
-                    IsVanilla = RmmPinManager.VanillaItemPoolGroups.Contains(poolGroup);
+                    isRando = RandoItemPoolGroups.Contains(poolGroup);
+                    isVanilla = VanillaItemPoolGroups.Contains(poolGroup);
                 }
                 else
                 {
-                    IsRando = RmmPinManager.RandoLocationPoolGroups.Contains(poolGroup);
-                    IsVanilla = RmmPinManager.VanillaLocationPoolGroups.Contains(poolGroup);
+                    isRando = RandoLocationPoolGroups.Contains(poolGroup);
+                    isVanilla = VanillaLocationPoolGroups.Contains(poolGroup);
                 }
 
-                if (IsRando && IsVanilla && RandoMapMod.LS.RandomizedOn != RandoMapMod.LS.VanillaOn)
+                if (isRando && isVanilla && RandomizedOn != VanillaOn)
                 {
                     return PoolState.Mixed;
                 }
-                if ((IsRando && RandomizedOn) || (IsVanilla && VanillaOn))
+                if ((isRando && RandomizedOn) || (isVanilla && VanillaOn))
                 {
                     return PoolState.On;
                 }

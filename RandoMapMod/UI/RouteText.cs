@@ -5,7 +5,6 @@ using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Settings;
-using RandoMapMod.Transition;
 
 namespace RandoMapMod.UI
 {

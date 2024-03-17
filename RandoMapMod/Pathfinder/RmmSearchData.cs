@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using MapChanger;
 using RandoMapMod.Transition;
 using RandomizerCore.Json;
 using RandomizerCore.Logic;

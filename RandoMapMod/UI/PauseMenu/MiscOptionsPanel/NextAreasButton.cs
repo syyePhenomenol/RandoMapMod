@@ -1,7 +1,7 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
 using RandoMapMod.Settings;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -26,7 +26,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Show next area indicators (text/arrow) on the quick map.";
+            RmmTitle.Instance.HoveredText = "Show next area indicators (text/arrow) on the quick map.".L();
         }
 
         protected override void OnUnhover()
@@ -36,22 +36,22 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Show next\nareas")}: ";
+            string text = $"{"Show next\nareas".L()}: ";
 
             switch (RandoMapMod.GS.ShowNextAreas)
             {
                 case NextAreaSetting.Off:
-                    text += L.Localize("Off");
+                    text += "Off".L();
                     Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
                     break;
 
                 case NextAreaSetting.Arrows:
-                    text += L.Localize("Arrows");
+                    text += "Arrows".L();
                     Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
                     break;
 
                 case NextAreaSetting.Full:
-                    text += L.Localize("Full");
+                    text += "Full".L();
                     Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
                     break;
             }

@@ -4,13 +4,18 @@ using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Rooms;
-using RandoMapMod.Transition;
 using UnityEngine;
+using MapChanger;
 
 namespace RandoMapMod.UI
 {
     internal class Hotkeys : MapUILayer
     {
+        internal static bool NoCtrl()
+        {
+            return !Input.GetKey("left ctrl") && !Input.GetKey("right ctrl");
+        }
+
         public override void BuildLayout()
         {
             Root.ListenForHotkey(KeyCode.H, () =>
@@ -31,12 +36,19 @@ namespace RandoMapMod.UI
                 UpdateSelectors();
             }, ModifierKeys.Ctrl);
 
+            Root.ListenForHotkey(KeyCode.C, () =>
+            {
+                RandoMapMod.GS.ToggleShowItemCompass();
+                ItemCompass.Update();
+                MapUILayerUpdater.Update();
+            }, ModifierKeys.Ctrl);
+
             if (Interop.HasBenchwarp())
             {
                 Root.ListenForHotkey(KeyCode.W, () =>
                 {
                     RandoMapMod.GS.ToggleBenchwarpPins();
-                    RmmPinManager.Update();
+                    RmmPinManager.MainUpdate();
                     UpdateSelectors();
                 }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
             }
@@ -66,21 +78,14 @@ namespace RandoMapMod.UI
 
             Root.ListenForHotkey(KeyCode.G, () =>
             {
-                RandoMapMod.GS.ToggleRouteTextInGame();
+                RandoMapMod.GS.ToggleProgressHint();
                 MapUILayerUpdater.Update();
-            }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
+            }, ModifierKeys.Ctrl);
 
-            Root.ListenForHotkey(KeyCode.E, () =>
+            Root.ListenForPlayerAction(InputHandler.Instance.inputActions.superDash, () =>
             {
-                RandoMapMod.GS.ToggleWhenOffRoute();
-                MapUILayerUpdater.Update();
-            }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
-
-            Root.ListenForHotkey(KeyCode.C, () =>
-            {
-                RandoMapMod.GS.ToggleRouteCompassEnabled();
-                MapUILayerUpdater.Update();
-            }, ModifierKeys.Ctrl, () => Conditions.TransitionRandoModeEnabled());
+                ProgressHintPanel.Instance.RevealProgressHint();
+            }, () => States.WorldMapOpen && RandoMapMod.GS.ProgressHint is not Settings.ProgressHintSetting.Off && NoCtrl());
 
             Root.ListenForHotkey(KeyCode.Alpha1, () =>
             {
@@ -102,7 +107,7 @@ namespace RandoMapMod.UI
 
             Root.ListenForHotkey(KeyCode.Alpha4, () =>
             {
-                RandoMapMod.GS.TogglePinStyle();
+                RandoMapMod.GS.TogglePinShape();
                 UpdatePins();
             }, ModifierKeys.Ctrl);
 
@@ -133,7 +138,7 @@ namespace RandoMapMod.UI
         private void UpdatePins()
         {
             PauseMenu.Update();
-            RmmPinManager.Update();
+            RmmPinManager.MainUpdate();
             MapUILayerUpdater.Update();
         }
     }

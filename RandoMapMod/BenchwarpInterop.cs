@@ -10,7 +10,6 @@ namespace RandoMapMod
 
     internal class BenchwarpInterop
     {
-        internal const string BENCH_EXTRA_SUFFIX = "_Extra";
         internal const string BENCH_WARP_START = "Start_Warp";
 
         internal static Dictionary<RmmBenchKey, string> BenchNames { get; private set; } = new();
@@ -49,9 +48,8 @@ namespace RandoMapMod
 
         internal static bool IsVisitedBench(string benchName)
         {
-            return benchName is BENCH_WARP_START or $"{BENCH_WARP_START}{BENCH_EXTRA_SUFFIX}"
-                || ((BenchKeys.TryGetValue(benchName, out RmmBenchKey key)
-                    || (benchName.Length > BENCH_EXTRA_SUFFIX.Length && BenchKeys.TryGetValue(benchName.Substring(0, benchName.Length - BENCH_EXTRA_SUFFIX.Length), out key)))
+            return benchName is BENCH_WARP_START 
+                || (BenchKeys.TryGetValue(benchName, out RmmBenchKey key)
                 && GetVisitedBenchKeys().Contains(key));
         }
 
@@ -66,10 +64,6 @@ namespace RandoMapMod
         internal static IEnumerator DoBenchwarp(string benchName)
         {
             if (BenchKeys.TryGetValue(benchName, out RmmBenchKey benchKey))
-            {
-                yield return DoBenchwarpInternal(benchKey);
-            }
-            else if (benchName.Length > BENCH_EXTRA_SUFFIX.Length && BenchKeys.TryGetValue(benchName.Substring(0, benchName.Length - BENCH_EXTRA_SUFFIX.Length), out benchKey))
             {
                 yield return DoBenchwarpInternal(benchKey);
             }

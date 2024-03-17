@@ -8,12 +8,15 @@ namespace RandoMapMod
     /// </summary>
     internal class EmbeddedSprite : ISprite
     {
-        internal string Key { get; init; }
-        public Sprite Value => MapChanger.SpriteManager.Instance.GetSprite(Key);
+        public string Key { get; init; }
+        
+        private readonly Sprite value;
+        public Sprite Value => value;
 
         internal EmbeddedSprite(string key)
         {
             Key = key;
+            value = MapChanger.SpriteManager.Instance.GetSprite(key);
         }
 
         public ISprite Clone()

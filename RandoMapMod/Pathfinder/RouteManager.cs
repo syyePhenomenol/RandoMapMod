@@ -49,7 +49,9 @@ namespace RandoMapMod.Pathfinder
                     RmmPathfinder.SD.CurrentState,
                     RmmPathfinder.SD.GetTransitionTerms(FinalScene),
                     1000f,
-                    TerminationConditionType.Any
+                    TerminationConditionType.AnyUniqueStartAndDestination,
+                    1000f,
+                    true
                 );
 
                 if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
@@ -76,6 +78,7 @@ namespace RandoMapMod.Pathfinder
 
             while (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
             {
+                LogSearchResults(_sp, _ss);
                 Route route = new(_ss.NewResultNodes[0]);
 
                 //RandoMapMod.Instance.LogDebug($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
@@ -110,7 +113,9 @@ namespace RandoMapMod.Pathfinder
                 RmmPathfinder.SD.CurrentState,
                 new Term[] { destination },
                 1000f,
-                TerminationConditionType.Any
+                TerminationConditionType.Any,
+                1000f,
+                true
             );
 
             if (TransitionData.GetTransitionDef(transition.ToString()) is RmmTransitionDef td
@@ -143,6 +148,7 @@ namespace RandoMapMod.Pathfinder
 
             if (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
             {
+                LogSearchResults(_sp, _ss);
                 Route route = new(_ss.NewResultNodes[0]);
 
                 //foreach (AbstractAction action in route.Node.Actions)
@@ -217,9 +223,9 @@ namespace RandoMapMod.Pathfinder
 
         private static void UpdateRouteUI()
         {
-            RouteText.Instance.Update();
-            RouteSummaryText.Instance.Update();
-            SelectionPanels.UpdateRoomPanel();
+            RouteText.Instance?.Update();
+            RouteSummaryText.Instance?.Update();
+            RoomSelectionPanel.Instance?.Update();
         }
 
         internal static bool TryGetBenchwarpKey(out RmmBenchKey key)
@@ -279,6 +285,15 @@ namespace RandoMapMod.Pathfinder
 
             dreamGateStart = new("dreamGate", term, 1f);
             return true;
+        }
+
+        private static void LogSearchResults(SearchParams sp, SearchState ss)
+        {
+            RandoMapMod.Instance.LogDebug($"Pathfinder search time: {ss.SearchTime} milliseconds");
+            if (_ss.HasTimedOut)
+            {
+                RandoMapMod.Instance.LogDebug($"State propagation timed out after {sp.MaxTime} milliseconds, switching to stateless search");
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RandoMapMod.Settings
+﻿namespace RandoMapMod.Settings
 {
     public class GlobalSettings
     {
@@ -9,14 +7,16 @@ namespace RandoMapMod.Settings
         public bool PinSelectionOn = true;
         public bool RoomSelectionOn = true;
         public bool ShowReticle = true;
+        public ProgressHintSetting ProgressHint = ProgressHintSetting.Area;
+        public ItemCompassSetting ShowItemCompass = ItemCompassSetting.Off;
         public bool PathfinderBenchwarp = true;
+        public bool ShowRouteCompass = true;
         public RouteTextInGame RouteTextInGame = RouteTextInGame.NextTransitionOnly;
         public OffRouteBehaviour WhenOffRoute = OffRouteBehaviour.Reevaluate;
-        public bool ShowRouteCompass = true;
-        public PinStyle PinStyle = PinStyle.Normal;
+        public PinShapeSetting PinShapes = PinShapeSetting.Mixed;
+        public QMarkSetting QMarks = QMarkSetting.Off;
         public PinSize PinSize = PinSize.Medium;
-        public bool ShowClearedPins = false;
-        public bool ShowPersistentPins = false;
+        public ClearedPinsSetting ShowClearedPins = ClearedPinsSetting.Persistent;
         public bool ReachablePins = true;
         public bool ShowBenchwarpPins = true;
         public bool ShowAreaNames = true;
@@ -61,6 +61,16 @@ namespace RandoMapMod.Settings
             ShowReticle = !ShowReticle;
         }
 
+        internal void ToggleProgressHint()
+        {
+            ProgressHint = (ProgressHintSetting)(((int)ProgressHint + 1) % Enum.GetNames(typeof(ProgressHintSetting)).Length);
+        }
+
+        internal void ToggleShowItemCompass()
+        {
+            ShowItemCompass = (ItemCompassSetting)(((int)ShowItemCompass + 1) % Enum.GetNames(typeof(ItemCompassSetting)).Length);
+        }
+
         internal void ToggleAllowBenchWarpSearch()
         {
             PathfinderBenchwarp = !PathfinderBenchwarp;
@@ -81,9 +91,9 @@ namespace RandoMapMod.Settings
             ShowRouteCompass = !ShowRouteCompass;
         }
 
-        internal void TogglePinStyle()
+        internal void TogglePinShape()
         {
-            PinStyle = (PinStyle)(((int)PinStyle + 1) % Enum.GetNames(typeof(PinStyle)).Length);
+            PinShapes = (PinShapeSetting)(((int)PinShapes + 1) % Enum.GetNames(typeof(PinShapeSetting)).Length);
         }
 
         internal void TogglePinSize()
@@ -91,19 +101,19 @@ namespace RandoMapMod.Settings
             PinSize = (PinSize)(((int)PinSize + 1) % Enum.GetNames(typeof(PinSize)).Length);
         }
 
-        internal void ToggleCleared()
+        internal void ToggleShowClearedPins()
         {
-            ShowClearedPins = !ShowClearedPins;
-        }
-
-        internal void TogglePersistent()
-        {
-            ShowPersistentPins = !ShowPersistentPins;
+            ShowClearedPins = (ClearedPinsSetting)(((int)ShowClearedPins + 1) % Enum.GetNames(typeof(ClearedPinsSetting)).Length);
         }
 
         internal void ToggleReachablePins()
         {
             ReachablePins = !ReachablePins;
+        }
+        
+        internal void ToggleQMarkSetting()
+        {
+            QMarks = (QMarkSetting)(((int)QMarks + 1) % Enum.GetNames(typeof(QMarkSetting)).Length);
         }
 
         internal void ToggleBenchPins()

@@ -8,14 +8,13 @@ using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Rooms;
-using RandoMapMod.Settings;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using UnityEngine;
 
 namespace RandoMapMod
 {
-    public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
+    public class RandoMapMod : Mod, ILocalSettings<Settings.LocalSettings>, IGlobalSettings<Settings.GlobalSettings>
     {
         internal const string MOD = "RandoMapMod";
         internal static Assembly Assembly => Assembly.GetExecutingAssembly();
@@ -45,12 +44,13 @@ namespace RandoMapMod
             new ModEnabledButton(),
             new ModeButton(),
             new PinSizeButton(),
-            new PinStyleButton(),
+            new PinShapeButton(),
             new RandomizedButton(),
             new VanillaButton(),
             new SpoilersButton(),
             new PoolOptionsPanelButton(),
             new PinOptionsPanelButton(),
+            new PathfinderOptionsPanelButton(),
             new MiscOptionsPanelButton()
         };
 
@@ -58,6 +58,7 @@ namespace RandoMapMod
         {
             new PoolOptionsPanel(),
             new PinOptionsPanel(),
+            new PathfinderOptionsPanel(),
             new MiscOptionsPanel()
         };
 
@@ -65,7 +66,7 @@ namespace RandoMapMod
         {
             new Hotkeys(),
             new ControlPanel(),
-            new MapKey(),
+            new TopLeftPanels(),
             new SelectionPanels(),
             new RmmBottomRowText(),
             new RouteSummaryText(),
@@ -78,10 +79,12 @@ namespace RandoMapMod
             new RmmColors(),
             new TransitionData(),
             new RmmPathfinder(),
+            new PinSpriteManager(),
             new RmmPinManager(),
             new TransitionTracker(),
             new DreamgateTracker(),
             new RouteManager(),
+            new ItemCompass(),
             new RouteCompass()
         };
 
@@ -92,26 +95,25 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.4.2";
+        public override string GetVersion() => "3.5.0";
 
         public override int LoadPriority() => 10;
 
-        public static LocalSettings LS = new();
+        public static Settings.LocalSettings LS = new();
 
-        public void OnLoadLocal(LocalSettings ls) => LS = ls;
+        public void OnLoadLocal(Settings.LocalSettings ls) => LS = ls;
 
-        public LocalSettings OnSaveLocal() => LS;
+        public Settings.LocalSettings OnSaveLocal() => LS;
 
-        public static GlobalSettings GS = new();
+        public static Settings.GlobalSettings GS = new();
 
-        public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
+        public void OnLoadGlobal(Settings.GlobalSettings gs) => GS = gs;
 
-        public GlobalSettings OnSaveGlobal() => GS;
+        public Settings.GlobalSettings OnSaveGlobal() => GS;
 
         public override void Initialize()
         {
             LogDebug($"Initializing");
-
             foreach (string dependency in dependencies)
             {
                 if (ModHooks.GetMod(dependency) is not Mod)
@@ -123,10 +125,11 @@ namespace RandoMapMod
 
             Interop.FindInteropMods();
             RmmSearchData.LoadConditionalTerms();
-            Instruction.LoadCompssObjOverrides();
+            Instruction.LoadRouteCompassOverrides();
             InstructionData.LoadWaypointInstructions();
             RmmRoomManager.Load();
             RmmPinManager.Load();
+
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 
             Events.OnEnterGame += OnEnterGame;

@@ -1,6 +1,6 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -25,7 +25,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Show area names on the world/quick map.";
+            RmmTitle.Instance.HoveredText = "Show area names on the world/quick map.".L();
         }
 
         protected override void OnUnhover()
@@ -35,16 +35,16 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{L.Localize("Show area\nnames")}: ";
+            string text = $"{"Show area\nnames".L()}: ";
 
             if (RandoMapMod.GS.ShowAreaNames)
             {
-                text += L.Localize("On");
+                text += "On".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
             }
             else
             {
-                text += L.Localize("Off");
+                text += "Off".L();
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
 

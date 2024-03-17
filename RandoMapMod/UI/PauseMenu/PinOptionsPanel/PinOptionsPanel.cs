@@ -7,8 +7,8 @@ namespace RandoMapMod.UI
         private static readonly ExtraButton[] buttons =
         {
             new ClearedButton(),
-            new PersistentButton(),
-            new ReachablePinsButton()
+            new ReachablePinsButton(),
+            new QMarkSettingButton()
         };
 
         internal static PinOptionsPanel Instance { get; private set; }

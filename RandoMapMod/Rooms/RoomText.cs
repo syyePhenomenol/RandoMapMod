@@ -1,5 +1,6 @@
 ﻿using MapChanger;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Transition;
 using TMPro;
@@ -7,14 +8,14 @@ using UnityEngine;
 
 namespace RandoMapMod.Rooms
 {
-    internal class RoomText : MapObject, ISelectable
+    internal class RoomText : ColoredMapObject, ISelectable
     {
         internal RoomTextDef Rtd { get; private set; }
 
         private TMP_FontAsset font;
 
         private TextMeshPro tmp;
-        internal Vector4 Color
+        public override Vector4 Color
         {
             get => tmp.color;
             set
@@ -74,8 +75,12 @@ namespace RandoMapMod.Rooms
             tmp.sortingLayerID = 629535577;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.font = font;
-            tmp.fontSize = 2.4f;
-            tmp.text = Rtd.Name;
+            tmp.fontSize = 2.4f; 
+            if (Language.Language.CurrentLanguage() is Language.LanguageCode.ZH)
+            {
+                tmp.fontSize = 3;
+            }
+            tmp.text = Rtd.Name.LC();
         }
 
         private bool ActiveByMap()
@@ -93,7 +98,7 @@ namespace RandoMapMod.Rooms
             UpdateColor();
         }
 
-        internal void UpdateColor()
+        public override void UpdateColor()
         {
             if (selected)
             {

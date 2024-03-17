@@ -1,7 +1,7 @@
 ﻿using MagicUI.Core;
 using MagicUI.Elements;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
+using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
@@ -19,7 +19,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Toggle all map mod behavior on/off.";
+            RmmTitle.Instance.HoveredText = "Toggle all map mod behavior on/off.".L();
         }
 
         protected override void OnUnhover()
@@ -43,12 +43,12 @@ namespace RandoMapMod.UI
             if (MapChanger.Settings.MapModEnabled())
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                Button.Content = $"{L.Localize("Map Mod")}\n{L.Localize("Enabled")}";
+                Button.Content = $"{"Map Mod".L()}\n{"Enabled".L()}";
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Disabled);
-                Button.Content = $"{L.Localize("Map Mod")}\n{L.Localize("Disabled")}";
+                Button.Content = $"{"Map Mod".L()}\n{"Disabled".L()}";
             }
         }
     }
