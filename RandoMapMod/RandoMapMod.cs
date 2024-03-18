@@ -11,10 +11,11 @@ using RandoMapMod.Rooms;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using UnityEngine;
+using RandoMapMod.Settings;
 
 namespace RandoMapMod
 {
-    public class RandoMapMod : Mod, ILocalSettings<Settings.LocalSettings>, IGlobalSettings<Settings.GlobalSettings>
+    public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
     {
         internal const string MOD = "RandoMapMod";
         internal static Assembly Assembly => Assembly.GetExecutingAssembly();
@@ -99,17 +100,17 @@ namespace RandoMapMod
 
         public override int LoadPriority() => 10;
 
-        public static Settings.LocalSettings LS = new();
+        public static LocalSettings LS = new();
 
-        public void OnLoadLocal(Settings.LocalSettings ls) => LS = ls;
+        public void OnLoadLocal(LocalSettings ls) => LS = ls;
 
-        public Settings.LocalSettings OnSaveLocal() => LS;
+        public LocalSettings OnSaveLocal() => LS;
 
-        public static Settings.GlobalSettings GS = new();
+        public static GlobalSettings GS = new();
 
-        public void OnLoadGlobal(Settings.GlobalSettings gs) => GS = gs;
+        public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
 
-        public Settings.GlobalSettings OnSaveGlobal() => GS;
+        public GlobalSettings OnSaveGlobal() => GS;
 
         public override void Initialize()
         {

@@ -200,7 +200,7 @@ namespace RandoMapMod.Pins
 
         private static void OnTrackerUpdate()
         {
-            RandoMapMod.Instance.LogDebug("On Tracker Update");
+            // RandoMapMod.Instance.LogDebug("On Tracker Update");
             foreach (RmmPin pin in Pins.Values)
             {
                 pin.OnTrackerUpdate();
