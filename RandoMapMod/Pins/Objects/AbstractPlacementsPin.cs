@@ -257,7 +257,7 @@ namespace RandoMapMod.Pins
                 return text.Substring(0, text.Length - 1);
             }
 
-            return $"\n\n{"Room".L()}: {CurrentPlacementDef.SceneName.LC()}";
+            return $"\n\n{"Room".L()}: {(CurrentPlacementDef.SceneName ?? "Unknown").LC()}";
         }
 
         private protected override string GetStatusText()

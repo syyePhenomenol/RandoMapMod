@@ -18,6 +18,8 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
+	<Import Project="LocalOverrides.targets" Condition="Exists('LocalOverrides.targets')" />
+
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
