@@ -202,7 +202,7 @@ namespace RandoMapMod.Pathfinder
                 || (a is PlacementAction && TransitionData.IsVanillaOrCheckedTransition(a.Name) && !IsBlockedByInfection(a.Name))
                 || (a is not PlacementAction && ReferencePM.Has(a.Destination))).ToList();
 
-            if (node.Position.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
+            if (node.CurrentPosition.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
             {
                 actions.Add(DirthmouthStagTransition);
             }
@@ -354,38 +354,40 @@ namespace RandoMapMod.Pathfinder
             List<Term> inLogicTransitions = new(transitions.Where(t => (RM.RS.TrackerData.pm.lm.GetTerm(t.Name) is not null && RM.RS.TrackerData.pm.Get(t.Name) > 0)
                 || TransitionTracker.InLogicExtraTransitions.Contains(t.Name)));
 
-            SearchParams sp = new
-            (
-                transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-                RmmPathfinder.SD.CurrentState,
-                transitions.ToArray(),
-                1f,
-                TerminationConditionType.None
-            );
+            SearchParams sp = new()
+            {
+                StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = transitions.ToArray(),
+                MaxCost = 1f,
+                MaxTime = 1000f,
+                AllowBacktracking = false
+            };
 
             SearchState ss = new(sp);
-
+            
+            // RandoMapMod.Instance.LogDebug("Pruned start terms search");
             Algorithms.DijkstraSearch(RmmPathfinder.SD, sp, ss);
 
-            List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition != n.Actions.Last().Destination));
+            List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
 
             List<StartPosition> prunedTransitions = new();
 
             foreach (Term transition in inLogicTransitions)
             {
-                //RandoMapMod.Instance.LogDebug(transition.Name);
+                // RandoMapMod.Instance.LogDebug(transition.Name);
 
-                if (prunedTransitions.Where(t => nodes.Any(n => n.StartPosition == transition && n.Actions.Last().Destination == t.Term)
-                    && nodes.Any(n => (n.StartPosition == t.Term && n.Actions.Last().Destination == transition)))
+                if (prunedTransitions.Where(t => nodes.Any(n => n.StartPosition.Term == transition && n.Actions.Last().Destination == t.Term)
+                    && nodes.Any(n => n.StartPosition.Term == t.Term && n.Actions.Last().Destination == transition))
                     .FirstOrDefault() is StartPosition accessibleTransition)
                 {
-                    //RandoMapMod.Instance.LogDebug($"Accessible from {accessibleTransition.Term}");
+                    // RandoMapMod.Instance.LogDebug($"Accessible from {accessibleTransition.Term}");
 
                     prunedTransitions.Add(new(accessibleTransition.Key, transition, 0f));
                     continue;
                 }
 
-                //RandoMapMod.Instance.LogDebug($"New transition {transition}");
+                // RandoMapMod.Instance.LogDebug($"New transition {transition}");
 
                 prunedTransitions.Add(new(transition.Name, transition, 0f));
             }
@@ -396,7 +398,6 @@ namespace RandoMapMod.Pathfinder
             {
                 prunedTransitions.Add(new("Can_Stag", PositionLookup["Can_Stag"], 0f));
             }
-
 
             return prunedTransitions.ToArray();
         }

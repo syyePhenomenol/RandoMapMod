@@ -37,7 +37,7 @@ namespace RandoMapMod.Pathfinder
                 {
                     sd.LocalPM.SetState(kvp.Key, sd.CurrentState);
 
-                    RandoMapMod.Instance?.LogDebug($"    {action.DebugName}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _, out var _)}");
+                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _, out var _)}");
 
                     sd.LocalPM.SetState(kvp.Key, null);
                 }
@@ -51,14 +51,16 @@ namespace RandoMapMod.Pathfinder
 
             sd.UpdateProgression();
 
-            SearchParams sp = new
-            (
-                null,
-                RmmPathfinder.SD.CurrentState,
-                null,
-                1000f,
-                TerminationConditionType.Any
-            );
+            SearchParams sp = new()
+            {
+                StartPositions = null,
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = null,
+                MaxCost = 1000f,
+                MaxTime = 1000f,
+                TerminationCondition = TerminationConditionType.Any,
+                AllowBacktracking = false
+            };
 
             RandoMapMod.Instance?.LogDebug($"Starting SingleStartDestinationTest:");
 
@@ -117,14 +119,16 @@ namespace RandoMapMod.Pathfinder
 
             sd.UpdateProgression();
 
-            SearchParams sp = new
-            (
-                null,
-                RmmPathfinder.SD.CurrentState,
-                null,
-                1000f,
-                TerminationConditionType.Any
-            );
+            SearchParams sp = new()
+            {
+                StartPositions = null,
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = null,
+                MaxCost = 1000f,
+                MaxTime = 1000f,
+                TerminationCondition = TerminationConditionType.Any,
+                AllowBacktracking = false
+            };
 
             RandoMapMod.Instance?.LogDebug($"Starting SceneToSceneTest:");
 
@@ -204,20 +208,21 @@ namespace RandoMapMod.Pathfinder
         {
             if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
 
-            SearchParams sp = new
-            (
-                transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-                sd.CurrentState,
-                transitions.ToArray(),
-                1f,
-                TerminationConditionType.None
-            );
+            SearchParams sp = new()
+            {
+                StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = transitions.ToArray(),
+                MaxCost = 1f,
+                MaxTime = 1000f,
+                AllowBacktracking = false
+            };
 
             SearchState ss = new(sp);
 
             Algorithms.DijkstraSearch(sd, sp, ss);
 
-            List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition != n.Actions.Last().Destination));
+            List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
 
             HashSet<Term> prunedTransitions = new(transitions);
 
@@ -227,7 +232,7 @@ namespace RandoMapMod.Pathfinder
 
                 foreach (Term transition2 in new List<Term>(prunedTransitions))
                 {
-                    if (nodes.Any(n => n.StartPosition == transition && n.Actions.Last().Destination == transition2))
+                    if (nodes.Any(n => n.StartPosition.Term == transition && n.Actions.Last().Destination == transition2))
                     {
                         prunedTransitions.Remove(transition2);
                     }

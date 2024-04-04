@@ -8,7 +8,7 @@ namespace RandoMapMod.Pathfinder
     internal class Route
     {
         internal Node Node { get; }
-        internal Term Start => Node.StartPosition;
+        internal Term Start => Node.StartPosition.Term;
         internal Term Destination { get; }
         internal List<Instruction> RemainingInstructions { get; }
         internal Instruction FirstInstruction { get; }

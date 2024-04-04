@@ -60,7 +60,7 @@ namespace RandoMapMod.Pathfinder
         {
             List<Instruction> instructions = new();
 
-            string position = node.StartPosition.Name;
+            string position = node.StartPosition.Term.Name;
             TransitionData.TryGetScene(position, out string scene);
 
             if (Interop.HasBenchwarp())
@@ -78,7 +78,7 @@ namespace RandoMapMod.Pathfinder
                 }
             }
 
-            if (node.Key is "dreamGate")
+            if (node.StartPosition.Key is "dreamGate")
             {
                 instructions.Add(Instance.DreamgateInstruction);
             }

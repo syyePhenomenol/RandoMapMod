@@ -43,16 +43,17 @@ namespace RandoMapMod.Pathfinder
                 StartScene = Utils.CurrentScene();
                 FinalScene = scene;
 
-                _sp = new
-                (
-                    RmmPathfinder.SD.GetPrunedStartTerms(StartScene),
-                    RmmPathfinder.SD.CurrentState,
-                    RmmPathfinder.SD.GetTransitionTerms(FinalScene),
-                    1000f,
-                    TerminationConditionType.AnyUniqueStartAndDestination,
-                    1000f,
-                    true
-                );
+                _sp = new()
+                {
+                    StartPositions = RmmPathfinder.SD.GetPrunedStartTerms(StartScene),
+                    StartState = RmmPathfinder.SD.CurrentState,
+                    Destinations = RmmPathfinder.SD.GetTransitionTerms(FinalScene),
+                    MaxCost = 1000f,
+                    MaxTime = 1000f,
+                    TerminationCondition = TerminationConditionType.AnyUniqueStartAndDestination,
+                    Stateless = _ss is not null && _ss.HasTimedOut,
+                    AllowBacktracking = false
+                };
 
                 if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
                 {
@@ -78,15 +79,13 @@ namespace RandoMapMod.Pathfinder
 
             while (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
             {
-                LogSearchResults(_sp, _ss);
                 Route route = new(_ss.NewResultNodes[0]);
-
-                //RandoMapMod.Instance.LogDebug($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
-                //RandoMapMod.Instance.LogDebug(route.Node.PrintActions());
 
                 if (!route.RemainingInstructions.Any() 
                     || route.RemainingInstructions.First().Text == route.RemainingInstructions.Last().TargetTransition 
                     || _routes.Contains(route)) continue;
+
+                LogRouteResults(route);
 
                 _routes.Add(route);
                 CurrentRoute = route;
@@ -107,16 +106,16 @@ namespace RandoMapMod.Pathfinder
             StartScene = transition.SceneName;
             Term destination = CurrentRoute.Destination;
 
-            _sp = new
-            (
-                null,
-                RmmPathfinder.SD.CurrentState,
-                new Term[] { destination },
-                1000f,
-                TerminationConditionType.Any,
-                1000f,
-                true
-            );
+            _sp = new()
+            {
+                StartPositions = null,
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = new Term[] { destination },
+                MaxCost = 1000f,
+                MaxTime = 1000f,
+                TerminationCondition = TerminationConditionType.Any,
+                AllowBacktracking = false,
+            };
 
             if (TransitionData.GetTransitionDef(transition.ToString()) is RmmTransitionDef td
                 && RmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out Term start))
@@ -145,22 +144,18 @@ namespace RandoMapMod.Pathfinder
             }
 
             _ss = new(_sp);
-
+            
             if (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
             {
-                LogSearchResults(_sp, _ss);
                 Route route = new(_ss.NewResultNodes[0]);
-
-                //foreach (AbstractAction action in route.Node.Actions)
-                //{
-                //    RandoMapMod.Instance.LogDebug($"{action.DebugName}");
-                //}
 
                 if (!route.RemainingInstructions.Any())
                 {
                     ResetRoute();
                     return false;
                 }
+
+                LogRouteResults(route);
 
                 CurrentRoute = route;
                 Reevaluated = true;
@@ -215,10 +210,13 @@ namespace RandoMapMod.Pathfinder
             FinalScene = null;
             Reevaluated = false;
             _sp = null;
+            _ss = null;
             _routes = null;
 
             RouteCompass.Update();
             UpdateRouteUI();
+
+            RandoMapMod.Instance.LogFine("Reset route.");
         }
 
         private static void UpdateRouteUI()
@@ -287,13 +285,13 @@ namespace RandoMapMod.Pathfinder
             return true;
         }
 
-        private static void LogSearchResults(SearchParams sp, SearchState ss)
+        private static void LogRouteResults(Route route)
         {
-            RandoMapMod.Instance.LogDebug($"Pathfinder search time: {ss.SearchTime} milliseconds");
-            if (_ss.HasTimedOut)
-            {
-                RandoMapMod.Instance.LogDebug($"State propagation timed out after {sp.MaxTime} milliseconds, switching to stateless search");
-            }
+            RandoMapMod.Instance.LogFine($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
+            RandoMapMod.Instance.LogFine(route.Node.PrintActionsShort());
+            RandoMapMod.Instance.LogFine($"Node states count: {route.Node.CurrentStates.Count()}");
+            RandoMapMod.Instance.LogFine($"Stateless search: {_sp?.Stateless}");
+            RandoMapMod.Instance.LogFine($"Cumulative search time: {_ss?.SearchTime} ms");
         }
     }
 }

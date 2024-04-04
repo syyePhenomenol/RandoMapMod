@@ -60,7 +60,8 @@ namespace RandoMapMod.Transition
 
         internal static void Update()
         {
-            //RandoMapMod.Instance.LogDebug("Update TransitionTracker");
+            if (!Conditions.RandoMapModEnabled()) return;
+
             InLogicExtraTransitions = new();
             InLogicScenes = new();
             UncheckedReachableScenes = new();
@@ -159,14 +160,15 @@ namespace RandoMapMod.Transition
 
             if (!starts.Any()) return new();
 
-            SearchParams sp = new
-            (
-                starts,
-                RmmPathfinder.SD.CurrentState,
-                new Term[] { },
-                0.5f,
-                TerminationConditionType.None
-            );
+            SearchParams sp = new()
+            {
+                StartPositions = starts,
+                StartState = RmmPathfinder.SD.CurrentState,
+                Destinations = new Term[] { },
+                MaxCost = 0.5f,
+                MaxTime = 1000f,
+                AllowBacktracking = false
+            };
 
             SearchState ss = new(sp);
             Algorithms.DijkstraSearch(RmmPathfinder.SD, sp, ss);

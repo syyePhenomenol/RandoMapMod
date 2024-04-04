@@ -16,13 +16,13 @@ namespace RandoMapMod.Pathfinder
 
             SD.UpdateProgression();
 
-            //Testing.LogProgressionData(SD);
+            // Testing.LogProgressionData(SD);
 
-            //Testing.DebugActions(SD);
+            // Testing.DebugActions(SD);
 
-            //Testing.SingleStartDestinationTest(SD);
+            // Testing.SingleStartDestinationTest(SD);
 
-            //Testing.SceneToSceneTest(SD);
+            // Testing.SceneToSceneTest(SD);
         }
 
         public override void OnQuitToMenu()
