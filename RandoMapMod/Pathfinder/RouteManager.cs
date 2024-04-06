@@ -52,7 +52,7 @@ namespace RandoMapMod.Pathfinder
                     MaxTime = 1000f,
                     TerminationCondition = TerminationConditionType.AnyUniqueStartAndDestination,
                     Stateless = _ss is not null && _ss.HasTimedOut,
-                    AllowBacktracking = false
+                    DisallowBacktracking = false
                 };
 
                 if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
@@ -114,7 +114,7 @@ namespace RandoMapMod.Pathfinder
                 MaxCost = 1000f,
                 MaxTime = 1000f,
                 TerminationCondition = TerminationConditionType.Any,
-                AllowBacktracking = false,
+                DisallowBacktracking = false,
             };
 
             if (TransitionData.GetTransitionDef(transition.ToString()) is RmmTransitionDef td

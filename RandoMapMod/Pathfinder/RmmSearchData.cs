@@ -89,13 +89,11 @@ namespace RandoMapMod.Pathfinder
             UpdateProgression();
         }
 
-        protected override ProgressionManager CreateLocalPM()
+        protected override LogicManagerBuilder CreateLocalLM(LogicManagerBuilder lmb)
         {
-            ProgressionManager pm = base.CreateLocalPM();
+            lmb = base.CreateLocalLM(lmb);
 
-            LogicManagerBuilder lmb = new(pm.lm);
-
-            if (pm.ctx?.InitialProgression is not ProgressionInitializer pi || pi.StartStateTerm is not Term startTerm)
+            if (ReferencePM.ctx?.InitialProgression is not ProgressionInitializer pi || pi.StartStateTerm is not Term startTerm)
             {
                 throw new NullReferenceException();
             }
@@ -130,7 +128,7 @@ namespace RandoMapMod.Pathfinder
                 if (lmb.IsTerm(term.Name)) lmb.DoLogicEdit(new(term.Name, $"ORIG | {startTerm.Name}"));
             }
 
-            return new(new(lmb), pm.ctx);
+            return lmb;
         }
 
         protected override List<AbstractAction> CreateActions()
@@ -361,7 +359,7 @@ namespace RandoMapMod.Pathfinder
                 Destinations = transitions.ToArray(),
                 MaxCost = 1f,
                 MaxTime = 1000f,
-                AllowBacktracking = false
+                DisallowBacktracking = false
             };
 
             SearchState ss = new(sp);

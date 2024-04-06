@@ -17,7 +17,7 @@ namespace RandoMapMod.Pathfinder
         {
             RandoMapMod.Instance?.LogDebug($"  Logging PMs");
 
-            foreach (Term term in sd.Positions)
+            foreach (Term term in sd.LocalPM.lm.Terms)
             {
                 RandoMapMod.Instance.LogDebug($"    {term.Name}");
                 RandoMapMod.Instance.LogDebug($"      Reference: {RM.RS.TrackerData.lm.Terms.IsTerm(term.Name) && RM.RS.TrackerData.pm.Has(term)}");
@@ -37,7 +37,7 @@ namespace RandoMapMod.Pathfinder
                 {
                     sd.LocalPM.SetState(kvp.Key, sd.CurrentState);
 
-                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _, out var _)}");
+                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _)}");
 
                     sd.LocalPM.SetState(kvp.Key, null);
                 }
@@ -59,7 +59,7 @@ namespace RandoMapMod.Pathfinder
                 MaxCost = 1000f,
                 MaxTime = 1000f,
                 TerminationCondition = TerminationConditionType.Any,
-                AllowBacktracking = false
+                DisallowBacktracking = false
             };
 
             RandoMapMod.Instance?.LogDebug($"Starting SingleStartDestinationTest:");
@@ -127,7 +127,7 @@ namespace RandoMapMod.Pathfinder
                 MaxCost = 1000f,
                 MaxTime = 1000f,
                 TerminationCondition = TerminationConditionType.Any,
-                AllowBacktracking = false
+                DisallowBacktracking = false
             };
 
             RandoMapMod.Instance?.LogDebug($"Starting SceneToSceneTest:");
@@ -215,7 +215,7 @@ namespace RandoMapMod.Pathfinder
                 Destinations = transitions.ToArray(),
                 MaxCost = 1f,
                 MaxTime = 1000f,
-                AllowBacktracking = false
+                DisallowBacktracking = false
             };
 
             SearchState ss = new(sp);

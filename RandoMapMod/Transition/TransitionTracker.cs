@@ -167,7 +167,7 @@ namespace RandoMapMod.Transition
                 Destinations = new Term[] { },
                 MaxCost = 0.5f,
                 MaxTime = 1000f,
-                AllowBacktracking = false
+                DisallowBacktracking = false
             };
 
             SearchState ss = new(sp);
