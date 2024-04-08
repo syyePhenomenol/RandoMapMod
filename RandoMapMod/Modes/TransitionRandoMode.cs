@@ -7,13 +7,6 @@ namespace RandoMapMod.Modes
 {
     internal abstract class TransitionRandoMode : RmmMapMode
     {
-        public override bool InitializeToThis()
-        {
-            if (!TransitionData.IsTransitionRando()) return false;
-
-            return ModeName == RandoMapMod.GS.DefaultTransitionRandoMode.ToString().ToCleanName();
-        }
-
         public override bool DisableAreaNames => true;
 
         public override bool? RoomActiveOverride(RoomSprite roomSprite)

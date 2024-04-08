@@ -16,11 +16,12 @@ namespace RandoMapMod.UI
         protected override void OnClick()
         {
             MapChanger.Settings.ToggleMode();
+            OnHover();
         }
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Toggle to the next map mode.".L();
+            RmmTitle.Instance.HoveredText = $"{"Current map mode".L()}: {MapChanger.Settings.CurrentMode().ModeName.ToString().ToCleanName().L()}";
         }
 
         protected override void OnUnhover()
@@ -36,50 +37,40 @@ namespace RandoMapMod.UI
 
             string text = $"{"Mode".L()}:";
 
-            MapMode mode = MapChanger.Settings.CurrentMode();
+            RmmColorSetting colorSetting = RmmColorSetting.UI_Neutral;
 
-            if (mode is FullMapMode)
+            switch (MapChanger.Settings.CurrentMode())
             {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += $"\n{"Full Map".L()}";
+                case FullMapMode:
+                    colorSetting = RmmColorSetting.UI_On;
+                    text += $"\n{"Full Map".L()}";
+                    break;
+                case AllPinsMode:
+                    text += $"\n{"All Pins".L()}";
+                    break;
+                case PinsOverAreaMode:
+                    text += $" {"Pins\nOver Area".L()}";
+                    break;
+                case PinsOverRoomMode:
+                    text += $" {"Pins\nOver Room".L()}";
+                    break;
+                case TransitionNormalMode:
+                    colorSetting = RmmColorSetting.UI_Special;
+                    text += $"\n{"Transition".L()} 1";
+                    break;
+                case TransitionVisitedOnlyMode:
+                    colorSetting = RmmColorSetting.UI_Special;
+                    text += $"\n{"Transition".L()} 2";;
+                    break;
+                case TransitionAllRoomsMode:
+                    colorSetting = RmmColorSetting.UI_Special;
+                    text += $"\n{"Transition".L()} 3";
+                    break;
+                default:
+                    break;
             }
 
-            if (mode is AllPinsMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += $"\n{"All Pins".L()}";
-            }
-
-            if (mode is PinsOverAreaMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += $" {"Pins\nOver Area".L()}";
-            }
-
-            if (mode is PinsOverRoomMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += $" {"Pins\nOver Room".L()}";
-            }
-
-            if (mode is TransitionNormalMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += $"\n{"Transition".L()} 1";
-            }
-
-            if (mode is TransitionVisitedOnlyMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += $"\n{"Transition".L()} 2";
-            }
-
-            if (mode is TransitionAllRoomsMode)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-                text += $"\n{"Transition".L()} 3";
-            }
-
+            Button.ContentColor = RmmColors.GetColor(colorSetting);
             Button.Content = text;
         }
     }

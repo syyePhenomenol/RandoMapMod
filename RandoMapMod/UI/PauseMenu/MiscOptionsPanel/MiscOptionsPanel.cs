@@ -10,6 +10,8 @@ namespace RandoMapMod.UI
             new NextAreasButton(),
             new MapMarkersButton(),
             new QuillButton(),
+            new DefaultItemModeButton(),
+            new DefaultTransitionModeButton(),
             new DefaultSettingsButton()
         };
 

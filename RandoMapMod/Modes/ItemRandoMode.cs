@@ -2,20 +2,12 @@
 using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Settings;
-using RandoMapMod.Transition;
 using UnityEngine;
 
 namespace RandoMapMod.Modes
 {
     internal class ItemRandoMode : RmmMapMode
     {
-        public override bool InitializeToThis()
-        {
-            if (TransitionData.IsTransitionRando()) return false;
-
-            return ModeName == RandoMapMod.GS.DefaultItemRandoMode.ToString().ToCleanName();
-        }
-
         public override Vector4? RoomColorOverride(RoomSprite roomSprite)
         {
             if (roomSprite.Selected)

@@ -141,6 +141,16 @@
             AlwaysHaveQuill = !AlwaysHaveQuill;
         }
 
+        internal void ToggleDefaultItemRandoMode()
+        {
+            DefaultItemRandoMode = (RmmMode)(((int)DefaultItemRandoMode + 1) % Enum.GetNames(typeof(RmmMode)).Length);
+        }
+
+        internal void ToggleDefaultTransitionRandoMode()
+        {
+            DefaultTransitionRandoMode = (RmmMode)(((int)DefaultTransitionRandoMode + 1) % Enum.GetNames(typeof(RmmMode)).Length);
+        }
+
         internal static void ResetToDefaultSettings()
         {
             RandoMapMod.GS = new();
