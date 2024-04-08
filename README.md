@@ -93,6 +93,8 @@ Optional and compatible:
     - "Show Next Areas": Toggle showing names/arrows for adjacent map areas on the quick map
     - "Show Map Markers": Toggle showing map markers. You still need to buy the map markers to see them with this setting on.
     - "Always Have Quill": Fill in rooms even if you haven't picked up Quill. Doesn't affect Full Map or Transition modes.
+    - "Def. Item Mode": Toggle which map mode is set by default for a new item rando save.
+    - "Def. Transition Mode": Toggle which map mode is set by default for a new transition rando save.
     - "Reset Global Settings": Resets all global settings to default settings
     
 
