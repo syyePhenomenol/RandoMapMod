@@ -48,7 +48,7 @@ namespace RandoMapMod.UI
             if (RandoMapMod.LS.IsVanillaCustom())
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
-                text += "custom".L();
+                text += $" ({"custom".L()})";
             }
 
             Button.Content = text;
