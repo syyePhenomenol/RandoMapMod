@@ -56,7 +56,7 @@ namespace RandoMapMod.UI
 
         internal void Update()
         {
-            if (RandoMapMod.GS.ProgressHint is not Settings.ProgressHintSetting.Off)
+            if (RandoMapMod.GS.ProgressHint is not ProgressHintSetting.Off)
             {
                 progressHintPanel.Visibility = Visibility.Visible;
             }

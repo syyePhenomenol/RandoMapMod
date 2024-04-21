@@ -117,7 +117,7 @@ namespace RandoMapMod.Pins
             }
             else
             {
-                return GetLocationSprite(SD.Of(placement).Get(InjectedProps.LocationPoolGroup));
+                sprite = GetLocationSprite(SD.Of(placement).Get(InjectedProps.LocationPoolGroup));
             }
 
             ConnectionPinSprites.Add(placement, sprite);
@@ -139,7 +139,7 @@ namespace RandoMapMod.Pins
             }
             else
             {
-                return GetSprite(SD.Of(item).Get(InjectedProps.ItemPoolGroup));
+                sprite = GetSprite(SD.Of(item).Get(InjectedProps.ItemPoolGroup));
             }
 
             ConnectionPinSprites.Add(item, sprite);

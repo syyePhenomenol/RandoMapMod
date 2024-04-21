@@ -124,7 +124,7 @@ namespace RandoMapMod.UI
             }, ModifierKeys.Ctrl, GlobalHotkeyCondition);
         }
 
-        private HashSet<string> nonGameplayScenes = new()
+        private readonly HashSet<string> nonGameplayScenes = new()
         {
             SN.Cinematic_Ending_A,
             SN.Cinematic_Ending_B,
