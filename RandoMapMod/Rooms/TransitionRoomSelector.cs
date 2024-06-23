@@ -56,12 +56,12 @@ namespace RandoMapMod.Rooms
                 attackHoldTimer.Reset();
             }
 
-            // Disable this benchwarp if the pin selector has already selected a bench
+            // Disable this benchwarp if the pin selector has already selected a visited bench
             if (attackHoldTimer.ElapsedMilliseconds >= 500)
             {
                 attackHoldTimer.Reset();
 
-                if (!RmmPinSelector.Instance.BenchSelected())
+                if (!RmmPinSelector.Instance.VisitedBenchSelected())
                 {
                     TryBenchwarp();
                 }
@@ -126,7 +126,7 @@ namespace RandoMapMod.Rooms
                 text += $" {"to find a new route".L()}.";
             }
 
-            if (!RmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
+            if (!RmmPinSelector.Instance.VisitedBenchSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 

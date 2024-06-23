@@ -127,7 +127,7 @@ namespace RandoMapMod.Pins
             {
                 attackHoldTimer.Reset();
 
-                if (BenchSelected())
+                if (VisitedBenchSelected())
                 {
                     GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(SelectedObjectKey));
                 }
@@ -198,7 +198,7 @@ namespace RandoMapMod.Pins
             return RandoMapMod.GS.PinSelectionOn;
         }
 
-        internal bool BenchSelected()
+        internal bool VisitedBenchSelected()
         {
             return Interop.HasBenchwarp() && BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
         }
