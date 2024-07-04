@@ -48,6 +48,24 @@ namespace RandoMapMod.Pathfinder
                 return "You need to rescue Bretta first.".L();
             }
 
+            if (RemainingInstructions.Any(i => i.Text is "Town[room_grimm]" or "Town[room_divine]")
+                && !PlayerData.instance.GetBool(nameof(PlayerData.troupeInTown)))
+            {
+                return "You need to light the Nightmare Lantern first.".L();
+            }
+
+            if (RemainingInstructions.Any(i => i.Text is "RestingGrounds_05[right1]")
+                && !PlayerData.instance.GetBool(nameof(PlayerData.gladeDoorOpened)))
+            {
+                return "You need to talk to Seer first.".L();
+            }
+
+            if (RemainingInstructions.Any(i => i.Text is "Waterways_07[right1]")
+                && !PlayerData.instance.GetBool(nameof(PlayerData.waterwaysAcidDrained)))
+            {
+                return "You need to drain the Waterways acid first.".L();
+            }
+
             return default;
         }
 

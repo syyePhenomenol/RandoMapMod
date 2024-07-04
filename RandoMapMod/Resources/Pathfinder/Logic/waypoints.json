@@ -1,67 +1,197 @@
 ﻿[
   {
-    "name": "Left_Elevator_Activated",
+    "name": "RMM_Dung_Defender_Wall",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Broke_Waterways_Bench_Ceiling",
+    "name": "RMM_False_Knight_Gate",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "City_Toll_Elevator_Down",
+    "name": "RMM_Mawlek_Wall",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "City_Toll_Elevator_Up",
+    "name": "RMM_Shaman_Pillar",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "City_Toll_Wall_Broken",
+    "name": "RMM_Lower_Kingdom's_Edge_Wall",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Bretta_Opened",
+    "name": "RMM_Mantis_Big_Floor",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Divine_Opened",
+    "name": "RMM_Mantis_Big_Door",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Grimm_Opened",
+    "name": "RMM_Archives_Exit_Wall",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Jiji_Opened",
+    "name": "RMM_Gardens_Stag_Exit",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Sly_Opened",
+    "name": "RMM_Left_Elevator",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Door_Station_Opened",
+    "name": "RMM_Resting_Grounds_Floor",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Town_Lift_Activated",
+    "name": "RMM_Glade_Door",
     "logic": "FALSE",
     "Stateless": true
   },
   {
-    "name": "Broke_Catacombs_Ceiling",
+    "name": "RMM_Catacombs_Ceiling",
     "logic": "FALSE",
     "Stateless": true
+  },
+  {
+    "name": "RMM_Sanctum_Glass_Floor",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_City_Toll_Lift_Down",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_City_Toll_Lift_Up",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_City_Toll_Wall",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Shade_Soul_Exit",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Bathhouse_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Elegant_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Emilitia_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Catacombs_Wall",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Bathhouse_Wall",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Love_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Bretta_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Jiji_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Sly_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Dirtmouth_Station_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Dirtmouth_Lift",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Divine_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Grimm_Door",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Waterways_Manhole",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Flukemarm_Floor",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Waterways_Bench_Floor",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Dung_Defender_Floor",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Waterways_Acid",
+    "logic": "FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "RMM_Infected",
+    "logic": "FALSE",
+    "Stateless" : true
+  },
+  {
+    "name": "RMM_Not_Infected",
+    "logic": "FALSE",
+    "Stateless" : true
+  },
+  {
+    "name": "RMM_Not_Vanilla_Infected_Transitions",
+    "logic": "FALSE",
+    "Stateless" : true
   }
 ]

@@ -1,4 +1,5 @@
 ﻿[
+  // Godhome and Black Temple
   {
     "name": "Room_temple[left1]",
     "old": "Bench-Black_Egg_Temple",
@@ -15,16 +16,6 @@
     "replacement": "GG_Workshop[left1]"
   },
   {
-    "name": "Left_Elevator",
-    "old": "Crossroads_49[left1]",
-    "replacement": "Crossroads_49[left1] + Left_Elevator_Activated"
-  },
-  {
-    "name": "Left_Elevator",
-    "old": "Crossroads_49[right1]",
-    "replacement": "Crossroads_49[right1] + Left_Elevator_Activated"
-  },
-  {
     "name": "Bench-Black_Egg_Temple",
     "old": "Room_temple[left1]",
     "replacement": "Room_Final_Boss_Atrium[left1]"
@@ -34,30 +25,156 @@
     "old": "Opened_Black_Egg_Temple",
     "replacement": "TRUE"
   },
-  // TODO: Check this is the best way to handle these
+  // Fixing false positives
   {
     "name": "Abyss_01[left1]",
-    "old": "Abyss_01[left1]",
-    "replacement": "FALSE"
+    "old": "Opened_Dung_Defender_Wall",
+    "replacement": "RMM_Dung_Defender_Wall"
+  },
+  {
+    "name": "Crossroads_10[right1]",
+    "old": "Defeated_False_Knight",
+    "replacement": "RMM_False_Knight_Gate"
   },
   {
     "name": "Crossroads_33[left1]",
-    "old": "Crossroads_33[left1]",
-    "replacement": "FALSE"
+    "old": "Opened_Mawlek_Wall",
+    "replacement": "RMM_Mawlek_Wall"
   },
   {
     "name": "Crossroads_33[right1]",
-    "old": "Crossroads_33[right1]",
-    "replacement": "FALSE"
+    "old": "Opened_Shaman_Pillar",
+    "replacement": "RMM_Shaman_Pillar | RMM_Infected"
+  },
+  {
+    "name": "Deepnest_East_03[left2]",
+    "old": "Opened_Lower_Kingdom's_Edge_Wall",
+    "replacement": "RMM_Lower_Kingdom's_Edge_Wall"
+  },
+  {
+    "name": "Fungus2_25[right1]",
+    "old": "Defeated_Mantis_Lords",
+    "replacement": "RMM_Mantis_Big_Door"
+  },
+  {
+    "name": "Fungus3_02[right1]",
+    "old": "Opened_Archives_Exit_Wall",
+    "replacement": "RMM_Archives_Exit_Wall"
+  },
+  {
+    "name": "Fungus3_13[left2]",
+    "old": "Opened_Gardens_Stag_Exit",
+    "replacement": "RMM_Gardens_Stag_Exit"
+  },
+  {
+    "name": "Left_Elevator",
+    "old": "Crossroads_49[left1]",
+    "replacement": "Crossroads_49[left1] + RMM_Left_Elevator"
+  },
+  {
+    "name": "Left_Elevator",
+    "old": "Crossroads_49[right1]",
+    "replacement": "Crossroads_49[right1] + RMM_Left_Elevator"
+  },
+  {
+    "name": "RestingGrounds_02[bot1]",
+    "old": "Opened_Resting_Grounds_Floor",
+    "replacement": "RMM_Resting_Grounds_Floor"
+  },
+  {
+    "name": "RestingGrounds_10[top1]",
+    "old": "Broke_Crypts_One_Way_Floor",
+    "replacement": "RMM_Catacombs_Ceiling"
+  },
+  {
+    "name": "Ruins1_23[top1]",
+    "old": "Broke_Sanctum_Glass_Floor",
+    "replacement": "RMM_Sanctum_Glass_Floor"
   },
   {
     "name": "Ruins1_31[left2]",
-    "old": "Ruins1_31[left2]",
-    "replacement": "FALSE"
+    "old": "Lever-Shade_Soul",
+    "replacement": "RMM_Shade_Soul_Exit"
+  },
+  {
+    "name": "Ruins2_04[door_Ruin_House_03]",
+    "old": "Opened_Emilitia_Door",
+    "replacement": "RMM_Emilitia_Door"
+  },
+  {
+    "name": "Ruins2_10[right1]",
+    "old": "Opened_Resting_Grounds_Catacombs_Wall",
+    "replacement": "RMM_Catacombs_Wall"
+  },
+  {
+    "name": "Ruins2_10b[left1]",
+    "old": "Opened_Pleasure_House_Wall",
+    "replacement": "RMM_Bathhouse_Wall"
+  },
+  {
+    "name": "Waterways_01[top1]",
+    "old": "Opened_Waterways_Manhole",
+    "replacement": "RMM_Waterways_Manhole"
+  },
+// Fixing false negatives
+  {
+    "name": "RestingGrounds_05[right1]",
+    "old": "Opened_Glade_Door",
+    "replacement": "Opened_Glade_Door | RMM_Glade_Door"
   },
   {
     "name": "Ruins1_31[left3]",
-    "old": "Ruins1_31[left3]",
-    "replacement": "FALSE"
+    "old": "ELEGANT",
+    "replacement": "ELEGANT | RMM_Elegant_Door"
+  },
+  {
+    "name": "Ruins2_11_b[left1]",
+    "old": "LOVE",
+    "replacement": "LOVE | RMM_Love_Door"
+  },
+  {
+    "name": "Ruins2_04[door_Ruin_Elevator]",
+    "old": "PLEASUREHOUSEUNLOCK",
+    "replacement": "PLEASUREHOUSEUNLOCK | RMM_Bathhouse_Door"
+  },
+  {
+    "name": "Town[door_bretta]",
+    "old": "Rescued_Bretta",
+    "replacement": "Rescued_Bretta | RMM_Bretta_Door"
+  },
+  {
+    "name": "Town[door_jiji]",
+    "old": "JIJIUNLOCK",
+    "replacement": "JIJIUNLOCK | RMM_Jiji_Door"
+  },
+  {
+    "name": "Town[door_sly]",
+    "old": "Rescued_Sly",
+    "replacement": "Rescued_Sly | RMM_Sly_Door"
+  },
+  {
+    "name": "Town[door_station]",
+    "old": "Dirtmouth_Stag",
+    "replacement": "Dirtmouth_Stag | RMM_Dirtmouth_Station_Door"
+  },
+  {
+    "name": "Town[room_divine]",
+    "old": "Nightmare_Lantern_Lit",
+    "replacement": "Nightmare_Lantern_Lit | RMM_Divine_Door"
+  },
+  {
+    "name": "Town[room_grimm]",
+    "old": "Nightmare_Lantern_Lit",
+    "replacement": "Nightmare_Lantern_Lit | RMM_Grimm_Door"
+  },
+  {
+    "name": "Waterways_02[bot1]",
+    "old": "Broke_Flukemarm_Quake_Floor",
+    "replacement": "Broke_Flukemarm_Quake_Floor | RMM_Flukemarm_Floor"
+  },
+  {
+    "name": "Waterways_05[bot2]",
+    "old": "Broke_Dung_Defender_Quake_Floor",
+    "replacement": "Broke_Dung_Defender_Quake_Floor | RMM_Dung_Defender_Floor"
   }
 ]

@@ -2,9 +2,9 @@ using MagicUI.Core;
 using MagicUI.Elements;
 using MagicUI.Graphics;
 using MapChanger;
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using UnityEngine;
-using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {

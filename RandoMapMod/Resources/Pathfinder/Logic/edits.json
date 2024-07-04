@@ -5,10 +5,6 @@
     "logic": "FALSE"
   },
   {
-    "name": "WARPSTARTTOBENCH",
-    "logic": "FALSE"
-  },
-  {
     "name": "Can_Bench",
     "logic": "FALSE"
   },
@@ -20,45 +16,43 @@
     "name": "Can_Warp_To_Bench",
     "logic": "FALSE"
   },
-  // Other logic changes based on stateless waypoints / incomplete nature of base rando logic
+  // Fixing false negatives
+  {
+    "name": "Fungus2_14[bot3]",
+    "logic": "ORIG | Fungus2_14 + RMM_Mantis_Big_Floor"
+  },
   {
     "name": "Ruins1_31",
-    "logic": "ORIG | (Ruins1_31[left1] | Ruins1_31[bot1]) + City_Toll_Wall_Broken + (City_Toll_Elevator_Down + (LEFTCLAW | RIGHTCLAW | WINGS) | City_Toll_Elevator_Up)"
-  },
-  {
-    "name": "Town[door_bretta]",
-    "logic": "ORIG | Town + Town_Door_Bretta_Opened"
-  },
-  {
-    "name": "Town[door_jiji]",
-    "logic": "ORIG | Town + Town_Door_Jiji_Opened"
-  },
-  {
-    "name": "Town[door_sly]",
-    "logic": "ORIG | Town + Town_Door_Sly_Opened"
-  },
-  {
-    "name": "Town[door_station]",
-    "logic": "ORIG | Town + Town_Door_Station_Opened"
+    "logic": "ORIG | (Ruins1_31[left1] | Ruins1_31[bot1]) + RMM_City_Toll_Wall + (RMM_City_Toll_Lift_Down + (LEFTCLAW | RIGHTCLAW | WINGS) | RMM_City_Toll_Lift_Up)"
   },
   {
     "name": "Town[right1]",
-    "logic": "ORIG | Town + Town_Lift_Activated"
-  },
-  {
-    "name": "Town[room_divine]",
-    "logic": "ORIG | Town + Town_Door_Divine_Opened"
-  },
-  {
-    "name": "Town[room_grimm]",
-    "logic": "ORIG | Town + Town_Door_Grimm_Opened"
+    "logic": "ORIG | Town + RMM_Dirtmouth_Lift"
   },
   {
     "name": "Waterways_02[top3]",
-    "logic": "ORIG | Waterways_02 + Broke_Waterways_Bench_Ceiling + (LEFTCLAW | RIGHTCLAW + WINGS)"
+    "logic": "ORIG | Waterways_02 + RMM_Waterways_Bench_Floor + (LEFTCLAW | RIGHTCLAW + WINGS)"
+  },
+  // Fixing false positives due to infection
+  {
+    "name": "Crossroads_03[bot1]",
+    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
   },
   {
-    "name": "RestingGrounds_10[top1]",
-    "logic": "ORIG | RestingGrounds_10 + Broke_Catacombs_Ceiling + (LEFTCLAW | RIGHTCLAW)"
+    "name": "Crossroads_06[right1]",
+    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
+  },
+  {
+    "name": "Crossroads_10[left1]",
+    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
+  },
+  {
+    "name": "Crossroads_19[top1]",
+    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
+  },
+  // Special fix for Dirtmouth stag
+  {
+    "name": "Room_Town_Stag_Station[left1]",
+    "logic": "Room_Town_Stag_Station[left1] + (Dirtmouth_Stag | RMM_Dirtmouth_Station_Door) | Can_Stag"
   }
 ]

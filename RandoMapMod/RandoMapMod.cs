@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.UI;
@@ -96,7 +96,7 @@ namespace RandoMapMod
             Instance = this;
         }
 
-        public override string GetVersion() => "3.5.5";
+        public override string GetVersion() => "3.5.6";
 
         public override int LoadPriority() => 10;
 
@@ -125,7 +125,6 @@ namespace RandoMapMod
             }
 
             Interop.FindInteropMods();
-            RmmSearchData.LoadConditionalTerms();
             Instruction.LoadRouteCompassOverrides();
             InstructionData.LoadWaypointInstructions();
             RmmRoomManager.Load();

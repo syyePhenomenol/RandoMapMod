@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using RandoMapMod.Transition;
 using RandomizerCore.Json;
 using RandomizerCore.Logic;
@@ -24,24 +24,18 @@ namespace RandoMapMod.Pathfinder
             "Crossroads_19[top1]"
         ];
 
-        private static Dictionary<string, string> conditionalTerms;
-
-        internal ReadOnlyDictionary<string, ReadOnlyCollection<Term>> TransitionTermsByScene { get; private set; }
-
-        internal AbstractAction DirthmouthStagTransition { get; private set; }
-        internal Term StartTerm { get; private set; }
-        internal ReadOnlyCollection<Term> BenchwarpTerms { get; private set; }
-
-        internal static void LoadConditionalTerms()
-        {
-            conditionalTerms = JU.DeserializeFromEmbeddedResource<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.conditionalTerms.json");
-        }
+        internal ReadOnlyDictionary<string, ReadOnlyCollection<Term>> TransitionTermsByScene { get; }
+        
+        // Dirtmouth stag room is still accessible by stag even when the transition in the room isn't, so it is a special case
+        internal AbstractAction DirtmouthStagTransition { get; private set; }
+        internal Term StartTerm { get; }
+        internal ReadOnlyCollection<Term> BenchwarpTerms { get; }
 
         public RmmSearchData(ProgressionManager reference) : base(reference)
         {
             if (Actions.Where(a => a.Name is "Room_Town_Stag_Station[left1]").FirstOrDefault() is AbstractAction action)
             {
-                DirthmouthStagTransition = action;
+                DirtmouthStagTransition = action;
             }
 
             if (LocalPM.ctx?.InitialProgression is ProgressionInitializer pi && pi.StartStateTerm is Term startTerm)
@@ -81,6 +75,8 @@ namespace RandoMapMod.Pathfinder
             transitionsByScene[SN.Room_Tram_RG] = [PositionLookup["Upper_Tram"]];
 
             TransitionTermsByScene = new(transitionsByScene.ToDictionary(kvp => kvp.Key, kvp => new ReadOnlyCollection<Term>(kvp.Value.ToArray())));
+            
+            LocalPM.Set("RMM_Not_Vanilla_Infected_Transitions", infectionTransitions.Any(t => !TransitionData.IsVanillaTransition(t)) ? 1 : 0);
 
             UpdateProgression();
         }
@@ -193,27 +189,47 @@ namespace RandoMapMod.Pathfinder
         {
             // Prune out of logic stuff
             var actions = base.GetActions(node).Where(a => ReferencePM.lm.GetTerm(a.Destination.Name) is null
-                || (a is PlacementAction && TransitionData.IsVanillaOrCheckedTransition(a.Name) && !IsBlockedByInfection(a.Name))
+                || (a is PlacementAction && TransitionData.IsVanillaOrCheckedTransition(a.Name))
                 || (a is not PlacementAction && ReferencePM.Has(a.Destination))).ToList();
 
-            if (node.CurrentPosition.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
+            if (node.CurrentPosition.Name is "Can_Stag" && !actions.Contains(DirtmouthStagTransition))
             {
-                actions.Add(DirthmouthStagTransition);
+                actions.Add(DirtmouthStagTransition);
             }
 
             return actions;
         }
 
         private static readonly (string term, string pdBool)[] pdBoolTerms =
-        {
-            ("Left_Elevator_Activated", nameof(PlayerData.cityLift1)),
-            ("Town_Lift_Activated", nameof(PlayerData.mineLiftOpened)),
-            ("Opened_Mawlek_Wall", nameof(PlayerData.crossroadsMawlekWall)),
-            ("Opened_Dung_Defender_Wall", nameof(PlayerData.dungDefenderWallBroken)),
-            ("Opened_Resting_Grounds_Floor", nameof(PlayerData.openedRestingGrounds02)),
-            ("Opened_Gardens_Stag_Exit", nameof(PlayerData.openedGardensStagStation)),
-            ("Opened_Glade_Door", nameof(PlayerData.gladeDoorOpened))
-        };
+        [
+            ("RMM_Dung_Defender_Wall", nameof(PlayerData.dungDefenderWallBroken)),
+            ("RMM_Mawlek_Wall", nameof(PlayerData.crossroadsMawlekWall)),
+            ("RMM_Shaman_Pillar", nameof(PlayerData.shamanPillar)),
+            ("RMM_Lower_Kingdom's_Edge_Wall", nameof(PlayerData.outskirtsWall)),
+            ("RMM_Mantis_Big_Door", nameof(PlayerData.defeatedMantisLords)),
+            ("RMM_Archives_Exit_Wall", nameof(PlayerData.oneWayArchive)),
+            ("RMM_Gardens_Stag_Exit", nameof(PlayerData.openedGardensStagStation)),
+            ("RMM_Left_Elevator", nameof(PlayerData.cityLift1)),
+            ("RMM_Resting_Grounds_Floor", nameof(PlayerData.openedRestingGrounds02)),
+            ("RMM_Glade_Door", nameof(PlayerData.gladeDoorOpened)),
+            ("RMM_Sanctum_Glass_Floor", nameof(PlayerData.brokenMageWindow)),
+            ("RMM_Bathhouse_Door", nameof(PlayerData.bathHouseOpened)),
+            ("RMM_Elegant_Door", nameof(PlayerData.openedMageDoor_v2)),
+            ("RMM_Emilitia_Door", nameof(PlayerData.city2_sewerDoor)),
+            ("RMM_Catacombs_Wall", nameof(PlayerData.restingGroundsCryptWall)),
+            ("RMM_Bathhouse_Wall", nameof(PlayerData.bathHouseWall)),
+            ("RMM_Love_Door", nameof(PlayerData.openedLoveDoor)),
+            ("RMM_Bretta_Door", nameof(PlayerData.brettaRescued)),
+            ("RMM_Jiji_Door", nameof(PlayerData.jijiDoorUnlocked)),
+            ("RMM_Sly_Door", nameof(PlayerData.slyRescued)),
+            ("RMM_Dirtmouth_Station_Door", nameof(PlayerData.openedTownBuilding)),
+            ("RMM_Dirtmouth_Lift", nameof(PlayerData.mineLiftOpened)),
+            ("RMM_Divine_Door", nameof(PlayerData.divineInTown)),
+            ("RMM_Grimm_Door", nameof(PlayerData.troupeInTown)),
+            ("RMM_Waterways_Manhole", nameof(PlayerData.openedWaterwaysManhole)),
+            ("RMM_Waterways_Acid", nameof(PlayerData.waterwaysAcidDrained)),
+            ("RMM_Infected", nameof(PlayerData.crossroadsInfected))
+        ];
 
         public override void UpdateProgression()
         {
@@ -221,59 +237,72 @@ namespace RandoMapMod.Pathfinder
 
             base.UpdateProgression();
 
-            // Emulate a transition being possibly available via having the required term
-            foreach (KeyValuePair<string, string> kvp in conditionalTerms
-                .Where(kvp => RM.RS.Context.LM.GetTerm(kvp.Key) is not null
-                    && RM.RS.Context.LM.GetTerm(kvp.Value) is Term valueTerm
-                    && valueTerm.Type is not TermType.State))
-            {
-                if (RM.RS.TrackerData.pm.Get(kvp.Key) > 0)
-                {
-                    LocalPM.Set(kvp.Value, 1);
-                }
-            }
-
             foreach ((string term, string pdBool) in pdBoolTerms)
             {
-                if (LocalPM.lm.GetTerm(term) is null) continue;
                 LocalPM.Set(term, pd.GetBool(pdBool) ? 1 : 0);
             }
 
-            if (LocalPM.lm.GetTerm("Opened_Shaman_Pillar") is Term shamanPillar)
+            if (LocalPM.lm.GetTerm("RMM_Not_Infected") is Term notInfected)
             {
-                LocalPM.Set(shamanPillar, pd.GetBool(nameof(PlayerData.shamanPillar)) || pd.GetBool(nameof(PlayerData.crossroadsInfected)) ? 1 : 0);
+                LocalPM.Set(notInfected, !pd.GetBool(nameof(PlayerData.crossroadsInfected)) ? 1 : 0);
             }
 
             foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
             {
                 switch (pbd.sceneName)
                 {
-                    case SN.Waterways_02:
-                        if (pbd.id is "Quake Floor (1)")
+                    case SN.Crossroads_10:
+                        if (pbd.id is "Battle Scene")
                         {
-                            LocalPM.Set("Broke_Waterways_Bench_Ceiling", pbd.activated ? 1 : 0);
+                            LocalPM.Set("RMM_False_Knight_Gate", pbd.activated ? 1 : 0);
                         }
                         break;
-                    case SN.Ruins1_31:
-                        if (pbd.id is "Breakable Wall Ruin Lift")
+                    case SN.Fungus2_14:
+                        if (pbd.id is "Mantis Lever (1)")
                         {
-                            LocalPM.Set("City_Toll_Wall_Broken", pbd.activated ? 1 : 0);
-                        }
-                        if (pbd.id is "Ruins Lever")
-                        {
-                            LocalPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
+                            LocalPM.Set("RMM_Mantis_Big_Floor", pbd.activated ? 1 : 0);
                         }
                         break;
                     case SN.RestingGrounds_10:
                         if (pbd.id is "Collapser Small (5)")
                         {
-                            LocalPM.Set("Broke_Catacombs_Ceiling", pbd.activated ? 1 : 0);
+                            LocalPM.Set("RMM_Catacombs_Ceiling", pbd.activated ? 1 : 0);
                         }
                         break;
-                    case SN.Crossroads_10:
-                        if (pbd.id is "Battle Scene")
+                    case SN.Ruins1_31:
+                        if (pbd.id is "Breakable Wall Ruin Lift")
                         {
-                            LocalPM.Set("Defeated_False_Knight", pbd.activated ? 1 : 0);
+                            LocalPM.Set("RMM_City_Toll_Wall", pbd.activated ? 1 : 0);
+                        }
+                        if (pbd.id is "Ruins Lever")
+                        {
+                            LocalPM.Set("RMM_Shade_Soul_Exit", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.Waterways_02:
+                        if (pbd.id is "Quake Floor")
+                        {
+                            LocalPM.Set("RMM_Flukemarm_Floor", pbd.activated ? 1 : 0);
+                        }
+                        if (pbd.id is "Quake Floor (1)")
+                        {
+                            LocalPM.Set("RMM_Waterways_Bench_Floor", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.Waterways_04:
+                        if (pbd.id is "Quake Floor")
+                        {
+                            LocalPM.Set("RMM_Waterways_Bench_Floor_1", pbd.activated ? 1 : 0);
+                        }
+                        if (pbd.id is "Quake Floor (1)")
+                        {
+                            LocalPM.Set("RMM_Waterways_Bench_Floor_2", pbd.activated ? 1 : 0);
+                        }
+                        break;
+                    case SN.Waterways_05:
+                        if (pbd.id is "Quake Floor")
+                        {
+                            LocalPM.Set("RMM_Dung_Defender_Floor", pbd.activated ? 1 : 0);
                         }
                         break;
                 }
@@ -283,8 +312,8 @@ namespace RandoMapMod.Pathfinder
             {
                 if (pid.sceneName is SN.Ruins1_31 && pid.id is "Ruins Lift")
                 {
-                    LocalPM.Set("City_Toll_Elevator_Up", pid.value % 2 is 1 ? 1 : 0);
-                    LocalPM.Set("City_Toll_Elevator_Down", pid.value % 2 is 0 ? 1 : 0);
+                    LocalPM.Set("RMM_City_Toll_Lift_Up", pid.value % 2 is 1 ? 1 : 0);
+                    LocalPM.Set("RMM_City_Toll_Lift_Down", pid.value % 2 is 0 ? 1 : 0);
                 }
             }
 
@@ -328,15 +357,8 @@ namespace RandoMapMod.Pathfinder
             CurrentState = new((State)new(sb));
         }
 
-        private bool IsBlockedByInfection(string transition)
-        {
-            return infectionTransitions.Contains(transition)
-                && VanillaInfectedTransitions
-                && PlayerData.instance.GetBool(nameof(PlayerData.crossroadsInfected));
-        }
-
         /// <summary>
-        /// Groups transitions that are accesible from another transition in the same scene (both ways).
+        /// Groups transitions that are accessible from another transition in the same scene (both ways).
         /// </summary>
         internal StartPosition[] GetPrunedStartTerms(string scene)
         {
@@ -386,14 +408,7 @@ namespace RandoMapMod.Pathfinder
                 prunedTransitions.Add(new(transition.Name, transition, 0f));
             }
 
-            if (scene is SN.Room_Town_Stag_Station
-                && !inLogicTransitions.Any(t => t.Name is "Room_Town_Stag_Station[left1]")
-                && ReferencePM.Get("Can_Stag") > 0)
-            {
-                prunedTransitions.Add(new("Can_Stag", PositionLookup["Can_Stag"], 0f));
-            }
-
-            return prunedTransitions.ToArray();
+            return [.. prunedTransitions];
         }
 
         internal Term[] GetTransitionTerms(string scene)

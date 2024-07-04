@@ -75,7 +75,6 @@
 		<EmbeddedResource Include="Resources\Compass\worldCoordinates.json" />
 		<EmbeddedResource Include="Resources\locationHints.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\conditionalTerms.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointInstructions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />

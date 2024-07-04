@@ -15,8 +15,8 @@ namespace RandoMapMod.Pins
 
         private string locationPoolGroup;
 
-        private readonly List<string> items = new();
-        private readonly Dictionary<string, string> itemPoolGroups = new();
+        // private readonly List<string> items = new();
+        private readonly Dictionary<string, string> itemPoolGroups = [];
 
         internal override IReadOnlyCollection<string> ItemPoolGroups => new HashSet<string> (itemPoolGroups.Values);
         internal override IReadOnlyCollection<string> LocationPoolGroups => new string[] { locationPoolGroup };
