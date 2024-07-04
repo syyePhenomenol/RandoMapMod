@@ -41,8 +41,8 @@ namespace RandoMapMod.Pins
             {"Other", "Unknown"}
         };
 
-        internal static Dictionary<string, ScaledPinSprite> BuiltInPinSprites = new();
-        internal static Dictionary<TaggableObject, ScaledPinSprite> ConnectionPinSprites = new();
+        internal static Dictionary<string, ScaledPinSprite> BuiltInPinSprites = [];
+        internal static Dictionary<TaggableObject, ScaledPinSprite> ConnectionPinSprites = [];
 
         public override void OnEnterGame() { }
 

@@ -75,8 +75,8 @@ namespace RandoMapMod.Pathfinder
                 Term start = GetRandomTerm(inLogicTransitions);
                 Term destination = GetRandomTerm(inLogicTransitions);
 
-                sp.StartPositions = new StartPosition[] { new(start.Name, start, 0f) };
-                sp.Destinations = new Term[] { destination };
+                sp.StartPositions = [new(start.Name, start, 0f)];
+                sp.Destinations = [destination];
 
                 SearchState ss = new(sp);
 
@@ -139,13 +139,13 @@ namespace RandoMapMod.Pathfinder
 
             for (int i = 0; i < testCount; i++)
             {
-                HashSet<Route> routes = new();
+                HashSet<Route> routes = [];
 
                 string startScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
                 string destScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
 
                 sp.StartPositions = GetPrunedTransitions(sd, startScene).Select(t => new StartPosition(t.Name, t, 0f)).ToArray();
-                sp.Destinations = GetPrunedTransitions(sd, destScene).ToArray();
+                sp.Destinations = [.. GetPrunedTransitions(sd, destScene)];
 
                 if (!sp.StartPositions.Any() || !sp.Destinations.Any())
                 {
@@ -206,13 +206,13 @@ namespace RandoMapMod.Pathfinder
         /// </summary>
         private static Term[] GetPrunedTransitions(RmmSearchData sd, string scene)
         {
-            if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
+            if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return [];
 
             SearchParams sp = new()
             {
                 StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
                 StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = transitions.ToArray(),
+                Destinations = [.. transitions],
                 MaxCost = 1f,
                 MaxTime = 1000f,
                 DisallowBacktracking = false
@@ -239,7 +239,7 @@ namespace RandoMapMod.Pathfinder
                 }
             }
 
-            return prunedTransitions.ToArray();
+            return [.. prunedTransitions];
         }
 
         private static bool DoTest(SearchData sd, SearchParams sp, SearchState search)

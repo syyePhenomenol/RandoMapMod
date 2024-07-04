@@ -29,7 +29,7 @@ namespace RandoMapMod.Pins
 
             LocationPoolGroup = SD.Of(placement).Get(InjectedProps.LocationPoolGroup);
 
-            HashSet<string> itemPoolGroups = new();
+            HashSet<string> itemPoolGroups = [];
             foreach (AbstractItem item in placement.Items)
             {
                 itemPoolGroups.Add(SD.Of(item).Get(InjectedProps.ItemPoolGroup));

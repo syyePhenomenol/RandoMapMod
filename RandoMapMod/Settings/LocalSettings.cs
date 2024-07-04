@@ -25,11 +25,11 @@ namespace RandoMapMod.Settings
         {
             if (InitializedPreviously) return;
 
-            AllPoolGroups = new();
-            RandoLocationPoolGroups = new();
-            RandoItemPoolGroups = new();
-            VanillaLocationPoolGroups = new();
-            VanillaItemPoolGroups = new();
+            AllPoolGroups = [];
+            RandoLocationPoolGroups = [];
+            RandoItemPoolGroups = [];
+            VanillaLocationPoolGroups = [];
+            VanillaItemPoolGroups = [];
 
             foreach (RmmPin pin in RmmPinManager.Pins.Values)
             {

@@ -12,15 +12,15 @@ namespace RandoMapMod.Transition
     internal class TransitionTracker : HookModule
     {
         private static readonly (string condition, string transition)[] waypointTransitionPairs =
-        {
+        [
             ("Opened_Black_Egg_Temple", "Room_temple[door1]"),
             ("Opened_Black_Egg_Temple", "Room_Final_Boss_Atrium[left1]"),
             ("GG_Atrium", "GG_Atrium[Door_Workshop]"),
             ("GG_Workshop", "GG_Workshop[left1]"),
-        };
+        ];
 
         private static readonly (string waypoint, string scene)[] waypointScenePairs =
-        {
+        [
             ("Bench-Black_Egg_Temple", "Room_Final_Boss_Atrium"),
             ("Opened_Black_Egg_Temple", "Room_Final_Boss_Atrium"),
             ("Can_Stag", "Room_Town_Stag_Station"),
@@ -29,12 +29,12 @@ namespace RandoMapMod.Transition
             ("GG_Workshop", "GG_Workshop"),
             ("Upper_Tram", "Room_Tram_RG"),
             ("Lower_Tram", "Room_Tram")
-        };
+        ];
 
-        internal static HashSet<string> InLogicExtraTransitions { get; private set; }
-        internal static HashSet<string> InLogicScenes { get; private set; } = new();
-        internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = new();
-        internal static HashSet<string> UncheckedReachableScenes { get; private set; } = new();
+        internal static HashSet<string> InLogicExtraTransitions { get; private set; } = [];
+        internal static HashSet<string> InLogicScenes { get; private set; } = [];
+        internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = [];
+        internal static HashSet<string> UncheckedReachableScenes { get; private set; } = [];
 
         public override void OnEnterGame()
         {
@@ -62,9 +62,9 @@ namespace RandoMapMod.Transition
         {
             if (!Conditions.RandoMapModEnabled()) return;
 
-            InLogicExtraTransitions = new();
-            InLogicScenes = new();
-            UncheckedReachableScenes = new();
+            InLogicExtraTransitions = [];
+            InLogicScenes = [];
+            UncheckedReachableScenes = [];
 
             ProgressionManager pm = RM.RS.TrackerData.pm;
 
@@ -153,18 +153,18 @@ namespace RandoMapMod.Transition
         {
             string scene = Utils.CurrentScene();
 
-            if (scene is "Room_Tram") return new() { "Abyss_03", "Abyss_03_b", "Abyss_03_c" };
-            if (scene is "Room_Tram_RG") return new() { "Crossroads_46", "Crossroads_46b" };
+            if (scene is "Room_Tram") return ["Abyss_03", "Abyss_03_b", "Abyss_03_c"];
+            if (scene is "Room_Tram_RG") return ["Crossroads_46", "Crossroads_46b"];
 
             StartPosition[] starts = RmmPathfinder.SD.GetPrunedStartTerms(scene);
 
-            if (!starts.Any()) return new();
+            if (!starts.Any()) return [];
 
             SearchParams sp = new()
             {
                 StartPositions = starts,
                 StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = new Term[] { },
+                Destinations = [],
                 MaxCost = 0.5f,
                 MaxTime = 1000f,
                 DisallowBacktracking = false
@@ -173,7 +173,7 @@ namespace RandoMapMod.Transition
             SearchState ss = new(sp);
             Algorithms.DijkstraSearch(RmmPathfinder.SD, sp, ss);
 
-            HashSet<string> scenes = new();
+            HashSet<string> scenes = [];
 
             foreach (var (_, node) in ss.QueueNodes)
             {

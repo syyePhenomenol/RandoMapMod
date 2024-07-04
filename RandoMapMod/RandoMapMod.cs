@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.UI;
@@ -20,15 +20,15 @@ namespace RandoMapMod
         internal const string MOD = "RandoMapMod";
         internal static Assembly Assembly => Assembly.GetExecutingAssembly();
 
-        private static readonly string[] dependencies = new string[]
-        {
+        private static readonly string[] dependencies =
+        [
             "MapChangerMod",
             "Randomizer 4",
             "CMICore",
-        };
+        ];
 
-        private static readonly MapMode[] modes = new MapMode[]
-        {
+        private static readonly MapMode[] modes =
+        [
             new FullMapMode(),
             new AllPinsMode(),
             new PinsOverAreaMode(),
@@ -36,12 +36,12 @@ namespace RandoMapMod
             new TransitionNormalMode(),
             new TransitionVisitedOnlyMode(),
             new TransitionAllRoomsMode()
-        };
+        ];
 
         private static readonly Title title = new RmmTitle();
 
-        private static readonly MainButton[] mainButtons = new MainButton[]
-        {
+        private static readonly MainButton[] mainButtons =
+        [
             new ModEnabledButton(),
             new ModeButton(),
             new PinSizeButton(),
@@ -53,18 +53,18 @@ namespace RandoMapMod
             new PinOptionsPanelButton(),
             new PathfinderOptionsPanelButton(),
             new MiscOptionsPanelButton()
-        };
+        ];
 
-        private static readonly ExtraButtonPanel[] extraButtonPanels = new ExtraButtonPanel[]
-        {
+        private static readonly ExtraButtonPanel[] extraButtonPanels =
+        [
             new PoolOptionsPanel(),
             new PinOptionsPanel(),
             new PathfinderOptionsPanel(),
             new MiscOptionsPanel()
-        };
+        ];
 
-        private static readonly MapUILayer[] mapUILayers = new MapUILayer[]
-        {
+        private static readonly MapUILayer[] mapUILayers =
+        [
             new Hotkeys(),
             new ControlPanel(),
             new TopLeftPanels(),
@@ -73,10 +73,10 @@ namespace RandoMapMod
             new RouteSummaryText(),
             new RouteText(),
             new QuickMapTransitions()
-        };
+        ];
 
-        private static readonly List<HookModule> hookModules = new()
-        {
+        private static readonly List<HookModule> hookModules =
+        [
             new RmmColors(),
             new TransitionData(),
             new RmmPathfinder(),
@@ -87,7 +87,7 @@ namespace RandoMapMod
             new RouteManager(),
             new ItemCompass(),
             new RouteCompass()
-        };
+        ];
 
         internal static RandoMapMod Instance;
 

@@ -15,7 +15,7 @@
 		<ImplicitUsings>true</ImplicitUsings>
 		<NoWarn>CS7035</NoWarn>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<Import Project="LocalOverrides.targets" Condition="Exists('LocalOverrides.targets')" />

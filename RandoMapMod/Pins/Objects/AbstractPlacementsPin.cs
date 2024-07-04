@@ -14,12 +14,12 @@ namespace RandoMapMod.Pins
     {
         private protected abstract PoolsCollection PoolsCollection { get; }
 
-        private protected List<AbstractPlacement> placements = new();
+        private protected List<AbstractPlacement> placements = [];
         internal ReadOnlyCollection<AbstractPlacement> Placements => placements.AsReadOnly();
 
-        private protected Dictionary<AbstractPlacement, AbstractPlacementPinDef> placementDefs = new();
+        private protected Dictionary<AbstractPlacement, AbstractPlacementPinDef> placementDefs = [];
 
-        private protected List<AbstractPlacement> activePlacements = new();
+        private protected List<AbstractPlacement> activePlacements = [];
         private protected AbstractPlacement CurrentPlacement => activePlacements.FirstOrDefault();
         private protected AbstractPlacementPinDef CurrentPlacementDef => placementDefs[CurrentPlacement];
         private protected AbstractPlacementState CurrentPlacementState => CurrentPlacementDef.State;
@@ -27,10 +27,10 @@ namespace RandoMapMod.Pins
         internal string[] HighlightScenes { get; private set; }
         internal ISelectable[] HighlightRooms { get; private set; }
 
-        private readonly HashSet<string> locationPoolGroups = new();
+        private readonly HashSet<string> locationPoolGroups = [];
         internal override IReadOnlyCollection<string> LocationPoolGroups => locationPoolGroups;
 
-        private readonly HashSet<string> itemPoolGroups = new();
+        private readonly HashSet<string> itemPoolGroups = [];
         internal override IReadOnlyCollection<string> ItemPoolGroups => itemPoolGroups;
 
         internal override LogicDef Logic => CurrentPlacementDef.Logic;
@@ -48,7 +48,7 @@ namespace RandoMapMod.Pins
 
             if (HighlightScenes is not null)
             {
-                HashSet<ISelectable> highlightRooms = new();
+                HashSet<ISelectable> highlightRooms = [];
 
                 foreach (string scene in HighlightScenes)
                 {
@@ -60,7 +60,7 @@ namespace RandoMapMod.Pins
                     }
                 }
 
-                HighlightRooms = highlightRooms.ToArray();
+                HighlightRooms = [.. highlightRooms];
             }
 
             AddPlacement(appd);

@@ -156,7 +156,7 @@ namespace RandoMapMod.Pins
 
             if (ItemChanger.Finder.GetLocation(name) is AbstractLocation al && al.sceneName is not null)
             {
-                return new (string, float, float)[] { new MapLocation() { MappedScene = MapChanger.Finder.GetMappedScene(al.sceneName) } };
+                return [new MapLocation() { MappedScene = MapChanger.Finder.GetMappedScene(al.sceneName) }];
             }
 
             RandoMapMod.Instance.LogDebug($"No MapLocation found for {name}.");
@@ -171,7 +171,7 @@ namespace RandoMapMod.Pins
                 && location.sceneName is string sceneName
                 && MapChanger.Finder.IsMappedScene(sceneName))
             {
-                return new (string, float, float)[] { (sceneName, location.x, location.y) };
+                return [(sceneName, location.x, location.y)];
             }
 
             return null;
@@ -194,7 +194,7 @@ namespace RandoMapMod.Pins
                 return hints;
             }
 
-            return new RawLogicDef[] { };
+            return [];
         }
 
         private static readonly Dictionary<string, WorldCoordinates> worldCoordinates = JsonUtil.DeserializeFromAssembly<Dictionary<string, WorldCoordinates>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Compass.worldCoordinates.json");

@@ -86,7 +86,7 @@ namespace RandoMapMod.Pins
                     continue;
                 }
 
-                Objects[pin.name] = new() { pin };
+                Objects[pin.name] = [pin];
             }
         }
 

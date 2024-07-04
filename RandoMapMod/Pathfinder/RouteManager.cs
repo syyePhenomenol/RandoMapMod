@@ -57,12 +57,12 @@ namespace RandoMapMod.Pathfinder
 
                 if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
                 {
-                    _sp.StartPositions = _sp.StartPositions.Concat(GetBenchStartWarps()).ToArray();
+                    _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps()];
                 }
 
                 if (TryGetDreamGateStart(out var dreamGateStart))
                 {
-                    _sp.StartPositions = _sp.StartPositions.Append(dreamGateStart).ToArray();
+                    _sp.StartPositions = [.. _sp.StartPositions, dreamGateStart];
                 }
 
                 if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
@@ -72,7 +72,7 @@ namespace RandoMapMod.Pathfinder
                 }
 
                 _ss = new(_sp);
-                _routes = new();
+                _routes = [];
             }
 
             Reevaluated = false;
@@ -110,7 +110,7 @@ namespace RandoMapMod.Pathfinder
             {
                 StartPositions = null,
                 StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = new Term[] { destination },
+                Destinations = [destination],
                 MaxCost = 1000f,
                 MaxTime = 1000f,
                 TerminationCondition = TerminationConditionType.Any,
@@ -120,7 +120,7 @@ namespace RandoMapMod.Pathfinder
             if (TransitionData.GetTransitionDef(transition.ToString()) is RmmTransitionDef td
                 && RmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out Term start))
             {
-                _sp.StartPositions = new StartPosition[] { new(start.Name, start, 0f) };
+                _sp.StartPositions = [new(start.Name, start, 0f)];
             }
             else
             {
@@ -129,12 +129,12 @@ namespace RandoMapMod.Pathfinder
 
             if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
             {
-                _sp.StartPositions = _sp.StartPositions.Concat(GetBenchStartWarps(true)).ToArray();
+                _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps(true)];
             }
 
             if (TryGetDreamGateStart(out var dreamGateStart, transition))
             {
-                _sp.StartPositions = _sp.StartPositions.Append(dreamGateStart).ToArray();
+                _sp.StartPositions = [.. _sp.StartPositions, dreamGateStart];
             }
 
             if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())

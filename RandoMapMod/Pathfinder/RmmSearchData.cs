@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using RandoMapMod.Transition;
 using RandomizerCore.Json;
 using RandomizerCore.Logic;
@@ -16,14 +16,13 @@ namespace RandoMapMod.Pathfinder
     {
         internal StateUnion CurrentState { get; private set; }
 
-        internal bool VanillaInfectedTransitions { get; }
         private static readonly string[] infectionTransitions =
-        {
+        [
             "Crossroads_03[bot1]",
             "Crossroads_06[right1]",
             "Crossroads_10[left1]",
             "Crossroads_19[top1]"
-        };
+        ];
 
         private static Dictionary<string, string> conditionalTerms;
 
@@ -50,7 +49,7 @@ namespace RandoMapMod.Pathfinder
                 StartTerm = PositionLookup[startTerm.Name];
             }
 
-            HashSet<Term> benchwarpTerms = new();
+            HashSet<Term> benchwarpTerms = [];
 
             foreach (KeyValuePair<string, RmmBenchKey> kvp in BenchwarpInterop.BenchKeys)
             {
@@ -62,10 +61,7 @@ namespace RandoMapMod.Pathfinder
 
             BenchwarpTerms = new(benchwarpTerms.ToArray());
 
-            // To remove transitions that are blocked by infection from being included in the pathfinder
-            VanillaInfectedTransitions = infectionTransitions.All(TransitionData.IsVanillaTransition);
-
-            Dictionary<string, HashSet<Term>> transitionsByScene = new();
+            Dictionary<string, HashSet<Term>> transitionsByScene = [];
 
             foreach (Term position in Positions)
             {
@@ -77,12 +73,12 @@ namespace RandoMapMod.Pathfinder
                         continue;
                     }
 
-                    transitionsByScene[scene] = new() { position };
+                    transitionsByScene[scene] = [position];
                 }
             }
 
-            transitionsByScene[SN.Room_Tram] = new() { PositionLookup["Lower_Tram"] };
-            transitionsByScene[SN.Room_Tram_RG] = new() { PositionLookup["Upper_Tram"] };
+            transitionsByScene[SN.Room_Tram] = [PositionLookup["Lower_Tram"]];
+            transitionsByScene[SN.Room_Tram_RG] = [PositionLookup["Upper_Tram"]];
 
             TransitionTermsByScene = new(transitionsByScene.ToDictionary(kvp => kvp.Key, kvp => new ReadOnlyCollection<Term>(kvp.Value.ToArray())));
 
@@ -152,12 +148,12 @@ namespace RandoMapMod.Pathfinder
             return actions;
         }
 
-        private static readonly HashSet<string> extraRooms = new()
-        {
+        private static readonly HashSet<string> extraRooms =
+        [
             SN.Room_Final_Boss_Atrium,
             SN.GG_Atrium,
             SN.GG_Workshop
-        };
+        ];
 
         /// <summary>
         /// Remove miscellaneous logical connections for now.
@@ -344,10 +340,10 @@ namespace RandoMapMod.Pathfinder
         /// </summary>
         internal StartPosition[] GetPrunedStartTerms(string scene)
         {
-            if (scene is SN.Room_Tram) return new StartPosition[] { new("Lower_Tram", RmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f) };
-            if (scene is SN.Room_Tram_RG) return new StartPosition[] { new("Upper_Tram", RmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f) };
+            if (scene is SN.Room_Tram) return [new("Lower_Tram", RmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f)];
+            if (scene is SN.Room_Tram_RG) return [new("Upper_Tram", RmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f)];
 
-            if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new StartPosition[] { };
+            if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return [];
 
             List<Term> inLogicTransitions = new(transitions.Where(t => (RM.RS.TrackerData.pm.lm.GetTerm(t.Name) is not null && RM.RS.TrackerData.pm.Get(t.Name) > 0)
                 || TransitionTracker.InLogicExtraTransitions.Contains(t.Name)));
@@ -356,7 +352,7 @@ namespace RandoMapMod.Pathfinder
             {
                 StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
                 StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = transitions.ToArray(),
+                Destinations = [.. transitions],
                 MaxCost = 1f,
                 MaxTime = 1000f,
                 DisallowBacktracking = false
@@ -369,7 +365,7 @@ namespace RandoMapMod.Pathfinder
 
             List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
 
-            List<StartPosition> prunedTransitions = new();
+            List<StartPosition> prunedTransitions = [];
 
             foreach (Term transition in inLogicTransitions)
             {
@@ -402,9 +398,9 @@ namespace RandoMapMod.Pathfinder
 
         internal Term[] GetTransitionTerms(string scene)
         {
-            if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
+            if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return [];
 
-            return transitions.ToArray();
+            return [.. transitions];
         }
     }
 }

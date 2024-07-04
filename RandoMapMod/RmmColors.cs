@@ -62,24 +62,24 @@ namespace RandoMapMod
         internal static bool HasCustomColors { get; private set; } = false;
 
         internal static readonly RmmColorSetting[] PinColors =
-        {
+        [
             RmmColorSetting.Pin_Normal,
             RmmColorSetting.Pin_Previewed,
             RmmColorSetting.Pin_Out_of_logic,
             RmmColorSetting.Pin_Persistent,
             RmmColorSetting.Pin_Cleared
-        };
+        ];
 
         internal static readonly RmmColorSetting[] RoomColors =
-        {
+        [
             RmmColorSetting.Room_Normal,
             RmmColorSetting.Room_Current,
             RmmColorSetting.Room_Adjacent,
             RmmColorSetting.Room_Out_of_logic,
             RmmColorSetting.Room_Selected
-        };
+        ];
 
-        private static Dictionary<RmmColorSetting, Vector4> customColors = new();
+        private static Dictionary<RmmColorSetting, Vector4> customColors = [];
 
         private static readonly Dictionary<RmmColorSetting, Vector4> defaultColors = new()
         {
@@ -140,7 +140,7 @@ namespace RandoMapMod
 
         public override void OnQuitToMenu()
         {
-            customColors = new();
+            customColors = [];
         }
 
         internal static Vector4 GetColor(RmmColorSetting rmmColor)

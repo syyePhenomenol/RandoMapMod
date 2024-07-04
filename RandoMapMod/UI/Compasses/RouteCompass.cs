@@ -47,7 +47,7 @@ namespace RandoMapMod.UI
             }
             else
             {
-                Compass.Locations = new();
+                Compass.Locations = [];
             }
 
             goCompass.SetActive(Compass.Locations.Any());

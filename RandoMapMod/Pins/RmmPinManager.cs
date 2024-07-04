@@ -29,8 +29,8 @@ namespace RandoMapMod.Pins
         internal static Dictionary<string, RawLogicDef[]> LocationHints;
 
         internal static MapObject MoPins { get; private set; }
-        internal static Dictionary<string, RmmPin> Pins { get; private set; } = new();
-        internal static List<RmmPin> GridPins { get; private set; } = new();
+        internal static Dictionary<string, RmmPin> Pins { get; private set; } = [];
+        internal static List<RmmPin> GridPins { get; private set; } = [];
 
         internal static void Load()
         {
@@ -54,8 +54,8 @@ namespace RandoMapMod.Pins
 
         internal static void Make(GameObject goMap)
         {
-            Pins = new();
-            GridPins = new();
+            Pins = [];
+            GridPins = [];
 
             MoPins = Utils.MakeMonoBehaviour<MapObject>(goMap, "RandoMapMod Pins");
             MoPins.Initialize();
@@ -63,7 +63,7 @@ namespace RandoMapMod.Pins
 
             MapObjectUpdater.Add(MoPins);
 
-            Dictionary<AbstractPlacement, AbstractPlacement> overlapPlacements = new();
+            Dictionary<AbstractPlacement, AbstractPlacement> overlapPlacements = [];
 
             foreach (AbstractPlacement placement in ItemChanger.Internal.Ref.Settings.Placements.Values)
             {
@@ -108,7 +108,7 @@ namespace RandoMapMod.Pins
             }
 
             // If you are planning to place pins into the grid on the world map, please refer to the following ordering hierarchy.
-            GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroups.First()).ThenBy(pin => pin.PinGridIndex).ThenBy(pin => pin.name).ToList();
+            GridPins = [.. GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroups.First()).ThenBy(pin => pin.PinGridIndex).ThenBy(pin => pin.name)];
 
             StaggerPins();
 

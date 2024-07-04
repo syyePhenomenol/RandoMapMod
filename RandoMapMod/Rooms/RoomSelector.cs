@@ -36,7 +36,7 @@ namespace RandoMapMod.Rooms
                 }
                 else
                 {
-                    Objects[sceneName] = new() { (ISelectable)room };
+                    Objects[sceneName] = [(ISelectable)room];
                 }
             }
         }

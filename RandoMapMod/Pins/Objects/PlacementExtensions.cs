@@ -1,4 +1,4 @@
-﻿using ItemChanger;
+using ItemChanger;
 using RandomizerMod.IC;
 using RandomizerMod.RC;
 using RM = RandomizerMod.RandomizerMod;
@@ -47,9 +47,9 @@ namespace RandoMapMod.Pins
 
         internal static string[] GetPreviewText(this AbstractPlacement placement)
         {
-            List<string> texts = new();
+            List<string> texts = [];
 
-            if (!placement.CheckVisitedAny(VisitState.Previewed)) return texts.ToArray();
+            if (!placement.CheckVisitedAny(VisitState.Previewed)) return [.. texts];
 
             if (placement.GetTag<ItemChanger.Tags.MultiPreviewRecordTag>() is ItemChanger.Tags.MultiPreviewRecordTag mprt
                     && mprt.previewTexts is not null)
@@ -69,7 +69,7 @@ namespace RandoMapMod.Pins
                 texts.Add(prt.previewText);
             }
 
-            return texts.ToArray();
+            return [.. texts];
         }
 
         internal static bool IsPersistent(this AbstractPlacement placement)

@@ -9,7 +9,7 @@ namespace RandoMapMod.Pins
 {
     internal sealed class BenchPin : RmmPin, IBenchPin
     {
-        string[] benches = { "Benches" };
+        readonly string[] benches = ["Benches"];
         internal override IReadOnlyCollection<string> LocationPoolGroups => benches;
         internal override IReadOnlyCollection<string> ItemPoolGroups => benches;
 

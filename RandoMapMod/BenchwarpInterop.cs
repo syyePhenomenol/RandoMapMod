@@ -12,14 +12,14 @@ namespace RandoMapMod
     {
         internal const string BENCH_WARP_START = "Start_Warp";
 
-        internal static Dictionary<RmmBenchKey, string> BenchNames { get; private set; } = new();
-        internal static Dictionary<string, RmmBenchKey> BenchKeys { get; private set; } = new();
+        internal static Dictionary<RmmBenchKey, string> BenchNames { get; private set; } = [];
+        internal static Dictionary<string, RmmBenchKey> BenchKeys { get; private set; } = [];
         internal static RmmBenchKey StartKey { get; private set; }
 
         internal static void Load()
         {
-            BenchNames = new();
-            BenchKeys = new();
+            BenchNames = [];
+            BenchKeys = [];
 
             if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
             {

@@ -22,7 +22,7 @@ namespace RandoMapMod.Pathfinder
         {
             WaypointInstruction[] waypointInstructions = JsonUtil.DeserializeFromAssembly<WaypointInstruction[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.waypointInstructions.json");
 
-            Dictionary<(string, string), WaypointInstruction> wiLookup = new();
+            Dictionary<(string, string), WaypointInstruction> wiLookup = [];
 
             foreach (WaypointInstruction wi in waypointInstructions)
             {
@@ -36,7 +36,7 @@ namespace RandoMapMod.Pathfinder
         {
             Instance = this;
 
-            Dictionary<string, TransitionInstruction> transitionInstructions = new();
+            Dictionary<string, TransitionInstruction> transitionInstructions = [];
 
             foreach (AbstractAction action in sd.Actions)
             {
@@ -58,7 +58,7 @@ namespace RandoMapMod.Pathfinder
 
         internal static List<Instruction> GetInstructions(Node node)
         {
-            List<Instruction> instructions = new();
+            List<Instruction> instructions = [];
 
             string position = node.StartPosition.Term.Name;
             TransitionData.TryGetScene(position, out string scene);
@@ -99,12 +99,12 @@ namespace RandoMapMod.Pathfinder
             return instructions;
         }
 
-        private static readonly HashSet<string> extraRooms = new()
-        {
+        private static readonly HashSet<string> extraRooms =
+        [
             "Room_Final_Boss_Atrium",
             "GG_Atrium",
             "GG_Workshop"
-        };
+        ];
 
         private static bool TryGetInstruction(string position, string scene, AbstractAction action, out Instruction instruction)
         {

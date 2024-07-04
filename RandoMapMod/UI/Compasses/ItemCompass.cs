@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
         {
             Make();
 
-            compassLocations = new();
+            compassLocations = [];
             
             foreach (var kvp in ItemChanger.Internal.Ref.Settings.Placements)
             {
@@ -28,7 +28,7 @@ namespace RandoMapMod.UI
 
                 if (!compassLocations.TryGetValue(scene, out var list))
                 {
-                    list = new();
+                    list = [];
                     compassLocations.Add(scene, list);
                 }
 

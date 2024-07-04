@@ -10,12 +10,12 @@ namespace RandoMapMod.Transition
     internal class TransitionData : HookModule
     {
         internal static (string location, string item)[] ExtraVanillaTransitions { get; } =
-        {
+        [
             ( "Room_temple[door1]", "Room_Final_Boss_Atrium[left1]" ),
             ( "Room_Final_Boss_Atrium[left1]", "Room_temple[door1]" ),
             ( "GG_Atrium[Door_Workshop]", "GG_Workshop[left1]" ),
             ( "GG_Workshop[left1]", "GG_Atrium[Door_Workshop]" )
-        };
+        ];
 
         internal static ReadOnlyCollection<RmmTransitionDef> Transitions { get; private set; }
         private static Dictionary<string, RmmTransitionDef> _vanillaTransitions;
@@ -26,9 +26,9 @@ namespace RandoMapMod.Transition
 
         public override void OnEnterGame()
         {
-            _vanillaTransitions = new();
-            _randomizedTransitions = new();
-            _placements = new();
+            _vanillaTransitions = [];
+            _randomizedTransitions = [];
+            _placements = [];
 
             // Add transition placements
             foreach ((string location, string item) in RM.RS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name)).Concat(ExtraVanillaTransitions))

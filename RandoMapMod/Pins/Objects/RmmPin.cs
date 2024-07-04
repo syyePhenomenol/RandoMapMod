@@ -255,7 +255,7 @@ namespace RandoMapMod.Pins
         private protected abstract void UpdateBorderColor();
 
          // Text building
-        private protected List<Func<string>> textBuilders = new();
+        private protected List<Func<string>> textBuilders = [];
         internal string GetSelectionText()
         {
             return textBuilders.Select(f => f.Invoke()).Aggregate((t1, t2) => t1 + t2);

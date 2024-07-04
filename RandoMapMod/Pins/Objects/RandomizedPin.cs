@@ -11,7 +11,7 @@ namespace RandoMapMod.Pins
     {
         private protected override PoolsCollection PoolsCollection => PoolsCollection.Randomized;
 
-        private readonly Dictionary<AbstractPlacement, RandoLogicState> logicStates = new();
+        private readonly Dictionary<AbstractPlacement, RandoLogicState> logicStates = [];
        
         private RandoLogicState CurrentLogicState => logicStates[CurrentPlacement];
 
