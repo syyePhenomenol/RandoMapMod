@@ -1,19 +1,22 @@
 using ConnectionMetadataInjector;
+using ItemChanger;
+using ItemChanger.Extensions;
 using MagicUI.Core;
 using MagicUI.Elements;
 using MagicUI.Graphics;
 using MapChanger;
+using MapChanger.MonoBehaviours;
+using RandoMapMod.Localization;
 using RandoMapMod.Pins;
+using RandoMapMod.Settings;
+using RandoMapMod.Transition;
+using RandomizerCore;
+using RandomizerCore.Extensions;
 using RandomizerCore.Logic;
 using RandomizerMod.Extensions;
 using RandomizerMod.RandomizerData;
-using static RandomizerMod.Settings.TrackerData;
-using RandoMapMod.Localization;
-using ItemChanger.Extensions;
-using RandoMapMod.Settings;
-using MapChanger.MonoBehaviours;
-using RandomizerCore;
 using RandomizerMod.RC;
+using static RandomizerMod.Settings.TrackerData;
 
 namespace RandoMapMod.UI
 {
@@ -22,6 +25,7 @@ namespace RandoMapMod.UI
         internal static ProgressHintPanel Instance;
         private readonly Panel progressHintPanel;
         private readonly TextObject progressHintText;
+        private RandoModLocation selectedLocation;
 
         internal ProgressHintPanel(LayoutRoot layout, StackLayout panelStack)
         {
@@ -65,28 +69,192 @@ namespace RandoMapMod.UI
                 progressHintPanel.Visibility = Visibility.Collapsed;
             }
 
-            string quickCastBindingsText = Utils.GetBindingsText(new(InputHandler.Instance.inputActions.superDash.Bindings));
-            progressHintText.Text = $"{"Press".L()} {quickCastBindingsText} {"to reveal progress hint".L()}.";
-            gotProgressHint = false;
+            UpdateText(false);
         }
 
-        private bool gotProgressHint;
-        internal void RevealProgressHint()
+        internal void UpdateHint()
         {
-            if (gotProgressHint) return;
+            UpdateLocation();
+            
+            UpdateText(true);
+        }
 
-            gotProgressHint = true;
+        // Randomly selects a location with a "Required" (inner sphere) item that
+        // can be afforded. Prioritises getting a location of which its item immediately unlocks
+        // new placements. Also avoids getting the same location twice in a row if possible.
+        private void UpdateLocation()
+        {
+            bool newProgressFound = false;
+            bool terminateOnNewProgress = false;
 
-            if (!TryGetProgressLocation(out var location))
+            var td = RandomizerMod.RandomizerMod.RS.TrackerData;
+            var lm = td.lm;
+            var ctx = RandomizerMod.RandomizerMod.RS.Context;
+            ProgressionManager pm = new(lm, ctx);
+
+            // To avoid modifying TrackerData, keep a local copy to track what OOL stuff is added back in
+            HashSet<int> localOOLObtainedItems = new(td.outOfLogicObtainedItems);
+            HashSet<string> localOOLVisitedTransitions = new(td.outOfLogicVisitedTransitions);
+
+            MainUpdater mu = new(lm, pm);
+
+            mu.AddWaypoints(lm.Waypoints);
+            mu.AddTransitions(lm.TransitionLookup.Values);
+            mu.AddEntries(ctx.Vanilla.Select(v => new DelegateUpdateEntry(v.Location, pm =>
             {
-                progressHintText.Text = "Current reachable locations will not unlock any more progress.".L();
+                pm.Add(v.Item, v.Location);
+                
+                if (v.Location is ILocationWaypoint ilw)
+                {
+                    // RandoMapMod.Instance.LogDebug($"Adding vanilla reachable effect: {v.Location.Name}");
+                    pm.Add(ilw.GetReachableEffect());
+                }
+            })));
+            mu.AddEntries(ctx.itemPlacements.Select((p, id) => new DelegateUpdateEntry(p.Location.logic, (pm) =>
+            {
+                if (newProgressFound) return;
+
+                if (terminateOnNewProgress
+                    && !td.clearedLocations.Contains(p.Location.Name)
+                    && !td.previewedLocations.Contains(p.Location.Name)
+                    && !td.uncheckedReachableLocations.Contains(p.Location.Name))
+                {
+                    // RandoMapMod.Instance.LogDebug($"Unlocked new location: {p.Location.Name}");
+                    newProgressFound = true;
+                    return;
+                }
+
+                (RandoItem item, RandoLocation location) = ctx.itemPlacements[id];
+                if (location is ILocationWaypoint ilw)
+                {
+                    // RandoMapMod.Instance.LogDebug($"Adding reachable effect: {location.Name}");
+                    pm.Add(ilw.GetReachableEffect());
+                }
+                if (localOOLObtainedItems.Remove(id))
+                {
+                    // RandoMapMod.Instance.LogDebug($"Adding from OOL: {item.Name} at {location.Name}");
+                    pm.Add(item, location);
+                }
+            }
+            )));
+            mu.AddEntries(ctx.transitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, (pm) =>
+            {
+                if (newProgressFound) return;
+
+                (RandoTransition target, RandoTransition source) = ctx.transitionPlacements[id];
+
+                if (terminateOnNewProgress
+                    && !td.visitedTransitions.ContainsKey(source.Name)
+                    && !td.uncheckedReachableTransitions.Contains(source.Name))
+                {
+                    // RandoMapMod.Instance.LogDebug($"Unlocked new transition: {source.Name}");
+                    newProgressFound = true;
+                    return;
+                }
+
+                if (!pm.Has(source.lt.term))
+                {
+                    // RandoMapMod.Instance.LogDebug($"Adding transition reachable effect: {target.Name} at {source.Name}");
+                    pm.Add(source.GetReachableEffect());
+                }
+                if (localOOLVisitedTransitions.Remove(source.Name))
+                {
+                    // RandoMapMod.Instance.LogDebug($"Adding from OOL: {target.Name} at {source.Name}");
+                    pm.Add(target, source);
+                }
+            })));
+            mu.StartUpdating();
+
+            foreach (int i in td.obtainedItems)
+            {
+                if (localOOLObtainedItems.Contains(i)) continue;
+
+                (RandoModItem item, RandoModLocation loc) = ctx.itemPlacements[i];
+                pm.Add(item, loc);
+            }
+
+            foreach (KeyValuePair<string, string> kvp in td.visitedTransitions)
+            {
+                if (localOOLVisitedTransitions.Contains(kvp.Key)) continue;
+
+                LogicTransition tt = lm.GetTransitionStrict(kvp.Value);
+                LogicTransition st = lm.GetTransitionStrict(kvp.Key);
+
+                if (!pm.Has(st.term))
+                {
+                    pm.Add(st.GetReachableEffect());
+                }
+
+                pm.Add(tt, st);
+            }
+
+            newProgressFound = false;
+            terminateOnNewProgress = true;
+            Random rng = new();
+
+            var placements = td.uncheckedReachableLocations
+                .Union(td.previewedLocations)
+                .SelectMany
+                (
+                    l => ItemChanger.Internal.Ref.Settings.Placements[l].Items
+                    .Where(p => !p.HasTag<CostTag>() || p.GetTag<CostTag>().Cost.CanPay())
+                    .Select(p => p.RandoPlacement())
+                )
+                .Where(p => p.Item.Required && !td.obtainedItems.Contains(p.Index));
+
+            RandoModLocation noImmediateProgressLocation = null;
+            bool containsSelectedLocation = false;
+
+            foreach (var placement in rng.Permute(placements))
+            {
+                // RandoMapMod.Instance.LogDebug($"Checking placement: {placement.Item.Name} at {placement.Location.Name}");
+
+                if (selectedLocation == placement.Location)
+                {
+                    containsSelectedLocation = true;
+                    continue;
+                }
+
+                pm.StartTemp();
+
+                pm.Add(placement.Item, placement.Location);
+
+                pm.RemoveTempItems();
+
+                if (newProgressFound)
+                {
+                    // RandoMapMod.Instance.LogDebug($"New progress found - setting new location");
+                    selectedLocation = placement.Location;
+                    return;
+                }
+
+                noImmediateProgressLocation ??= placement.Location;
+            }
+
+            selectedLocation = noImmediateProgressLocation ?? (containsSelectedLocation ? selectedLocation : null);
+        }
+
+        private void UpdateText(bool afterRoll)
+        {
+            string quickCastBindingsText = Utils.GetBindingsText(new(InputHandler.Instance.inputActions.superDash.Bindings));
+
+            if (selectedLocation is null)
+            {
+                if (afterRoll)
+                {
+                    progressHintText.Text = "Current reachable locations will not unlock any more progress. Check transitions, check shop costs and gather more resources.".L();
+                }
+                else
+                {
+                    progressHintText.Text = $"{"Press".L()} {quickCastBindingsText} {"to reveal progress hint".L()}.";
+                }
                 return;
             }
 
             List<string> scenes = new();
             List<string> mapAreas = new();
 
-            if (location.LocationDef is LocationDef ld)
+            if (selectedLocation.LocationDef is LocationDef ld)
             {
                 if (ld.SceneName is not null)
                 {
@@ -99,12 +267,14 @@ namespace RandoMapMod.UI
                 }
             }
 
-            if (ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(location.Name, out var placement))
+            if (ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(selectedLocation.Name, out var placement))
             {
                 if (SupplementalMetadata.Of(placement).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
                 {
-                    scenes.AddRange(highlightScenes);
-                    mapAreas.AddRange(highlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null));
+                    var inLogicHighlightScenes = highlightScenes.Where(TransitionTracker.InLogicScenes.Contains);
+                    
+                    scenes.AddRange(inLogicHighlightScenes);
+                    mapAreas.AddRange(inLogicHighlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null));
                 }
                 else if (placement.GetScene() is string placementScene)
                 {
@@ -123,7 +293,7 @@ namespace RandoMapMod.UI
 
             if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
             {
-                text += $"\n{"at".L()} {location.Name.LC()}";
+                text += $"\n{"at".L()} {selectedLocation.Name.LC()}";
             }
 
             if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location or ProgressHintSetting.Room)
@@ -151,7 +321,9 @@ namespace RandoMapMod.UI
                 text += "an unknown area".L();
             }
 
-            progressHintText.Text = $"{"You will find progress".L()}" + text + ".";
+            progressHintText.Text = $"{"You will find progress".L()}" + text + $".\n\n{"Press".L()} {quickCastBindingsText} {"to refresh hint".L()}.";
+
+            if (!afterRoll) return;
 
             switch (RandoMapMod.GS.ProgressHint)
             {
@@ -165,7 +337,7 @@ namespace RandoMapMod.UI
                     }
                     break;
                 case ProgressHintSetting.Location:
-                    if (!TryPanToLocation(location.Name) && !TryPanToRoom(scenes.FirstOrDefault()))
+                    if (!TryPanToLocation(selectedLocation.Name) && !TryPanToRoom(scenes.FirstOrDefault()))
                     {
                         TryPanToArea(mapAreas.FirstOrDefault());
                     }
@@ -173,111 +345,6 @@ namespace RandoMapMod.UI
                 default:
                     break;
             }
-        }
-
-        private static bool TryGetProgressLocation(out RandoModLocation location)
-        {
-            bool newProgressFound = false;
-
-            var td = RandomizerMod.RandomizerMod.RS.TrackerData;
-            var lm = td.lm;
-            var ctx = RandomizerMod.RandomizerMod.RS.Context;
-            ProgressionManager pm = new(lm, ctx);
-
-            // To avoid modifying TrackerData, keep a local copy to track what OOL stuff is added back in
-            HashSet<int> localOOLObtainedItems = new(td.outOfLogicObtainedItems);
-            HashSet<string> localOOLVisitedTransitions = new(td.outOfLogicVisitedTransitions);
-
-            foreach (Term term in lm.Terms)
-            {
-                if (term.Type is TermType.State)
-                {
-                    pm.SetState(term, td.pm.GetState(term));
-                    continue;
-                }
-                pm.Set(term, td.pm.Get(term));
-            }
-
-            MainUpdater mu = new(lm, pm);
-
-            mu.AddWaypoints(lm.Waypoints);
-            mu.AddTransitions(lm.TransitionLookup.Values);
-            mu.AddEntries(ctx.Vanilla.Select(v => new DelegateUpdateEntry(v.Location, pm =>
-            {
-                // RandoMapMod.Instance.LogDebug($"Adding vanilla: {v.Item.Name} at {v.Location.Name}");
-                pm.Add(v.Item, v.Location);
-                if (v.Location is ILocationWaypoint ilw)
-                {
-                    // RandoMapMod.Instance.LogDebug($"Adding vanilla reachable effect: {v.Location.Name}");
-                    pm.Add(ilw.GetReachableEffect());
-                }
-            })));
-            mu.AddEntries(ctx.itemPlacements.Select((p, id) => new DelegateUpdateEntry(p.Location.logic, (pm) =>
-            {
-                (RandoItem item, RandoLocation location) = ctx.itemPlacements[id];
-                if (location is ILocationWaypoint ilw)
-                {
-                    // RandoMapMod.Instance.LogDebug($"Adding reachable effect: {location.Name}");
-                    pm.Add(ilw.GetReachableEffect());
-                }
-
-                if (localOOLObtainedItems.Remove(id))
-                {
-                    // RandoMapMod.Instance.LogDebug($"Adding from OOL: {item.Name} at {location.Name}");
-                    pm.Add(item, location);
-                }
-
-                if (!td.clearedLocations.Contains(p.Location.Name)
-                    && !td.previewedLocations.Contains(p.Location.Name)
-                    && !td.uncheckedReachableLocations.Contains(p.Location.Name))
-                {
-                    newProgressFound = true;
-                }
-            }
-            )));
-            mu.AddEntries(ctx.transitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, (pm) =>
-            {
-                (RandoTransition target, RandoTransition source) = ctx.transitionPlacements[id];
-                if (!pm.Has(source.lt.term))
-                {
-                    // RandoMapMod.Instance.LogDebug($"Adding transition reachable effect: {target.Name} at {source.Name}");
-                    pm.Add(source.GetReachableEffect());
-                }
-                
-                if (localOOLVisitedTransitions.Remove(source.Name))
-                {
-                    // RandoMapMod.Instance.LogDebug($"Adding from OOL: {target.Name} at {source.Name}");
-                    pm.Add(target, source);
-                }
-
-                if (!td.visitedTransitions.ContainsKey(source.Name)
-                    && !td.uncheckedReachableTransitions.Contains(source.Name))
-                {
-                    newProgressFound = true;
-                }
-            })));
-            mu.StartUpdating();
-
-            var unobtainedReachablePlacements = td.uncheckedReachableLocations
-                .Union(td.previewedLocations)
-                .SelectMany(l => ItemChanger.Internal.Ref.Settings.Placements[l].RandoPlacements())
-                .Where(p => !td.obtainedItems.Contains(p.Index));
-            
-            foreach (var placement in unobtainedReachablePlacements)
-            {
-                // RandoMapMod.Instance.LogDebug($"Adding unchecked reachable: {placement.Item.Name} at {placement.Location.Name}");
-                pm.Add(placement.Item, placement.Location);
-
-                if (newProgressFound)
-                {
-                    // RandoMapMod.Instance.LogDebug($"New progress found: {placement.Item.Name}, {placement.Location.Name}");
-                    location = placement.Location;
-                    return true;
-                }
-            }
-
-            location = null;
-            return false;
         }
 
         private static bool TryPanToArea(string area)

@@ -52,7 +52,8 @@ Optional and compatible:
 - ``SHIFT``: Pan faster (same as right thumbstick on controller).
 - ``CTRL-K``: Toggle a panel for the map key.
 - ``CTRL-G``: Toggle progress hint between revealing area/room/item location or off.
-    - If enabled, press the indicated key/controller bind to reveal a hint of where to check to unlock further progression. It will automatically pan to the relevant area on the map.
+    - If enabled, press the indicated key/controller bind to reveal a random hint of where to check to unlock further progression. It will automatically pan to the relevant area on the map.
+    - You can press the bind again to randomly cycle through other available hints.
 - ``CTRL-C``: Toggle item compass between pointing to reachable/reachable with sequence break/all items or off.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
