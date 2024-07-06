@@ -8,7 +8,8 @@
         public bool RoomSelectionOn = true;
         public bool ShowReticle = true;
         public ProgressHintSetting ProgressHint = ProgressHintSetting.Area;
-        public ItemCompassSetting ShowItemCompass = ItemCompassSetting.Off;
+        public bool ItemCompassOn = false;
+        public ItemCompassMode ItemCompassMode = ItemCompassMode.Reachable;
         public bool PathfinderBenchwarp = true;
         public bool ShowRouteCompass = true;
         public RouteTextInGame RouteTextInGame = RouteTextInGame.NextTransitionOnly;
@@ -66,9 +67,14 @@
             ProgressHint = (ProgressHintSetting)(((int)ProgressHint + 1) % Enum.GetNames(typeof(ProgressHintSetting)).Length);
         }
 
-        internal void ToggleShowItemCompass()
+        internal void ToggleItemCompass()
         {
-            ShowItemCompass = (ItemCompassSetting)(((int)ShowItemCompass + 1) % Enum.GetNames(typeof(ItemCompassSetting)).Length);
+            ItemCompassOn = !ItemCompassOn;
+        }
+
+        internal void ToggleItemCompassMode()
+        {
+            ItemCompassMode = (ItemCompassMode)(((int)ItemCompassMode + 1) % Enum.GetNames(typeof(ItemCompassMode)).Length);
         }
 
         internal void ToggleAllowBenchWarpSearch()

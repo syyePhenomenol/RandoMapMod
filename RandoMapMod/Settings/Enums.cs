@@ -51,9 +51,8 @@
         Location
     }
 
-    public enum ItemCompassSetting
+    public enum ItemCompassMode
     {
-        Off,
         Reachable,
         ReachableOutOfLogic,
         All

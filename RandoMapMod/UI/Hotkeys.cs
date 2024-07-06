@@ -39,8 +39,7 @@ namespace RandoMapMod.UI
 
             Root.ListenForHotkey(KeyCode.C, () =>
             {
-                RandoMapMod.GS.ToggleShowItemCompass();
-                ItemCompass.Update();
+                RandoMapMod.GS.ToggleItemCompass();
                 MapUILayerUpdater.Update();
             }, ModifierKeys.Ctrl, GlobalHotkeyCondition);
 

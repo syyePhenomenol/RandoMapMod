@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
 
         protected override void OnHover()
         {
-            RmmTitle.Instance.HoveredText = "Pathfinder and compass options.".L();
+            RmmTitle.Instance.HoveredText = "Pathfinder options.".L();
         }
 
         protected override void OnUnhover()

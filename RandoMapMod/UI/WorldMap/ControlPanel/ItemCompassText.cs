@@ -1,5 +1,4 @@
-﻿using RandoMapMod.Settings;
-using UnityEngine;
+﻿using UnityEngine;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
@@ -15,18 +14,12 @@ namespace RandoMapMod.UI
 
         private protected override Vector4 GetColor()
         {
-            return RandoMapMod.GS.ShowItemCompass is not ItemCompassSetting.Off ? RmmColors.GetColor(RmmColorSetting.UI_On) : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+            return RandoMapMod.GS.ItemCompassOn ? RmmColors.GetColor(RmmColorSetting.UI_On) : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
         }
 
         private protected override string GetText()
         {
-            return $"{"Toggle item compass".L()} (Ctrl-C): " + RandoMapMod.GS.ShowItemCompass switch
-            {
-                ItemCompassSetting.Reachable => "Reachable".L(),
-                ItemCompassSetting.ReachableOutOfLogic => "Reachable sequence break".L(),
-                ItemCompassSetting.All => "All items".L(),
-                _ => "Off".L()
-            };
+            return $"{"Toggle item compass".L()} (Ctrl-C): {(RandoMapMod.GS.ItemCompassOn ? "On" : "Off").L()}";
         }
     }
 }

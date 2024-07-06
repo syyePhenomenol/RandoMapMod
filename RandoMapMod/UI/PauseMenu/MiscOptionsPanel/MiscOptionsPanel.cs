@@ -6,6 +6,7 @@ namespace RandoMapMod.UI
     {
         private static readonly ExtraButton[] buttons =
         {
+            new ItemCompassModeButton(),
             new AreaNamesButton(),
             new NextAreasButton(),
             new MapMarkersButton(),

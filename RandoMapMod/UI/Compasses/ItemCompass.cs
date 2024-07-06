@@ -69,10 +69,10 @@ namespace RandoMapMod.UI
             {
                 if (Compass.Locations.ContainsKey(pcl.Placement.Name)) continue;
 
-                if (RandoMapMod.GS.ShowItemCompass is ItemCompassSetting.Reachable
+                if (RandoMapMod.GS.ItemCompassMode is ItemCompassMode.Reachable
                     && !RandomizerMod.RandomizerMod.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(pcl.Placement.Name)) continue;
 
-                if (RandoMapMod.GS.ShowItemCompass is ItemCompassSetting.ReachableOutOfLogic
+                if (RandoMapMod.GS.ItemCompassMode is ItemCompassMode.ReachableOutOfLogic
                     && !RandomizerMod.RandomizerMod.RS.TrackerData.uncheckedReachableLocations.Contains(pcl.Placement.Name)) continue;
 
                 // RandoMapMod.Instance.LogDebug($"Add {pcl.Placement.Name}, {pcl.Position}");
@@ -107,7 +107,7 @@ namespace RandoMapMod.UI
 
         private static bool IsCompassEnabled()
         {
-            return Conditions.RandoMapModEnabled() && RandoMapMod.GS.ShowItemCompass is not ItemCompassSetting.Off;
+            return Conditions.RandoMapModEnabled() && RandoMapMod.GS.ItemCompassOn;
         }
 
         private static void Destroy()
