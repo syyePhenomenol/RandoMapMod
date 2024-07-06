@@ -200,7 +200,7 @@ namespace RandoMapMod.UI
                     .Where(p => !p.HasTag<CostTag>() || p.GetTag<CostTag>().Cost.CanPay())
                     .Select(p => p.RandoPlacement())
                 )
-                .Where(p => p.Item.Required && !td.obtainedItems.Contains(p.Index));
+                .Where(p => p.Item is not null && p.Item.Required && !td.obtainedItems.Contains(p.Index));
 
             RandoModLocation noImmediateProgressLocation = null;
             bool containsSelectedLocation = false;
