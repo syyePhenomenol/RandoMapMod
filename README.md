@@ -54,7 +54,7 @@ Optional and compatible:
 - ``CTRL-G``: Toggle progress hint between revealing area/room/item location or off.
     - If enabled, press the indicated key/controller bind to reveal a random hint of where to check to unlock further progression. It will automatically pan to the relevant area on the map.
     - You can press the bind again to randomly cycle through other available hints.
-- ``CTRL-C``: Toggle item compass between pointing to reachable/reachable with sequence break/all items or off.
+- ``CTRL-C``: Toggle item compass on/off.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
     - For some locations, you can press the indicated key/controller bind to reveal a hint to find it.
@@ -90,6 +90,7 @@ Optional and compatible:
     - "Route Text": Toggle the route to be displayed in-game to full/next transition only/off.
     - "Off Route": Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
 - "Misc. Options":
+    - "Item Compass Mode": Toggle item compass between pointing to reachable items/reachable items with sequence break/all items
     - "Show Area Names": Toggle showing area names on the world map
     - "Show Next Areas": Toggle showing names/arrows for adjacent map areas on the quick map
     - "Show Map Markers": Toggle showing map markers. You still need to buy the map markers to see them with this setting on.
