@@ -289,16 +289,16 @@ namespace RandoMapMod.Pathfinder
                             LocalPM.Set("RMM_Waterways_Bench_Floor", pbd.activated ? 1 : 0);
                         }
                         break;
-                    case SN.Waterways_04:
-                        if (pbd.id is "Quake Floor")
-                        {
-                            LocalPM.Set("RMM_Waterways_Bench_Floor_1", pbd.activated ? 1 : 0);
-                        }
-                        if (pbd.id is "Quake Floor (1)")
-                        {
-                            LocalPM.Set("RMM_Waterways_Bench_Floor_2", pbd.activated ? 1 : 0);
-                        }
-                        break;
+                    // case SN.Waterways_04:
+                    //     if (pbd.id is "Quake Floor")
+                    //     {
+                    //         LocalPM.Set("RMM_Waterways_Bench_Floor_1", pbd.activated ? 1 : 0);
+                    //     }
+                    //     if (pbd.id is "Quake Floor (1)")
+                    //     {
+                    //         LocalPM.Set("RMM_Waterways_Bench_Floor_2", pbd.activated ? 1 : 0);
+                    //     }
+                    //     break;
                     case SN.Waterways_05:
                         if (pbd.id is "Quake Floor")
                         {
