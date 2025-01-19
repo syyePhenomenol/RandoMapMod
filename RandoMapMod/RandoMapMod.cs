@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.UI;
@@ -145,7 +145,7 @@ namespace RandoMapMod
             MapChanger.Settings.AddModes(modes);
             Events.OnSetGameMap += OnSetGameMap;
 
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 BenchwarpInterop.Load();
             }

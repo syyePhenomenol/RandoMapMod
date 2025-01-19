@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using MapChanger;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Transition;
@@ -49,7 +49,7 @@ namespace RandoMapMod.Pathfinder
             Instructions = new(transitionInstructions.Values.ToArray());
             TransitionInstructions = new(transitionInstructions);
 
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 StartWarpInstruction = new(sd.StartTerm);
                 BenchwarpInstructions = new(BenchwarpInterop.BenchKeys.ToDictionary(b => b.Key, b => new BenchwarpInstruction(b.Key, b.Value, b.Key)));
@@ -63,7 +63,7 @@ namespace RandoMapMod.Pathfinder
             string position = node.StartPosition.Term.Name;
             TransitionData.TryGetScene(position, out string scene);
 
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 if (position == Instance.StartWarpInstruction.Waypoint)
                 {

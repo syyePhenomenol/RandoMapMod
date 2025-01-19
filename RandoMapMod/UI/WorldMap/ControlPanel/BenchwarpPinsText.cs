@@ -1,4 +1,4 @@
-﻿using RandoMapMod.Localization;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI
@@ -14,7 +14,7 @@ namespace RandoMapMod.UI
 
         private protected override Vector4 GetColor()
         {
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 return RandoMapMod.GS.ShowBenchwarpPins ? RmmColors.GetColor(RmmColorSetting.UI_On) : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
@@ -24,7 +24,7 @@ namespace RandoMapMod.UI
 
         private protected override string GetText()
         {
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 return $"{"Benchwarp pins".L()} (Ctrl-W): {(RandoMapMod.GS.ShowBenchwarpPins ? "On" : "Off").L()}";
             }

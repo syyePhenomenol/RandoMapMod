@@ -1,4 +1,4 @@
-﻿using RandoMapMod.Modes;
+using RandoMapMod.Modes;
 using UnityEngine;
 using RandoMapMod.Localization;
 
@@ -15,7 +15,7 @@ namespace RandoMapMod.UI
 
         private protected override Vector4 GetColor()
         {
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 return RandoMapMod.GS.PathfinderBenchwarp ? RmmColors.GetColor(RmmColorSetting.UI_On) : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
             }
@@ -25,7 +25,7 @@ namespace RandoMapMod.UI
 
         private protected override string GetText()
         {
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 return $"{"Pathfinder benchwarp".L()} (Ctrl-B): {(RandoMapMod.GS.PathfinderBenchwarp ? "On" : "Off").L()}";
             }

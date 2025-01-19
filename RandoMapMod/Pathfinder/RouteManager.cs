@@ -1,4 +1,4 @@
-﻿using MapChanger;
+using MapChanger;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Settings;
 using RandoMapMod.Transition;
@@ -55,7 +55,7 @@ namespace RandoMapMod.Pathfinder
                     DisallowBacktracking = false
                 };
 
-                if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
+                if (Interop.HasBenchwarp && RandoMapMod.GS.PathfinderBenchwarp)
                 {
                     _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps()];
                 }
@@ -127,7 +127,7 @@ namespace RandoMapMod.Pathfinder
                 _sp.StartPositions = RmmPathfinder.SD.GetPrunedStartTerms(StartScene);
             }
 
-            if (Interop.HasBenchwarp() && RandoMapMod.GS.PathfinderBenchwarp)
+            if (Interop.HasBenchwarp && RandoMapMod.GS.PathfinderBenchwarp)
             {
                 _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps(true)];
             }

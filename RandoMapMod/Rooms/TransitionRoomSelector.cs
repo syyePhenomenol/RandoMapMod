@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
@@ -95,7 +95,7 @@ namespace RandoMapMod.Rooms
 
         private static void TryBenchwarp()
         {
-            if (Interop.HasBenchwarp() && RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First() is StartWarpInstruction or BenchwarpInstruction)
+            if (Interop.HasBenchwarp && RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First() is StartWarpInstruction or BenchwarpInstruction)
             {
                 GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(RouteManager.CurrentRoute.RemainingInstructions.First().Text));
             }

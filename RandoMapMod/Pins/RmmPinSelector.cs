@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
@@ -200,7 +200,7 @@ namespace RandoMapMod.Pins
 
         internal bool VisitedBenchSelected()
         {
-            return Interop.HasBenchwarp() && BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
+            return Interop.HasBenchwarp && BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
         }
     }
 }

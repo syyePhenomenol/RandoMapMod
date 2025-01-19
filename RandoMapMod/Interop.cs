@@ -4,31 +4,26 @@ namespace RandoMapMod
 {
     internal static class Interop
     {
-        private static readonly Dictionary<string, Assembly> interopMods = new()
-        {
-            { "BenchRando", null},
-            { "Benchwarp", null }
-        };
+        internal static bool HasBenchwarp { get; private set; } = false;
+
+        internal static bool HasBenchRando { get; private set; } = false;
 
         internal static void FindInteropMods()
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (interopMods.ContainsKey(assembly.GetName().Name))
+                switch (assembly.GetName().Name)
                 {
-                    interopMods[assembly.GetName().Name] = assembly;
+                    case "Benchwarp":
+                        HasBenchwarp = true;
+                        continue;
+                    case "BenchRando":
+                        HasBenchRando = true;
+                        continue;
+                    default:
+                        continue;
                 }
             }
-        }
-
-        internal static bool HasBenchRando()
-        {
-            return interopMods["BenchRando"] is not null;
-        }
-
-        internal static bool HasBenchwarp()
-        {
-            return interopMods["Benchwarp"] is not null;
         }
     }
 }

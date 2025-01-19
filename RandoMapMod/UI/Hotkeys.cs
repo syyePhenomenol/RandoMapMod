@@ -1,4 +1,4 @@
-﻿using MagicUI.Core;
+using MagicUI.Core;
 using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
@@ -43,7 +43,7 @@ namespace RandoMapMod.UI
                 MapUILayerUpdater.Update();
             }, ModifierKeys.Ctrl, GlobalHotkeyCondition);
 
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 Root.ListenForHotkey(KeyCode.W, () =>
                 {
@@ -65,7 +65,7 @@ namespace RandoMapMod.UI
                 UpdateSelectors();
             }, ModifierKeys.Ctrl, GlobalHotkeyCondition);
 
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 Root.ListenForHotkey(KeyCode.B, () =>
                 {

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Benchwarp;
 using InControl;
 using Modding;
@@ -21,7 +21,7 @@ namespace RandoMapMod
             BenchNames = [];
             BenchKeys = [];
 
-            if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
+            if (Interop.HasBenchRando && BenchRandoInterop.BenchRandoEnabled())
             {
                 BenchNames = BenchRandoInterop.GetBenches();
             }

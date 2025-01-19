@@ -1,4 +1,4 @@
-﻿using ConnectionMetadataInjector;
+using ConnectionMetadataInjector;
 using GlobalEnums;
 using ItemChanger;
 using MapChanger;
@@ -87,7 +87,7 @@ namespace RandoMapMod.Pins
             {
                 MakeVanillaPin(placement);
             }
-            if (Interop.HasBenchwarp())
+            if (Interop.HasBenchwarp)
             {
                 foreach (KeyValuePair<RmmBenchKey, string> kvp in BenchwarpInterop.BenchNames.Where(kvp => !Pins.ContainsKey(kvp.Value)))
                 {
@@ -136,7 +136,7 @@ namespace RandoMapMod.Pins
         private static void MakeRandoPin(AbstractPlacement placement)
         {
             AbstractPlacementsPin randoPin;
-            if (Interop.HasBenchwarp() && SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup) is "Benches")
+            if (Interop.HasBenchwarp && SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup) is "Benches")
             {
                 randoPin = Utils.MakeMonoBehaviour<RandomizedBenchPin>(MoPins.gameObject, placement.Name);
             }
