@@ -70,9 +70,9 @@
   	</Target>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\benchwarp.json" />
 		<EmbeddedResource Include="Resources\Compass\routeCompassOverrides.json" />
 		<EmbeddedResource Include="Resources\Compass\worldCoordinates.json" />
+		<EmbeddedResource Include="Resources\defaultBenches.json" />
 		<EmbeddedResource Include="Resources\locationHints.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointInstructions.json" />

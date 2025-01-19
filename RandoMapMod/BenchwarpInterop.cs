@@ -27,15 +27,14 @@ namespace RandoMapMod
             }
             else
             {
-                Dictionary<string, string> benchwarp = MapChanger.JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.benchwarp.json");
+                var defaultBenches = MapChanger.JsonUtil.DeserializeFromAssembly<Dictionary<string, string>>(RandoMapMod.Assembly, "RandoMapMod.Resources.defaultBenches.json");
 
-                foreach (KeyValuePair<string, string> kvp in benchwarp)
+                foreach (var kvp in defaultBenches)
                 {
-                    Bench bench = Bench.Benches.FirstOrDefault(b => b.sceneName == kvp.Key);
-
-                    if (bench is null) continue;
-
-                    BenchNames.Add(new(bench.sceneName, bench.respawnMarker), kvp.Value);
+                    if (Bench.Benches.FirstOrDefault(b => b.sceneName == kvp.Value) is Bench bench)
+                    {
+                        BenchNames.Add(new(bench.sceneName, bench.respawnMarker), kvp.Key);
+                    }
                 }
             }
 
