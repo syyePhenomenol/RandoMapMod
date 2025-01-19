@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class QuillButton : ExtraButton
+    internal class QuillButton() : ExtraButton(nameof(QuillButton), RandoMapMod.MOD)
     {
-        public QuillButton() : base(nameof(QuillButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
@@ -35,20 +30,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{"Always have\nQuill".L()}: ";
-
-            if (RandoMapMod.GS.AlwaysHaveQuill)
-            {
-                text += "On".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else
-            {
-                text += "Off".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-
-            Button.Content = text;
+            this.SetButtonBoolToggle($"{"Always have\nQuill".L()}: ", RandoMapMod.GS.AlwaysHaveQuill);
         }
     }
 }

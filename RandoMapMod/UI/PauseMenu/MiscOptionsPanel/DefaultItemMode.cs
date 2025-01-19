@@ -6,13 +6,8 @@ using RandoMapMod.Settings;
 
 namespace RandoMapMod.UI
 {
-    internal class DefaultItemModeButton : ExtraButton
+    internal class DefaultItemModeButton() : ExtraButton(nameof(DefaultItemModeButton), RandoMapMod.MOD)
     {
-        public DefaultItemModeButton() : base(nameof(DefaultItemModeButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

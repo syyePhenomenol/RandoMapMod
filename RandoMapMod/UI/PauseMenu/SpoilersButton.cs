@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class SpoilersButton : MainButton
+    internal class SpoilersButton() : MainButton(nameof(SpoilersButton), RandoMapMod.MOD, 0, 3)
     {
-        internal SpoilersButton() : base(nameof(SpoilersButton), RandoMapMod.MOD, 0, 3)
-        {
-
-        }
-
         protected override void OnClick()
         {
             RandoMapMod.LS.ToggleSpoilers();
@@ -32,16 +27,7 @@ namespace RandoMapMod.UI
 
             Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            if (RandoMapMod.LS.SpoilerOn)
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                Button.Content = $"{"Spoilers".L()}:\n{"on".L()}";
-            }
-            else
-            {
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                Button.Content = $"{"Spoilers".L()}:\n{"off".L()}";
-            }
+            this.SetButtonBoolToggle($"{"Spoilers".L()}:\n", RandoMapMod.LS.SpoilerOn);
         }
     }
 }

@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class QMarkSettingButton : ExtraButton
+    internal class QMarkSettingButton() : ExtraButton(nameof(QMarkSettingButton), RandoMapMod.MOD)
     {
-        internal QMarkSettingButton() : base(nameof(QMarkSettingButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

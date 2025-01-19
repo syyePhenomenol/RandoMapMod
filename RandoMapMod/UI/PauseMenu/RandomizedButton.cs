@@ -1,18 +1,11 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using RandoMapMod.Pins;
-using RandoMapMod.Settings;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class RandomizedButton : MainButton
+    internal class RandomizedButton() : MainButton(nameof(RandomizedButton), RandoMapMod.MOD, 0, 1)
     {
-        internal RandomizedButton() : base(nameof(RandomizedButton), RandoMapMod.MOD, 0, 1)
-        {
-
-        }
-
         protected override void OnClick()
         {
             RandoMapMod.LS.ToggleRandomized();
@@ -39,18 +32,18 @@ namespace RandoMapMod.UI
             if (RandoMapMod.LS.RandomizedOn)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += "on".L();
+                text += "On".L();
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += "off".L();
+                text += "Off".L();
             }
 
             if (RandoMapMod.LS.IsRandomizedCustom())
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
-                text += $" ({"custom".L()})";
+                text += $" ({"Custom".L()})";
             }
 
             Button.Content = text;

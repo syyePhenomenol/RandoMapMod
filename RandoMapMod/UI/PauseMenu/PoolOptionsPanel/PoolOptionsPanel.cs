@@ -1,5 +1,4 @@
 ﻿using MapChanger.UI;
-using RandoMapMod.Pins;
 
 namespace RandoMapMod.UI
 {
@@ -7,7 +6,7 @@ namespace RandoMapMod.UI
     {
         internal static PoolOptionsPanel Instance { get; private set; }
 
-        public PoolOptionsPanel() : base(nameof(PoolOptionsPanel), RandoMapMod.MOD, 390f, 10)
+        internal PoolOptionsPanel() : base(nameof(PoolOptionsPanel), RandoMapMod.MOD, 390f, 10)
         {
             Instance = this;
         }

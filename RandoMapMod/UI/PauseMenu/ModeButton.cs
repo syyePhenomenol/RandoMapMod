@@ -6,13 +6,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class ModeButton : MainButton
+    internal class ModeButton() : MainButton(nameof(ModeButton), RandoMapMod.MOD, 1, 0)
     {
-        public ModeButton() : base(nameof(ModeButton), RandoMapMod.MOD, 1, 0)
-        {
-
-        }
-
         protected override void OnClick()
         {
             MapChanger.Settings.ToggleMode();

@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class ReachablePinsButton : ExtraButton
+    internal class ReachablePinsButton() : ExtraButton(nameof(ReachablePinsButton), RandoMapMod.MOD)
     {
-        public ReachablePinsButton() : base(nameof(ReachablePinsButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
@@ -35,20 +30,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{"Indicate\nreachable".L()}: ";
-
-            if (RandoMapMod.GS.ReachablePins)
-            {
-                text += "On".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else
-            {
-                text += "Off".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-
-            Button.Content = text;
+            this.SetButtonBoolToggle($"{"Indicate\nreachable".L()}: ", RandoMapMod.GS.ReachablePins);
         }
     }
 }

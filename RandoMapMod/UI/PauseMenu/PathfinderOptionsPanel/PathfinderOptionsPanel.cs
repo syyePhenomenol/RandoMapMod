@@ -13,7 +13,7 @@ namespace RandoMapMod.UI
 
         internal static PathfinderOptionsPanel Instance { get; private set; }
 
-        public PathfinderOptionsPanel() : base(nameof(PathfinderOptionsPanel), RandoMapMod.MOD, 390f, 10)
+        internal PathfinderOptionsPanel() : base(nameof(PathfinderOptionsPanel), RandoMapMod.MOD, 390f, 10)
         {
             Instance = this;
         }

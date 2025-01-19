@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class MapMarkersButton : ExtraButton
+    internal class MapMarkersButton() : ExtraButton(nameof(MapMarkersButton), RandoMapMod.MOD)
     {
-        public MapMarkersButton() : base(nameof(MapMarkersButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
@@ -35,20 +30,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{"Show map\nmarkers".L()}: ";
-
-            if (RandoMapMod.GS.ShowMapMarkers)
-            {
-                text += "On".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else
-            {
-                text += "Off".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-
-            Button.Content = text;
+            this.SetButtonBoolToggle($"{"Show map\nmarkers".L()}: ", RandoMapMod.GS.ShowMapMarkers);
         }
     }
 }

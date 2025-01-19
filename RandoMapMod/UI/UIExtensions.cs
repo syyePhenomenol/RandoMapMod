@@ -1,15 +1,23 @@
 ﻿using MagicUI.Core;
 using MagicUI.Elements;
+using MapChanger.UI;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
     internal static class UIExtensions
     {
-        // TODO: move some of these into MapChanger
         internal static TextObject TextFromEdge(LayoutRoot onLayout, string name, bool onRight)
         {
-            TextObject text = BaseText(onLayout, name);
+            TextObject text = new(onLayout, name)
+            {
+                ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                TextAlignment = HorizontalAlignment.Left,
+                Font = MagicUI.Core.UI.TrajanNormal,
+                FontSize = 14
+            };
 
             if (onRight)
             {
@@ -25,43 +33,22 @@ namespace RandoMapMod.UI
             return text;
         }
 
-        internal static TextObject PanelText(LayoutRoot onLayout, string name)
-        {
-            TextObject text = BaseText(onLayout, name);
-            text.VerticalAlignment = VerticalAlignment.Center;
-            text.Padding = new(0f, 2f, 0f, 2f);
-            return text;
-        }
-
-        private static TextObject BaseText(LayoutRoot onLayout, string name)
-        {
-            return new(onLayout, name)
-            {
-                ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                TextAlignment = HorizontalAlignment.Left,
-                Font = MagicUI.Core.UI.TrajanNormal,
-                FontSize = 14
-            };
-        }
-
-        internal static void SetToggleText(TextObject textObj, string baseText, bool value)
+        internal static void SetButtonBoolToggle(this ButtonWrapper bw, string baseText, bool value)
         {
             string text = baseText;
 
             if (value)
             {
-                textObj.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                bw.Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
                 text += "On".L();
             }
             else
             {
-                textObj.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                bw.Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
                 text += "Off".L();
             }
 
-            textObj.Text = text;
+            bw.Button.Content = text;
         }
     }
 }

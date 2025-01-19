@@ -4,15 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PathfinderOptionsPanelButton : MainButton
+    internal class PathfinderOptionsPanelButton() : MainButton(nameof(PathfinderOptionsPanelButton), RandoMapMod.MOD, 2, 1)
     {
-        internal static PathfinderOptionsPanelButton Instance { get; private set; }
-
-        public PathfinderOptionsPanelButton() : base(nameof(PathfinderOptionsPanelButton), RandoMapMod.MOD, 2, 1)
-        {
-            Instance = this;
-        }
-
         protected override void OnClick()
         {
             PathfinderOptionsPanel.Instance.Toggle();

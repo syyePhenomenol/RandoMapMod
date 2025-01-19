@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class VanillaButton : MainButton
+    internal class VanillaButton() : MainButton(nameof(VanillaButton), RandoMapMod.MOD, 0, 2)
     {
-        internal VanillaButton() : base(nameof(VanillaButton), RandoMapMod.MOD, 0, 2)
-        {
-
-        }
-
         protected override void OnClick()
         {
             RandoMapMod.LS.ToggleVanilla();
@@ -37,18 +32,18 @@ namespace RandoMapMod.UI
             if (RandoMapMod.LS.VanillaOn)
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                text += "on".L();
+                text += "On".L();
             }
             else
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                text += "off".L();
+                text += "Off".L();
             }
 
             if (RandoMapMod.LS.IsVanillaCustom())
             {
                 Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Custom);
-                text += $" ({"custom".L()})";
+                text += $" ({"Custom".L()})";
             }
 
             Button.Content = text;

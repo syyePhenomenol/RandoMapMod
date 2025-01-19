@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class AreaNamesButton : ExtraButton
+    internal class AreaNamesButton() : ExtraButton(nameof(AreaNamesButton), RandoMapMod.MOD)
     {
-        public AreaNamesButton() : base(nameof(AreaNamesButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
@@ -35,20 +30,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{"Show area\nnames".L()}: ";
-
-            if (RandoMapMod.GS.ShowAreaNames)
-            {
-                text += "On".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else
-            {
-                text += "Off".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-
-            Button.Content = text;
+            this.SetButtonBoolToggle($"{"Show area\nnames".L()}: ", RandoMapMod.GS.ShowAreaNames);
         }
     }
 }

@@ -5,14 +5,9 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PoolButton : ExtraButton
+    internal class PoolButton(string poolGroup) : ExtraButton(poolGroup, RandoMapMod.MOD)
     {
-        internal string PoolGroup { get; init; }
-
-        public PoolButton(string poolGroup) : base(poolGroup, RandoMapMod.MOD)
-        {
-            PoolGroup = poolGroup;
-        }
+        internal string PoolGroup { get; init; } = poolGroup;
 
         protected override void OnClick()
         {

@@ -20,7 +20,7 @@ namespace RandoMapMod.UI
             }
         }
 
-        public RmmTitle() : base(RandoMapMod.MOD)
+        internal RmmTitle() : base(RandoMapMod.MOD)
         {
             Instance = this;
         }

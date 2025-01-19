@@ -4,15 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PinOptionsPanelButton : MainButton
+    internal class PinOptionsPanelButton() : MainButton(nameof(PinOptionsPanelButton), RandoMapMod.MOD, 2, 0)
     {
-        internal static PinOptionsPanelButton Instance { get; private set; }
-
-        public PinOptionsPanelButton() : base(nameof(PinOptionsPanelButton), RandoMapMod.MOD, 2, 0)
-        {
-            Instance = this;
-        }
-
         protected override void OnClick()
         {
             PinOptionsPanel.Instance.Toggle();

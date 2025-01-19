@@ -4,13 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class RouteCompassButton : ExtraButton
+    internal class RouteCompassButton() : ExtraButton(nameof(RouteCompassButton), RandoMapMod.MOD)
     {
-        internal RouteCompassButton() : base(nameof(RouteCompassButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
@@ -35,20 +30,7 @@ namespace RandoMapMod.UI
 
         public override void Update()
         {
-            string text = $"{"Route compass".L()}:\n";
-
-            if (RandoMapMod.GS.ShowRouteCompass)
-            {
-                text += "on".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else
-            {
-                text += "off".L();
-                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-
-            Button.Content = text;
+            this.SetButtonBoolToggle($"{"Route compass".L()}:\n", RandoMapMod.GS.ShowRouteCompass);
         }
     }
 }

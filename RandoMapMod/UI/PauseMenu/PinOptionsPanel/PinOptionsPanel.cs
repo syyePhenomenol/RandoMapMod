@@ -13,7 +13,7 @@ namespace RandoMapMod.UI
 
         internal static PinOptionsPanel Instance { get; private set; }
 
-        public PinOptionsPanel() : base(nameof(PinOptionsPanel), RandoMapMod.MOD, 390f, 10)
+        internal PinOptionsPanel() : base(nameof(PinOptionsPanel), RandoMapMod.MOD, 390f, 10)
         {
             Instance = this;
         }

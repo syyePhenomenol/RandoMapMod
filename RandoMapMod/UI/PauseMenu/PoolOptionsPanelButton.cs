@@ -4,15 +4,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PoolOptionsPanelButton : MainButton
+    internal class PoolOptionsPanelButton() : MainButton(nameof(PoolOptionsPanelButton), RandoMapMod.MOD, 1, 3)
     {
-        internal static PoolOptionsPanelButton Instance { get; private set; }
-
-        public PoolOptionsPanelButton() : base(nameof(PoolOptionsPanelButton), RandoMapMod.MOD, 1, 3)
-        {
-            Instance = this;
-        }
-
         protected override void OnClick()
         {
             PoolOptionsPanel.Instance.Toggle();

@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class GroupByButton : ExtraButton
+    internal class GroupByButton() : ExtraButton(nameof(GroupByButton), RandoMapMod.MOD)
     {
-        internal GroupByButton() : base(nameof(GroupByButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

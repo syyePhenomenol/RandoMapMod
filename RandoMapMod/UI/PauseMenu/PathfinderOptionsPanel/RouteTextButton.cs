@@ -1,17 +1,11 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using RandomizerMod.IC;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class RouteTextButton : ExtraButton
+    internal class RouteTextButton() : ExtraButton(nameof(RouteTextButton), RandoMapMod.MOD)
     {
-        internal RouteTextButton() : base(nameof(RouteTextButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

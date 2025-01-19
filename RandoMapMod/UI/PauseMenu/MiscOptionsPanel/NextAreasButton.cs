@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class NextAreasButton : ExtraButton
+    internal class NextAreasButton() : ExtraButton(nameof(NextAreasButton), RandoMapMod.MOD)
     {
-        public NextAreasButton() : base(nameof(NextAreasButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

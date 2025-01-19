@@ -18,7 +18,7 @@ namespace RandoMapMod.UI
 
         internal static MiscOptionsPanel Instance { get; private set; }
 
-        public MiscOptionsPanel() : base(nameof(MiscOptionsPanel), RandoMapMod.MOD, 390f, 10)
+        internal MiscOptionsPanel() : base(nameof(MiscOptionsPanel), RandoMapMod.MOD, 390f, 10)
         {
             Instance = this;
         }

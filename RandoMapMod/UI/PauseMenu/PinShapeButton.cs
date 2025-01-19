@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PinShapeButton : MainButton
+    internal class PinShapeButton() : MainButton(nameof(PinShapeButton), RandoMapMod.MOD, 1, 1)
     {
-        internal PinShapeButton() : base(nameof(PinShapeButton), RandoMapMod.MOD, 1, 1)
-        {
-
-        }
-
         protected override void OnClick()
         {
             RandoMapMod.GS.TogglePinShape();

@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class PinSizeButton : MainButton
+    internal class PinSizeButton() : MainButton(nameof(PinSizeButton), RandoMapMod.MOD, 1, 2)
     {
-        internal PinSizeButton() : base(nameof(PinSizeButton), RandoMapMod.MOD, 1, 2)
-        {
-
-        }
-
         protected override void OnClick()
         {
             RandoMapMod.GS.TogglePinSize();

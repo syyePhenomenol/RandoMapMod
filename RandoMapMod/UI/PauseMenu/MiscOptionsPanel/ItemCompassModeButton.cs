@@ -5,13 +5,8 @@ using RandoMapMod.Settings;
 
 namespace RandoMapMod.UI
 {
-    internal class ItemCompassModeButton : ExtraButton
+    internal class ItemCompassModeButton() : ExtraButton(nameof(ItemCompassModeButton), RandoMapMod.MOD)
     {
-        public ItemCompassModeButton() : base(nameof(ItemCompassModeButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();

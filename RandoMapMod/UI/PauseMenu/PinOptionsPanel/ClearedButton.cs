@@ -5,13 +5,8 @@ using RandoMapMod.Localization;
 
 namespace RandoMapMod.UI
 {
-    internal class ClearedButton : ExtraButton
+    internal class ClearedButton() : ExtraButton(nameof(ClearedButton), RandoMapMod.MOD)
     {
-        internal ClearedButton() : base(nameof(ClearedButton), RandoMapMod.MOD)
-        {
-
-        }
-
         public override void Make()
         {
             base.Make();
