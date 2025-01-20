@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Benchwarp;
 using InControl;
 using Modding;
@@ -55,20 +55,20 @@ namespace RandoMapMod
         internal static IEnumerable<string> GetVisitedBenchNames()
         {
             return GetVisitedBenchKeys()
-                .Where(b => BenchNames.ContainsKey(b))
+                .Where(BenchNames.ContainsKey)
                 .Select(b => BenchNames[b])
-                .Concat(new List<string>() { BENCH_WARP_START });
+                .Concat([BENCH_WARP_START]);
         }
 
         internal static IEnumerator DoBenchwarp(string benchName)
         {
             if (BenchKeys.TryGetValue(benchName, out RmmBenchKey benchKey))
             {
-                yield return DoBenchwarpInternal(benchKey);
+                yield return DoBenchwarp(benchKey);
             }
         }
 
-        private static IEnumerator DoBenchwarpInternal(RmmBenchKey benchKey)
+        internal static IEnumerator DoBenchwarp(RmmBenchKey benchKey)
         {
             InputHandler.Instance.inputActions.openInventory.CommitWithState(true, ReflectionHelper.GetField<OneAxisInputControl, ulong>(InputHandler.Instance.inputActions.openInventory, "pendingTick") + 1, 0);
             yield return new WaitWhile(() => GameManager.instance.inventoryFSM.ActiveStateName != "Closed");
@@ -87,7 +87,7 @@ namespace RandoMapMod
                 }
                 else
                 {
-                    Benchwarp.Events.SetToStart();
+                    Events.SetToStart();
                 }
 
                 ChangeScene.WarpToRespawn();

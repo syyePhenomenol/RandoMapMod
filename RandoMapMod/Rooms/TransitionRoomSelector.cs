@@ -61,9 +61,9 @@ namespace RandoMapMod.Rooms
             {
                 attackHoldTimer.Reset();
 
-                if (!RmmPinSelector.Instance.VisitedBenchSelected())
+                if (RmmPinSelector.Instance.VisitedBenchNotSelected() && RouteManager.TryGetBenchwarpKey(out var benchKey))
                 {
-                    TryBenchwarp();
+                    GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(benchKey));
                 }
             }
         }
@@ -93,14 +93,6 @@ namespace RandoMapMod.Rooms
             return $"{instructions}\n\n{transitions}";
         }
 
-        private static void TryBenchwarp()
-        {
-            if (Interop.HasBenchwarp && RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First() is StartWarpInstruction or BenchwarpInstruction)
-            {
-                GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(RouteManager.CurrentRoute.RemainingInstructions.First().Text));
-            }
-        }
-
         private static string GetInstructionText()
         {
             string selectedScene = Instance.SelectedObjectKey;
@@ -126,7 +118,7 @@ namespace RandoMapMod.Rooms
                 text += $" {"to find a new route".L()}.";
             }
 
-            if (!RmmPinSelector.Instance.VisitedBenchSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
+            if (RmmPinSelector.Instance.VisitedBenchNotSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 

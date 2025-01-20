@@ -202,5 +202,10 @@ namespace RandoMapMod.Pins
         {
             return Interop.HasBenchwarp && BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
         }
+
+        internal bool VisitedBenchNotSelected()
+        {
+            return Interop.HasBenchwarp && !BenchwarpInterop.IsVisitedBench(SelectedObjectKey);
+        }
     }
 }
