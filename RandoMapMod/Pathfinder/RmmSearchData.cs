@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using RandoMapMod.Transition;
+using RandomizerCore;
 using RandomizerCore.Json;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
@@ -33,7 +34,7 @@ namespace RandoMapMod.Pathfinder
 
         public RmmSearchData(ProgressionManager reference) : base(reference)
         {
-            if (Actions.Where(a => a.Name is "Room_Town_Stag_Station[left1]").FirstOrDefault() is AbstractAction action)
+            if (Actions.Where(a => a.Start.Name is "Room_Town_Stag_Station[left1]").FirstOrDefault() is AbstractAction action)
             {
                 DirtmouthStagTransition = action;
             }
@@ -123,81 +124,49 @@ namespace RandoMapMod.Pathfinder
             return lmb;
         }
 
-        protected override List<AbstractAction> CreateActions()
+        protected override Dictionary<Term, List<AbstractAction>> CreateActions()
         {
-            List<AbstractAction> actions = base.CreateActions();
+            Dictionary<Term, List<AbstractAction>> actionLookup = [];
 
-            foreach (AbstractAction action in actions)
+            // Make non-placement actions 0 cost
+            foreach (var destination in Positions)
             {
-                if (action is StateLogicAction)
+                var ld = (DNFLogicDef)LocalPM.lm.GetLogicDefStrict(destination.Name);
+                
+                foreach (var start in ld.GetTerms().Where(t => t.Type is TermType.State))
                 {
-                    action.Cost = 0f;
+                    AddAction(new StateLogicAction(start, destination, ld, 0));
+                }
+            }
+
+            // Default placement actions
+            foreach (GeneralizedPlacement gp in LocalPM.ctx.EnumerateExistingPlacements())
+            {
+                if (PositionLookup.TryGetValue(gp.Location.Name, out Term startPosition)
+                    && PositionLookup.TryGetValue(gp.Item.Name, out Term destination))
+                {
+                    AddAction(new PlacementAction(startPosition, destination));
                 }
             }
 
             // Add extra transitions
             foreach (var (location, item) in TransitionData.ExtraVanillaTransitions)
             {
-                actions.Add(new PlacementAction(PositionLookup[location], PositionLookup[item]));
+                AddAction(new PlacementAction(PositionLookup[location], PositionLookup[item]));
             }
 
-            return actions;
-        }
+            return actionLookup;
 
-        private static readonly HashSet<string> extraRooms =
-        [
-            SN.Room_Final_Boss_Atrium,
-            SN.GG_Atrium,
-            SN.GG_Workshop
-        ];
-
-        /// <summary>
-        /// Remove miscellaneous logical connections for now.
-        /// </summary>
-        protected override Dictionary<Term, List<AbstractAction>> CreateActionLookup()
-        {
-            var actionLookup = base.CreateActionLookup();
-
-            Dictionary<Term, List<AbstractAction>> actionLookupCopy = actionLookup.ToDictionary(kvp => kvp.Key, kvp => new List<AbstractAction>(kvp.Value));
-
-            foreach (var kvp in actionLookup)
+            void AddAction(AbstractAction a)
             {
-                if (!TransitionData.TryGetScene(kvp.Key.Name, out string scene)) continue;
-
-                foreach (var action in kvp.Value)
+                if (actionLookup.TryGetValue(a.Start, out var actionList))
                 {
-                    if (action is not StateLogicAction) continue;
-
-                    string newScene;
-                    if (extraRooms.Contains(action.Destination.Name) || RandomizerMod.RandomizerData.Data.IsRoom(action.Destination.Name))
-                    {
-                        newScene = action.Destination.Name;
-                    }
-                    else if (!TransitionData.TryGetScene(action.Destination.Name, out newScene))
-                    {
-                        continue;
-                    }
-
-                    if (scene != newScene) actionLookupCopy[kvp.Key].Remove(action);
+                    actionList.Add(a);
+                    return;
                 }
+
+                actionLookup[a.Start] = [a];
             }
-
-            return actionLookupCopy;
-        }
-
-        public override List<AbstractAction> GetActions(Node node)
-        {
-            // Prune out of logic stuff
-            var actions = base.GetActions(node).Where(a => ReferencePM.lm.GetTerm(a.Destination.Name) is null
-                || (a is PlacementAction && TransitionData.IsVanillaOrCheckedTransition(a.Name))
-                || (a is not PlacementAction && ReferencePM.Has(a.Destination))).ToList();
-
-            if (node.CurrentPosition.Name is "Can_Stag" && !actions.Contains(DirtmouthStagTransition))
-            {
-                actions.Add(DirtmouthStagTransition);
-            }
-
-            return actions;
         }
 
         private static readonly (string term, string pdBool)[] pdBoolTerms =

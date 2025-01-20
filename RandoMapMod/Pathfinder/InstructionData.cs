@@ -42,7 +42,7 @@ namespace RandoMapMod.Pathfinder
             {
                 if (action.IsOrIsSubclassInstanceOf<PlacementAction>())
                 {
-                    transitionInstructions[action.Name] = new(action.Name, action.Destination.Name);
+                    transitionInstructions[action.Start.Name] = new(action.Start.Name, action.Destination.Name);
                 }
             }
 
@@ -112,7 +112,7 @@ namespace RandoMapMod.Pathfinder
 
             if (action.IsOrIsSubclassInstanceOf<PlacementAction>())
             {
-                instruction = Instance.TransitionInstructions[action.Name];
+                instruction = Instance.TransitionInstructions[action.Start.Name];
                 return true;
             }
 

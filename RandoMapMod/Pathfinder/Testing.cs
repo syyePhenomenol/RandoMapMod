@@ -37,7 +37,7 @@ namespace RandoMapMod.Pathfinder
                 {
                     sd.LocalPM.SetState(kvp.Key, sd.CurrentState);
 
-                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _)}");
+                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, sd.CurrentState, out var _)}");
 
                     sd.LocalPM.SetState(kvp.Key, null);
                 }
