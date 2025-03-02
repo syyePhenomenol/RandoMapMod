@@ -1,4 +1,4 @@
-﻿using MapChanger;
+using MapChanger;
 using MapChanger.Map;
 using MapChanger.MonoBehaviours;
 using TMPro;
@@ -16,7 +16,7 @@ namespace RandoMapMod.Rooms
         {
             roomTextDefs = JsonUtil.DeserializeFromAssembly<Dictionary<string, RoomTextDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTexts.json");
 
-            if (Dependencies.HasAdditionalMaps())
+            if (Dependencies.HasAdditionalMaps)
             {
                 Dictionary<string, RoomTextDef> roomTextDefsAM = JsonUtil.DeserializeFromAssembly<Dictionary<string, RoomTextDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTextsAM.json");
                 foreach ((string scene, RoomTextDef rtd) in roomTextDefsAM.Select(kvp => (kvp.Key, kvp.Value)))
