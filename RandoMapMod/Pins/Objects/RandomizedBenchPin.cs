@@ -45,7 +45,7 @@ namespace RandoMapMod.Pins
         {
             if (RandoMapMod.GS.ShowBenchwarpPins && this.IsVisitedBench())
             {
-                CycleSprites = new ScaledPinSprite[] { PinSpriteManager.GetSprite("Benches") };
+                CycleSprites = [Psm.GetSprite("Benches")];
                 return;
             }
             

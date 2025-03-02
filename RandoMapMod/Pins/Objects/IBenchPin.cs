@@ -1,4 +1,4 @@
-namespace RandoMapMod
+namespace RandoMapMod.Pins
 {
     internal interface IBenchPin
     {

@@ -14,7 +14,7 @@ namespace RandoMapMod.UI
         private readonly Vector2 position;
         public override Vector2 Position => position;
 
-        public override Sprite Sprite => PinSpriteManager.GetLocationSprite(Placement).Value;
+        public override Sprite Sprite => RmmPinManager.Psm.GetLocationSprite(Placement).Value;
 
         public override Color Color => RmmColors.GetColor(RmmColorSetting.UI_Compass);
 

@@ -1,4 +1,4 @@
-using ConnectionMetadataInjector;
+﻿using ConnectionMetadataInjector;
 using GlobalEnums;
 using ItemChanger;
 using MapChanger;
@@ -25,21 +25,20 @@ namespace RandoMapMod.Pins
         private const float OFFSETZ_BASE = -1.4f;
         private const float OFFSETZ_RANGE = 0.4f;
 
-        private static Dictionary<MapZone, QuickMapGridDef> quickMapGridDefs;
-        internal static Dictionary<string, RawLogicDef[]> LocationHints;
+        private static Dictionary<MapZone, QuickMapGridDef> _quickMapGridDefs;
+        internal static Dictionary<string, RawLogicDef[]> LocationHints { get; private set; }
+        internal static PinSpriteManager Psm { get; private set; }
 
         internal static MapObject MoPins { get; private set; }
-        internal static Dictionary<string, RmmPin> Pins { get; private set; } = [];
-        internal static List<RmmPin> GridPins { get; private set; } = [];
-
-        internal static void Load()
-        {
-            quickMapGridDefs = JsonUtil.DeserializeFromAssembly<Dictionary<MapZone, QuickMapGridDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.quickMapGrids.json");
-            LocationHints = JsonUtil.DeserializeFromAssembly<Dictionary<string, RawLogicDef[]>>(RandoMapMod.Assembly, "RandoMapMod.Resources.locationHints.json");
-        }
+        internal static Dictionary<string, RmmPin> Pins { get; private set; }
+        internal static List<RmmPin> GridPins { get; private set; }
 
         public override void OnEnterGame()
         {
+            _quickMapGridDefs = JsonUtil.DeserializeFromAssembly<Dictionary<MapZone, QuickMapGridDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.quickMapGrids.json");
+            LocationHints = JsonUtil.DeserializeFromAssembly<Dictionary<string, RawLogicDef[]>>(RandoMapMod.Assembly, "RandoMapMod.Resources.locationHints.json");
+            Psm = new();
+
             TrackerUpdate.OnFinishedUpdate += OnTrackerUpdate;
             MapChanger.Events.OnWorldMap += ArrangeWorldMapPinGrid;
             MapChanger.Events.OnQuickMap += ArrangeQuickMapPinGrid;
@@ -47,6 +46,14 @@ namespace RandoMapMod.Pins
 
         public override void OnQuitToMenu()
         {
+            _quickMapGridDefs = null;
+            LocationHints = null;
+            Psm = null;
+
+            MoPins = null;
+            Pins = null;
+            GridPins = null;
+
             TrackerUpdate.OnFinishedUpdate -= OnTrackerUpdate;
             MapChanger.Events.OnWorldMap -= ArrangeWorldMapPinGrid;
             MapChanger.Events.OnQuickMap -= ArrangeQuickMapPinGrid;
@@ -115,6 +122,7 @@ namespace RandoMapMod.Pins
             // Force certain updates to happen
             OnTrackerUpdate();
 
+            // The Selector base class already adds to MapObjectUpdater (gets destroyed on return to Menu)
             RmmPinSelector pinSelector = Utils.MakeMonoBehaviour<RmmPinSelector>(null, "RandoMapMod Pin Selector");
             pinSelector.Initialize(Pins.Values);
         }
@@ -176,7 +184,7 @@ namespace RandoMapMod.Pins
                 return;
             }
 
-            VanillaPin vanillaPin = Utils.MakeMonoBehaviour<VanillaPin>(MoPins.gameObject, placement.Location.Name);
+            var vanillaPin = Utils.MakeMonoBehaviour<VanillaPin>(MoPins.gameObject, placement.Location.Name);
             vanillaPin.Initialize(placement);
             MoPins.AddChild(vanillaPin);
             Pins.Add(placement.Location.Name, vanillaPin);
@@ -226,7 +234,7 @@ namespace RandoMapMod.Pins
         /// </summary>
         private static void ArrangeQuickMapPinGrid(GameMap gameMap, MapZone mapZone)
         {
-            if (!quickMapGridDefs.TryGetValue(mapZone, out QuickMapGridDef qmgd)) return;
+            if (!_quickMapGridDefs.TryGetValue(mapZone, out QuickMapGridDef qmgd)) return;
 
             string currentScene = Utils.CurrentScene();
 

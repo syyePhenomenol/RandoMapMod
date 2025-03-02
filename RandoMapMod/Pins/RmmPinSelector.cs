@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;

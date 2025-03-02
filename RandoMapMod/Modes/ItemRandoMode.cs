@@ -38,7 +38,6 @@ namespace RandoMapMod.Modes
         }
         public override Vector4? NextAreaColorOverride(MiscObjectDef miscObjectDef) { return GetCustomColor(miscObjectDef.ColorSetting); }
 
-
         private Vector4? GetCustomColor(ColorSetting colorSetting)
         {
             Vector4 customColor = RmmColors.GetColor(colorSetting);

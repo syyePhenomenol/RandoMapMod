@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using GlobalEnums;
 using MapChanger;
 using MapChanger.MonoBehaviours;
@@ -26,7 +26,7 @@ namespace RandoMapMod.Pins
 
         private protected const float SELECTED_MULTIPLIER = 1.3f;
 
-        private protected static readonly Dictionary<PinSize, float> pinSizes = new()
+        private protected static readonly Dictionary<PinSize, float> _pinSizes = new()
         {
             { PinSize.Tiny, TINY_SCALE },
             { PinSize.Small, SMALL_SCALE },
@@ -46,6 +46,9 @@ namespace RandoMapMod.Pins
         // Dynamic properties
         internal abstract LogicDef Logic { get; }
         internal abstract string HintText { get; }
+
+        // Pin Sprite manager
+        internal PinSpriteManager Psm => RmmPinManager.Psm;
 
         // Sprite cycling
         internal IEnumerable<ScaledPinSprite> CycleSprites { get; private protected set; }
@@ -128,26 +131,24 @@ namespace RandoMapMod.Pins
 
             ActiveModifiers.AddRange
             (
-                new Func<bool>[]
-                {
+                [
                     CorrectMapOpen,
                     ActiveByCurrentMode,
                     ActiveBySettings,
                     ActiveByProgress
-                }
+                ]
             );
 
             textBuilders.AddRange
             (
-                new Func<string>[]
-                {
+                [
                     GetNameText,
                     GetRoomText,
                     GetStatusText,
                     GetLogicText,
                     GetHintText,
                     GetLockText
-                }
+                ]
             );
 
             BorderPlacement = BorderPlacement.InFront;
@@ -209,7 +210,7 @@ namespace RandoMapMod.Pins
 
         private protected virtual void UpdatePinSize()
         {
-            Size = pinSizes[RandoMapMod.GS.PinSize];
+            Size = _pinSizes[RandoMapMod.GS.PinSize];
 
             if (RandoMapMod.GS.PinShapes is PinShapeSetting.No_Border)
             {
@@ -243,8 +244,8 @@ namespace RandoMapMod.Pins
                 _ => GetMixedPinShape()
             };
 
-            BorderSprite = PinSpriteManager.GetSprite($"Border{shape}").Value;
-            BackgroundSprite = PinSpriteManager.GetSprite($"Background{shape}").Value;
+            BorderSprite = Psm.GetSprite($"Border{shape}").Value;
+            BackgroundSprite = Psm.GetSprite($"Background{shape}").Value;
         }
 
         private protected virtual PinShape GetMixedPinShape()

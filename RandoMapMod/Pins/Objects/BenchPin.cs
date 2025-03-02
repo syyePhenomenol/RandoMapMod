@@ -84,7 +84,7 @@ namespace RandoMapMod.Pins
 
         private protected override void UpdatePinSprites()
         {
-            CycleSprites ??= new ScaledPinSprite[] { PinSpriteManager.GetSprite("Benches") };
+            CycleSprites ??= [Psm.GetSprite("Benches")];
         }
 
         private protected override void UpdatePinSize()

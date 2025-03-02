@@ -200,11 +200,11 @@ namespace RandoMapMod.Pins
         {
             if (activeItems is not null)
             {
-                CycleSprites = activeItems.Select(PinSpriteManager.GetSprite).GroupBy(s => s.Value).Select(g => g.First());
+                CycleSprites = activeItems.Select(Psm.GetSprite).GroupBy(s => s.Value).Select(g => g.First());
             }
             else
             {
-                CycleSprites = new ScaledPinSprite[] { PinSpriteManager.GetLocationSprite(CurrentPlacement) };
+                CycleSprites = [Psm.GetLocationSprite(CurrentPlacement)];
             }
         }
 

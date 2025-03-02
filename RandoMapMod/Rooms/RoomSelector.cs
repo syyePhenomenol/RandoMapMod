@@ -12,11 +12,11 @@ namespace RandoMapMod.Rooms
         {
             base.Initialize();
 
-            ActiveModifiers.AddRange(new Func<bool>[]
-            {
+            ActiveModifiers.AddRange(
+            [
                 ActiveByCurrentMode,
                 ActiveByToggle
-            });
+            ]);
 
             foreach (MapObject room in rooms)
             {

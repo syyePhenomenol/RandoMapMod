@@ -80,7 +80,7 @@ namespace RandoMapMod.Pins
 
         private protected override void UpdatePinSprites()
         {
-            CycleSprites = new ScaledPinSprite[] { PinSpriteManager.GetLocationSprite(locationPoolGroup) };
+            CycleSprites = [Psm.GetLocationSprite(locationPoolGroup)];
         }
 
         private protected override void UpdatePinSize()

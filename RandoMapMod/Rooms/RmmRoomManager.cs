@@ -50,6 +50,7 @@ namespace RandoMapMod.Rooms
 
             MapObjectUpdater.Add(MoRoomTexts);
 
+            // The Selector base class already adds to MapObjectUpdater (gets destroyed on return to Menu)
             TransitionRoomSelector transitionRoomSelector = Utils.MakeMonoBehaviour<TransitionRoomSelector>(null, "RandoMapMod Transition Room Selector");
             transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
         }

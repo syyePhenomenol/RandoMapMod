@@ -1,4 +1,4 @@
-namespace RandoMapMod
+namespace RandoMapMod.Pins
 {
     // In order of view priority
     internal enum AbstractPlacementState

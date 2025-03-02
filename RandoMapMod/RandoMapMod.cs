@@ -8,10 +8,10 @@ using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Rooms;
+using RandoMapMod.Settings;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using UnityEngine;
-using RandoMapMod.Settings;
 
 namespace RandoMapMod
 {
@@ -80,7 +80,6 @@ namespace RandoMapMod
             new RmmColors(),
             new TransitionData(),
             new RmmPathfinder(),
-            new PinSpriteManager(),
             new RmmPinManager(),
             new TransitionTracker(),
             new DreamgateTracker(),
@@ -128,7 +127,6 @@ namespace RandoMapMod
             Instruction.LoadRouteCompassOverrides();
             InstructionData.LoadWaypointInstructions();
             RmmRoomManager.Load();
-            RmmPinManager.Load();
 
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 
