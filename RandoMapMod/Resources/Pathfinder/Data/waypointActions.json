@@ -1,0 +1,138 @@
+[
+  {
+    "Start": "RMM_Left_Elevator_Up",
+    "Destination": "Crossroads_49[elev_entrance]",
+    "Text": "Left_Elevator-Up"
+  },
+  {
+    "Start": "RMM_Left_Elevator_Down",
+    "Destination": "Crossroads_49b[elev_entrance]",
+    "Text": "Left_Elevator-Down"
+  },
+  {
+    "Start": "RMM_Right_Elevator_Up",
+    "Destination": "Ruins2_10[elev_entrance]",
+    "Text": "Right_Elevator-Up"
+  },
+  {
+    "Start": "RMM_Right_Elevator_Down",
+    "Destination": "Ruins2_10b[elev_entrance]",
+    "Text": "Right_Elevator-Down"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Ruins1_29[door_stagExit]",
+    "Text": "Stag-City_Storerooms"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Crossroads_47[door_stagExit]",
+    "Text": "Stag-Crossroads"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Room_Town_Stag_Station[door_stagExit]",
+    "Text": "Stag-Dirtmouth"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Deepnest_09[door_stagExit]",
+    "Text": "Stag-Distant_Village"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Fungus1_16_alt[door_stagExit]",
+    "Text": "Stag-Greenpath"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Abyss_22[door_stagExit]",
+    "Text": "Stag-Hidden_Station"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Ruins2_08[door_stagExit]",
+    "Text": "Stag-King's_Station"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Fungus3_40[door_stagExit]",
+    "Text": "Stag-Queen's_Gardens"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Fungus2_02[door_stagExit]",
+    "Text": "Stag-Queen's_Station"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "RestingGrounds_09[door_stagExit]",
+    "Text": "Stag-Resting_Grounds"
+  },
+  {
+    "Start": "Can_Stag",
+    "Destination": "Cliffs_03[door_stagExit]",
+    "Text": "Stag-Stag_Nest"
+  },
+  {
+    "Start": "Lower_Tram",
+    "Destination": "Room_Tram[door1]"
+  },
+  {
+    "Start": "RMM_Lower_Tram_Left",
+    "Destination": "Abyss_03_b[door_tram]",
+    "Text": "Exit-Left"
+  },
+  {
+    "Start": "RMM_Lower_Tram_Middle",
+    "Destination": "Abyss_03[door_tram]",
+    "Text": "Exit-Middle"
+  },
+  {
+    "Start": "RMM_Lower_Tram_Right",
+    "Destination": "Abyss_03_c[door_tram]",
+    "Text": "Exit-Right"
+  },
+  {
+    "Start": "Upper_Tram",
+    "Destination": "Room_Tram_RG[door1]"
+  },
+  {
+    "Start": "RMM_Upper_Tram_Left",
+    "Destination": "Crossroads_46[door_tram]",
+    "Text": "Exit-Left"
+  },
+  {
+    "Start": "RMM_Upper_Tram_Right",
+    "Destination": "Crossroads_46b[door_tram]",
+    "Text": "Exit-Right"
+  },
+  {
+    "Start": "Warp-Palace_Grounds_to_White_Palace",
+    "Destination": "White_Palace_11[door1]"
+  },
+  {
+    "Start": "Warp-Lifeblood_Core_to_Abyss",
+    "Destination": "Abyss_06_Core[door_dreamReturn]"
+  },
+  {
+    "Start": "Warp-Godhome_to_Junk_Pit",
+    "Destination": "GG_Waterways[door_dreamReturn]"
+  },
+  {
+    "Start": "Warp-Junk_Pit_to_Godhome",
+    "Destination": "GG_Atrium[door_dreamEnter]"
+  },
+  {
+    "Start": "Warp-White_Palace_Entrance_to_Palace_Grounds",
+    "Destination": "Abyss_05[door_dreamReturn_reality]"
+  },
+  {
+    "Start": "Warp-White_Palace_Atrium_to_Palace_Grounds",
+    "Destination": "Abyss_05[door_dreamReturn_reality]"
+  },
+  {
+    "Start": "Warp-Path_of_Pain_Complete",
+    "Destination": "White_Palace_06[door_dreamReturn]"
+  }
+]

@@ -1,5 +1,122 @@
 ﻿[
-  // Extra normal transitions
+  // Out transitions used for properly defining 1 cost actions from logic
+  {
+    "name": "Crossroads_49[elev_entrance]",
+    "logic": "RMM_Left_Elevator_Up"
+  },
+  {
+    "name": "Crossroads_49b[elev_entrance]",
+    "logic": "RMM_Left_Elevator_Down"
+  },
+  {
+    "name": "Ruins2_10[elev_entrance]",
+    "logic": "RMM_Right_Elevator_Up"
+  },
+  {
+    "name": "Ruins2_10b[elev_entrance]",
+    "logic": "RMM_Right_Elevator_Down"
+  },
+  {
+    "name": "Room_Town_Stag_Station[door_stagExit]",
+    "logic": "Can_Stag"
+  },
+  {
+    "name": "Crossroads_47[door_stagExit]",
+    "logic": "Can_Stag + Crossroads_Stag"
+  },
+  {
+    "name": "Fungus1_16_alt[door_stagExit]",
+    "logic": "Can_Stag + Greenpath_Stag"
+  },
+  {
+    "name": "Fungus2_02[door_stagExit]",
+    "logic": "Can_Stag + Queen's_Station_Stag"
+  },
+  {
+    "name": "Deepnest_09[door_stagExit]",
+    "logic": "Can_Stag + Distant_Village_Stag"
+  },
+  {
+    "name": "Abyss_22[door_stagExit]",
+    "logic": "Can_Stag + Hidden_Station_Stag"
+  },
+  {
+    "name": "Ruins1_29[door_stagExit]",
+    "logic": "Can_Stag + City_Storerooms_Stag"
+  },
+  {
+    "name": "Ruins2_08[door_stagExit]",
+    "logic": "Can_Stag + King's_Station_Stag"
+  },
+  {
+    "name": "RestingGrounds_09[door_stagExit]",
+    "logic": "Can_Stag + Resting_Grounds_Stag"
+  },
+  {
+    "name": "Fungus3_40[door_stagExit]",
+    "logic": "Can_Stag + Queen's_Gardens_Stag"
+  },
+  {
+    "name": "Cliffs_03[door_stagExit]",
+    "logic": "Can_Stag + Stag_Nest_Stag"
+  },
+  {
+    "name": "Room_Tram[door1]",
+    "logic": "Lower_Tram"
+  },
+  {
+    "name": "Abyss_03_b[door_tram]",
+    "logic": "RMM_Lower_Tram_Left"
+  },
+  {
+    "name": "Abyss_03[door_tram]",
+    "logic": "RMM_Lower_Tram_Middle"
+  },
+  {
+    "name": "Abyss_03_c[door_tram]",
+    "logic": "RMM_Lower_Tram_Right"
+  },
+  {
+    "name": "Room_Tram_RG[door1]",
+    "logic": "Upper_Tram"
+  },
+  {
+    "name": "Crossroads_46[door_tram]",
+    "logic": "RMM_Upper_Tram_Left"
+  },
+  {
+    "name": "Crossroads_46b[door_tram]",
+    "logic": "RMM_Upper_Tram_Right"
+  },
+  {
+    "name": "White_Palace_11[door1]",
+    "logic": "Warp-Palace_Grounds_to_White_Palace"
+  },
+  {
+    "name": "Abyss_06_Core[door_dreamReturn]",
+    "logic": "Warp-Lifeblood_Core_to_Abyss"
+  },
+  {
+    "name": "GG_Waterways[door_dreamReturn]",
+    "logic": "Warp-Godhome_to_Junk_Pit"
+  },
+  {
+    "name": "GG_Atrium[door_dreamEnter]",
+    "logic": "Warp-Junk_Pit_to_Godhome"
+  },
+  {
+    "name": "Abyss_05[door_dreamReturn_reality]",
+    "logic": "Warp-White_Palace_Entrance_to_Palace_Grounds"
+  },
+  {
+    "name": "Abyss_05[door_dreamReturn_reality]",
+    "logic": "Warp-White_Palace_Atrium_to_Palace_Grounds"
+  },
+  {
+    "name": "White_Palace_06[door_dreamReturn]",
+    "logic": "Warp-Path_of_Pain_Complete"
+  },
+  // Extra normal transitions. May not all be used if a connection mod already defines them
   {
     "name": "Room_temple[door1]",
     "logic": "Room_temple[door1] | Room_temple[left1] + Opened_Black_Egg_Temple"
@@ -10,10 +127,18 @@
   },
   {
     "name": "GG_Atrium[Door_Workshop]",
-    "logic": "GG_Atrium[Door_Workshop] | GG_Atrium"
+    "logic": "GG_Atrium[Door_Workshop] | GG_Atrium[door1_blueRoom] | GG_Atrium"
+  },
+  {
+    "name": "GG_Atrium[door1_blueRoom]",
+    "logic": "GG_Atrium[door1_blueRoom] | GG_Atrium + RMM_Blue_Room_Door"
   },
   {
     "name": "GG_Workshop[left1]",
     "logic": "GG_Workshop[left1] | GG_Workshop"
+  },
+  {
+    "name": "GG_Blue_Room[left1]",
+    "logic": "GG_Blue_Room[left1]"
   }
 ]

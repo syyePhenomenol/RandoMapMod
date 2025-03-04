@@ -1,5 +1,226 @@
 ﻿[
-  // Godhome and Black Temple
+  // Waypoint transition insertions
+  {
+    "name": "Crossroads_49[right1]",
+    "old": "Left_Elevator",
+    "replacement": "Crossroads_49[elev_entrance]"
+  },
+  {
+    "name": "Crossroads_49[left1]",
+    "old": "Left_Elevator",
+    "replacement": "Crossroads_49[elev_entrance]"
+  },
+  {
+    "name": "Crossroads_49b[right1]",
+    "old": "Left_Elevator",
+    "replacement": "Crossroads_49b[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10[right1]",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10[left1]",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10b[right1]",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10b[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10b[right2]",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10b[elev_entrance]"
+  },
+  {
+    "name": "Ruins2_10b[left1]",
+    "old": "Right_Elevator",
+    "replacement": "Ruins2_10b[elev_entrance]"
+  },
+  {
+    "name": "Room_Town_Stag_Station[left1]",
+    "old": "Can_Stag",
+    "replacement": "Room_Town_Stag_Station[door_stagExit]"
+  },
+  {
+    "name": "Crossroads_47[right1]",
+    "old": "Can_Stag",
+    "replacement": "Crossroads_47[door_stagExit]"
+  },
+  {
+    "name": "Fungus1_16_alt[right1]",
+    "old": "Can_Stag",
+    "replacement": "Fungus1_16_alt[right1]"
+  },
+  {
+    "name": "Fungus2_02[right1]",
+    "old": "Can_Stag",
+    "replacement": "Fungus2_02[right1]"
+  },
+  {
+    "name": "Deepnest_09[left1]",
+    "old": "Can_Stag",
+    "replacement": "Deepnest_09[door_stagExit]"
+  },
+  {
+    "name": "Abyss_22[left1]",
+    "old": "Can_Stag",
+    "replacement": "Abyss_22[door_stagExit]"
+  },
+  {
+    "name": "Ruins1_29[left1]",
+    "old": "Can_Stag",
+    "replacement": "Ruins1_29[door_stagExit]"
+  },
+  {
+    "name": "Ruins2_08[left1]",
+    "old": "Can_Stag",
+    "replacement": "Ruins2_08[door_stagExit]"
+  },
+  {
+    "name": "RestingGrounds_09[left1]",
+    "old": "Can_Stag",
+    "replacement": "RestingGrounds_09[door_stagExit]"
+  },
+  {
+    "name": "Bench-Gardens_Stag",
+    "old": "Can_Stag",
+    "replacement": "Fungus3_40[door_stagExit]"
+  },
+  {
+    "name": "Fungus3_40[right1]",
+    "old": "Can_Stag",
+    "replacement": "Fungus3_40[door_stagExit]"
+  },
+  {
+    "name": "Fungus3_40[top1]",
+    "old": "Can_Stag",
+    "replacement": "Fungus3_40[door_stagExit]"
+  },
+  {
+    "name": "Cliffs_03[right1]",
+    "old": "Can_Stag",
+    "replacement": "Cliffs_03[door_stagExit]"
+  },
+  {
+    "name": "Lower_Tram",
+    "old": "Bench-Lower_Tram",
+    "replacement": "FALSE"
+  },
+  {
+    "name": "Bench-Lower_Tram",
+    "old": "Lower_Tram",
+    "replacement": "Room_Tram[door1]"
+  },
+  {
+    "name": "Abyss_03_b[left1]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03_b[door_tram]"
+  },
+  {
+    "name": "Abyss_03[bot1]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03[door_tram]"
+  },
+  {
+    "name": "Abyss_03[bot2]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03[door_tram]"
+  },
+  {
+    "name": "Abyss_03[top1]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03[door_tram]"
+  },
+  {
+    "name": "Abyss_03_c[right1]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03_c[door_tram]"
+  },
+  {
+    "name": "Abyss_03_c[top1]",
+    "old": "Lower_Tram",
+    "replacement": "Abyss_03_c[door_tram]"
+  },
+  {
+    "name": "Upper_Tram",
+    "old": "Bench-Upper_Tram",
+    "replacement": "FALSE"
+  },
+  {
+    "name": "Bench-Upper_Tram",
+    "old": "Upper_Tram",
+    "replacement": "Room_Tram_RG[door1]"
+  },
+  {
+    "name": "Crossroads_46[left1]",
+    "old": "Upper_Tram",
+    "replacement": "Crossroads_46[door_tram]"
+  },
+  {
+    "name": "Crossroads_46b[right1]",
+    "old": "Upper_Tram",
+    "replacement": "Crossroads_46b[door_tram]"
+  },
+  {
+    "name": "White_Palace_11[door2]",
+    "old": "Warp-Palace_Grounds_to_White_Palace",
+    "replacement": "White_Palace_11[door1]"
+  },
+  {
+    "name": "Abyss_06_Core[left1]",
+    "old": "Warp-Lifeblood_Core_to_Abyss",
+    "replacement": "Abyss_06_Core[door_dreamReturn]"
+  },
+  {
+    "name": "GG_Waterways",
+    "old": "Warp-Godhome_to_Junk_Pit",
+    "replacement": "GG_Waterways[door_dreamReturn]"
+  },
+  {
+    "name": "GG_Atrium",
+    "old": "Warp-Junk_Pit_to_Godhome",
+    "replacement": "GG_Atrium[door_dreamEnter]"
+  },
+  {
+    "name": "Warp-Godhome_to_Junk_Pit",
+    "old": "Warp-Junk_Pit_to_Godhome",
+    "replacement": "GG_Atrium[door_dreamEnter]"
+  },
+  {
+    "name": "Abyss_05",
+    "old": "Warp-White_Palace_Entrance_to_Palace_Grounds",
+    "replacement": "Abyss_05[door_dreamReturn_reality]"
+  },
+  {
+    "name": "Abyss_05",
+    "old": "Warp-White_Palace_Atrium_to_Palace_Grounds",
+    "replacement": "Abyss_05[door_dreamReturn_reality]"
+  },
+  {
+    "name": "White_Palace_06[left1]",
+    "old": "Warp-Path_of_Pain_Complete",
+    "replacement": "White_Palace_06[door_dreamReturn]"
+  },
+  {
+    "name": "White_Palace_06[top1]",
+    "old": "Warp-Path_of_Pain_Complete",
+    "replacement": "White_Palace_06[door_dreamReturn]"
+  },
+  {
+    "name": "White_Palace_06[bot1]",
+    "old": "Warp-Path_of_Pain_Complete",
+    "replacement": "White_Palace_06[door_dreamReturn]"
+  },
+  // Godhome and Black Temple transition insertions
   {
     "name": "Room_temple[left1]",
     "old": "Bench-Black_Egg_Temple",
@@ -121,6 +342,11 @@
     "name": "RestingGrounds_05[right1]",
     "old": "Opened_Glade_Door",
     "replacement": "Opened_Glade_Door | RMM_Glade_Door"
+  },
+  {
+    "name": "Room_Town_Stag_Station[left1]",
+    "old": "Dirtmouth_Stag",
+    "replacement": "Dirtmouth_Stag | RMM_Dirtmouth_Station_Door"
   },
   {
     "name": "Ruins1_31[left3]",

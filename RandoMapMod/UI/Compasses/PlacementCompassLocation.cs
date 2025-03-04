@@ -10,7 +10,7 @@ namespace RandoMapMod.UI
         private bool isActive;
         public override bool IsActive => isActive;
 
-        public AbstractPlacement Placement { get; init; }
+        internal AbstractPlacement Placement { get; }
         private readonly Vector2 position;
         public override Vector2 Position => position;
 

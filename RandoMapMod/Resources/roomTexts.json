@@ -377,6 +377,12 @@
     "Y": -8.3,
     "MapZone": "WATERWAYS"
   },
+  "GG_Blue_Room": {
+    "Name": "GG_Blue_Room",
+    "X": -10.1,
+    "Y": -9.5,
+    "MapZone": "WATERWAYS"
+  },
   "GG_Atrium_Roof": {
     "Name": "GG_Atrium_Roof",
     "X": -4.1,

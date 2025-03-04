@@ -7,9 +7,9 @@ using MagicUI.Graphics;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
+using RandoMapMod.Pathfinder;
 using RandoMapMod.Pins;
 using RandoMapMod.Settings;
-using RandoMapMod.Transition;
 using RandomizerCore;
 using RandomizerCore.Extensions;
 using RandomizerCore.Logic;
@@ -251,8 +251,8 @@ namespace RandoMapMod.UI
                 return;
             }
 
-            List<string> scenes = new();
-            List<string> mapAreas = new();
+            List<string> scenes = [];
+            List<string> mapAreas = [];
 
             if (selectedLocation.LocationDef is LocationDef ld)
             {
@@ -271,7 +271,7 @@ namespace RandoMapMod.UI
             {
                 if (SupplementalMetadata.Of(placement).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
                 {
-                    var inLogicHighlightScenes = highlightScenes.Where(TransitionTracker.InLogicScenes.Contains);
+                    var inLogicHighlightScenes = highlightScenes.Where(RmmPathfinder.Slt.IsInLogicScene);
                     
                     scenes.AddRange(inLogicHighlightScenes);
                     mapAreas.AddRange(inLogicHighlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null));

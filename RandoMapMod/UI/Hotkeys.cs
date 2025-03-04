@@ -1,11 +1,11 @@
-using MagicUI.Core;
+﻿using MagicUI.Core;
+using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Rooms;
 using UnityEngine;
-using MapChanger;
 using SN = ItemChanger.SceneNames;
 
 namespace RandoMapMod.UI
@@ -70,7 +70,7 @@ namespace RandoMapMod.UI
                 Root.ListenForHotkey(KeyCode.B, () =>
                 {
                     RandoMapMod.GS.ToggleAllowBenchWarpSearch();
-                    RouteManager.ResetRoute();
+                    RmmPathfinder.RM.ResetRoute();
                     MapUILayerUpdater.Update();
                     RouteCompass.Update();
                 }, ModifierKeys.Ctrl, () => GlobalHotkeyCondition() && Conditions.TransitionRandoModeEnabled());

@@ -1,69 +1,72 @@
-using MapChanger;
-using RandoMapMod.Pathfinder.Instructions;
+﻿using MapChanger;
 using RandoMapMod.Settings;
-using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using RandomizerCore.Logic;
 using RCPathfinder;
+using RCPathfinder.Actions;
+using JU = RandomizerCore.Json.JsonUtil;
 
 namespace RandoMapMod.Pathfinder
 {
-    internal class RouteManager : HookModule
+    internal class RouteManager
     {
-        private static SearchParams _sp;
-        private static SearchState _ss;
-        private static HashSet<Route> _routes;
+        private readonly RmmSearchData _sd;
+        private readonly Dictionary<(string, string), RouteHint> _routeHints;
+        internal Route CurrentRoute { get; private set; }
+        private SearchParams _sp;
+        private SearchState _ss;
+        private HashSet<Route> _routes;
+        private string _startScene;
+        private string _finalScene;
+        private bool _reevaluated;
 
-        internal static Route CurrentRoute { get; private set; }
-        internal static string StartScene { get; private set; }
-        internal static string FinalScene { get; private set; }
-        internal static bool Reevaluated { get; private set; }
-
-        public override void OnEnterGame()
+        internal RouteManager(RmmSearchData sd)
         {
+            _sd = sd;
+            _routeHints = JU.DeserializeFromEmbeddedResource<RouteHint[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.Pathfinder.Data.routeHints.json")
+                .ToDictionary(rh => (rh.Start, rh.Destination), rh => rh);
+
             ItemChanger.Events.OnBeginSceneTransition += CheckRoute;
             MapChanger.Settings.OnSettingChanged += ResetRoute;
         }
 
-        public override void OnQuitToMenu()
+        ~RouteManager()
         {
-            ResetRoute();
-
             ItemChanger.Events.OnBeginSceneTransition -= CheckRoute;
             MapChanger.Settings.OnSettingChanged -= ResetRoute;
         }
 
-        internal static bool TryGetNextRouteTo(string scene)
+        internal bool CanCycleRoute(string scene)
         {
-            RmmPathfinder.SD.UpdateProgression();
+            return !_reevaluated
+                && Utils.CurrentScene() == _startScene
+                && scene == _finalScene
+                && CurrentRoute is not null
+                && CurrentRoute.NotStarted;
+        }
+
+        internal bool TryGetNextRouteTo(string scene)
+        {
+            _sd.UpdateProgression();
 
             // Reset
             if (!CanCycleRoute(scene))
             {
-                StartScene = Utils.CurrentScene();
-                FinalScene = scene;
+                _startScene = Utils.CurrentScene();
+                _finalScene = scene;
 
                 _sp = new()
                 {
-                    StartPositions = RmmPathfinder.SD.GetPrunedStartTerms(StartScene),
-                    StartState = RmmPathfinder.SD.CurrentState,
-                    Destinations = RmmPathfinder.SD.GetTransitionTerms(FinalScene),
-                    MaxCost = 1000f,
+                    // Give start jump actions higher priority
+                    StartPositions = _sd.GetPrunedPositionsFromScene(_startScene).Select(_sd.GetNormalStartPosition)
+                        .Concat([new ArbitraryPosition(_sd.Updater.CurrentState, -0.5f)]),
+                    Destinations = _sd.GetPrunedPositionsFromScene(_finalScene),
+                    MaxCost = 100f,
                     MaxTime = 1000f,
-                    TerminationCondition = TerminationConditionType.AnyUniqueStartAndDestination,
+                    TerminationCondition = TerminationConditionType.Any,
                     Stateless = _ss is not null && _ss.HasTimedOut,
                     DisallowBacktracking = false
                 };
-
-                if (Interop.HasBenchwarp && RandoMapMod.GS.PathfinderBenchwarp)
-                {
-                    _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps()];
-                }
-
-                if (TryGetDreamGateStart(out var dreamGateStart))
-                {
-                    _sp.StartPositions = [.. _sp.StartPositions, dreamGateStart];
-                }
 
                 if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
                 {
@@ -75,18 +78,21 @@ namespace RandoMapMod.Pathfinder
                 _routes = [];
             }
 
-            Reevaluated = false;
+            _reevaluated = false;
 
-            while (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
+            while (Algorithms.DijkstraSearch(_sd, _sp, _ss))
             {
-                Route route = new(_ss.NewResultNodes[0]);
+                Route route = GetRoute(_ss.NewResultNodes.First());
 
-                if (!route.RemainingInstructions.Any() 
-                    || route.RemainingInstructions.First().Text == route.RemainingInstructions.Last().TargetTransition 
-                    || _routes.Contains(route)) continue;
-
+                if (route.FinishedOrEmpty
+                    // || route.FirstInstruction.StartText == route.LastInstruction.DestinationText
+                    || _routes.Any(r => r.FirstInstruction == route.FirstInstruction && r.LastInstruction == route.LastInstruction))
+                {
+                    RandoMapMod.Instance.LogFine($"Redundant route: {route.Node.DebugString}");
+                    continue;
+                }
+                
                 LogRouteResults(route);
-
                 _routes.Add(route);
                 CurrentRoute = route;
                 RouteCompass.Update();
@@ -99,103 +105,32 @@ namespace RandoMapMod.Pathfinder
             return false;
         }
 
-        internal static bool TryReevaluateRoute(ItemChanger.Transition transition)
+        private void CheckRoute(ItemChanger.Transition lastTransition)
         {
-            RmmPathfinder.SD.UpdateProgression();
+            RandoMapMod.Instance.LogFine($"Last transition: {lastTransition}");
 
-            StartScene = transition.SceneName;
-            Term destination = CurrentRoute.Destination;
-
-            _sp = new()
+            if (!_sd.LocalPM.lm.Terms.IsTerm(lastTransition.ToString()))
             {
-                StartPositions = null,
-                StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = [destination],
-                MaxCost = 1000f,
-                MaxTime = 1000f,
-                TerminationCondition = TerminationConditionType.Any,
-                DisallowBacktracking = false,
-            };
-
-            if (TransitionData.GetTransitionDef(transition.ToString()) is RmmTransitionDef td
-                && RmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out Term start))
-            {
-                _sp.StartPositions = [new(start.Name, start, 0f)];
+                RandoMapMod.Instance.LogFine("Transition not in PM");
             }
-            else
-            {
-                _sp.StartPositions = RmmPathfinder.SD.GetPrunedStartTerms(StartScene);
-            }
-
-            if (Interop.HasBenchwarp && RandoMapMod.GS.PathfinderBenchwarp)
-            {
-                _sp.StartPositions = [.. _sp.StartPositions, .. GetBenchStartWarps(true)];
-            }
-
-            if (TryGetDreamGateStart(out var dreamGateStart, transition))
-            {
-                _sp.StartPositions = [.. _sp.StartPositions, dreamGateStart];
-            }
-
-            if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
-            {
-                ResetRoute();
-                return false;
-            }
-
-            _ss = new(_sp);
-            
-            if (Algorithms.DijkstraSearch(RmmPathfinder.SD, _sp, _ss))
-            {
-                Route route = new(_ss.NewResultNodes[0]);
-
-                if (!route.RemainingInstructions.Any())
-                {
-                    ResetRoute();
-                    return false;
-                }
-
-                LogRouteResults(route);
-
-                CurrentRoute = route;
-                Reevaluated = true;
-                return true;
-            }
-
-            ResetRoute();
-            return false;
-        }
-
-        internal static void CheckRoute(ItemChanger.Transition lastTransition)
-        {
-            //RandoMapMod.Instance.LogDebug($"Last transition: {lastTransition}");
 
             if (CurrentRoute is null) return;
 
-            Instruction instruction = CurrentRoute.RemainingInstructions.First();
-
-            if (instruction.IsInProgress(lastTransition)) return;
-
-            if (instruction.IsFinished(lastTransition))
+            if (CurrentRoute.CheckCurrentInstruction(lastTransition))
             {
-                CurrentRoute.RemainingInstructions.RemoveAt(0);
-                if (!CurrentRoute.RemainingInstructions.Any())
-                {
-                    ResetRoute();
-                    return;
-                }
+                if (CurrentRoute.FinishedOrEmpty) ResetRoute();
                 UpdateRouteUI();
                 return;
             }
 
-            // The transition doesn't match the route
+            // The transition doesn't match the route's instruction
             switch (RandoMapMod.GS.WhenOffRoute)
             {
                 case OffRouteBehaviour.Cancel:
                     ResetRoute();
                     break;
                 case OffRouteBehaviour.Reevaluate:
-                    TryReevaluateRoute(lastTransition);
+                    ReevaluateRoute(lastTransition);
                     UpdateRouteUI();
                     break;
                 default:
@@ -203,15 +138,73 @@ namespace RandoMapMod.Pathfinder
             }
         }
 
-        internal static void ResetRoute()
+        private void ReevaluateRoute(ItemChanger.Transition transition)
+        {
+            _sd.UpdateProgression();
+
+            _startScene = transition.SceneName;
+            Term destination = CurrentRoute.Node.Current.Term;
+
+            IEnumerable<Position> startPositions;
+            if (TryGetStartPosition(transition, out Position start))
+            {
+                startPositions = [start];
+            }
+            else
+            {
+                startPositions = _sd.GetPrunedPositionsFromScene(Utils.CurrentScene()).Select(_sd.GetNormalStartPosition);
+            }
+
+            _sp = new()
+            {
+                // Give start jump actions lower priority
+                StartPositions = startPositions.Concat([new ArbitraryPosition(_sd.Updater.CurrentState, 0.5f)]),
+                Destinations = [destination],
+                MaxCost = 100f,
+                MaxTime = 1000f,
+                TerminationCondition = TerminationConditionType.Any,
+                DisallowBacktracking = false
+            };
+
+            if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
+            {
+                ResetRoute();
+                return;
+            }
+
+            _ss = new(_sp);
+            
+            if (Algorithms.DijkstraSearch(_sd, _sp, _ss))
+            {
+                // RandoMapMod.Instance.LogFine($"{_ss.NewResultNodes.First().DebugString}");
+
+                Route route = GetRoute(_ss.NewResultNodes.First());
+
+                if (route.FinishedOrEmpty)
+                {
+                    ResetRoute();
+                    return;
+                }
+
+                LogRouteResults(route);
+
+                CurrentRoute = route;
+                _reevaluated = true;
+                return;
+            }
+
+            ResetRoute();
+        }
+
+        internal void ResetRoute()
         {
             CurrentRoute = null;
-            StartScene = null;
-            FinalScene = null;
-            Reevaluated = false;
             _sp = null;
             _ss = null;
             _routes = null;
+            _startScene = null;
+            _finalScene = null;
+            _reevaluated = false;
 
             RouteCompass.Update();
             UpdateRouteUI();
@@ -219,77 +212,56 @@ namespace RandoMapMod.Pathfinder
             RandoMapMod.Instance.LogFine("Reset route.");
         }
 
-        private static void UpdateRouteUI()
+        private void UpdateRouteUI()
         {
             RouteText.Instance?.Update();
             RouteSummaryText.Instance?.Update();
             RoomSelectionPanel.Instance?.Update();
         }
 
-        internal static bool TryGetBenchwarpKey(out RmmBenchKey key)
+        private bool TryGetStartPosition(ItemChanger.Transition transition, out Position start)
         {
-            if (CurrentRoute is not null && CurrentRoute.RemainingInstructions.First().IsOrIsSubclassInstanceOf<BenchwarpInstruction>())
+            if (_sd.StateTermLookup.TryGetValue(transition.ToString(), out Term position)
+                // Try get last benchwarp
+                || (Interop.HasBenchwarp && transition.GateName is ""
+                    && BenchwarpInterop.TryGetLastWarp(out string benchName, out RmmBenchKey _)
+                    && _sd.StateTermLookup.TryGetValue(benchName, out position)))
             {
-                key = ((BenchwarpInstruction)CurrentRoute.RemainingInstructions.First()).BenchKey;
-                return true;
-            }
-            key = default;
-            return false;
-        }
+                if (_sd.LocalPM.Has(position))
+                {
+                    start = _sd.GetNormalStartPosition(position);
+                    return true;
+                }
 
-        internal static bool CanCycleRoute(string scene)
-        {
-            return !Reevaluated
-                && Utils.CurrentScene() == StartScene
-                && scene == FinalScene
-                && CurrentRoute is not null
-                && CurrentRoute.RemainingInstructions.Count() == CurrentRoute.TotalInstructionCount;
-        }
-
-        /// <summary>
-        /// May exclude a bench/start warp based on the transition and last respawn marker.
-        /// </summary>
-        private static List<StartPosition> GetBenchStartWarps(bool removeLastWarp = false)
-        {
-            RmmBenchKey key = new(Utils.CurrentScene(), PlayerData.instance.GetString("respawnMarkerName"));
-            BenchwarpInterop.BenchNames.TryGetValue(key, out string lastWarp);
-
-            List<StartPosition> benchStarts = BenchwarpInterop.GetVisitedBenchNames()
-                    .Where(RmmPathfinder.SD.PositionLookup.ContainsKey)
-                    .Select(b => new StartPosition("benchStart", RmmPathfinder.SD.PositionLookup[b], 1f)).ToList();
-
-            if (removeLastWarp)
-            {
-                benchStarts.RemoveAll(b => b.Term.Name == lastWarp);
-            }
-
-            if (RmmPathfinder.SD.StartTerm is not null && (!removeLastWarp || lastWarp != BenchwarpInterop.BENCH_WARP_START))
-            {
-                benchStarts.Add(new("benchStart", RmmPathfinder.SD.StartTerm, 1f));
-            }
-
-            return benchStarts;
-        }
-
-        private static bool TryGetDreamGateStart(out StartPosition dreamGateStart, ItemChanger.Transition transition = default)
-        {
-            if (DreamgateTracker.DreamgateTiedTransition is null
-                || (transition != default && transition.GateName is "dreamGate")
-                || !RmmPathfinder.SD.PositionLookup.TryGetValue(DreamgateTracker.DreamgateTiedTransition, out Term term))
-            {
-                dreamGateStart = default;
+                RandoMapMod.Instance.LogFine($"Exited out of transition {transition} that is not in logic");
+                start = null;
                 return false;
             }
 
-            dreamGateStart = new("dreamGate", term, 1f);
-            return true;
+            RandoMapMod.Instance.LogFine($"Exited out of unrecognized transition {transition}");
+            start = null;
+            return false;
         }
 
-        private static void LogRouteResults(Route route)
+        private Route GetRoute(Node node)
         {
-            RandoMapMod.Instance.LogFine($"Found a route from {route.Node.StartPosition} to {route.Destination}:");
-            RandoMapMod.Instance.LogFine(route.Node.PrintActionsShort());
-            RandoMapMod.Instance.LogFine($"Node states count: {route.Node.CurrentStates.Count()}");
+            List<RouteHint> routeHints = [];
+            foreach (StandardAction a in node.Actions.Where(a => a is StandardAction).Cast<StandardAction>())
+            {
+                if (_routeHints.TryGetValue((a.Source.Name, a.Target.Name), out RouteHint rh))
+                {
+                    routeHints.Add(rh);
+                }
+            }
+
+            return new Route(node, routeHints.Distinct());
+        }
+
+        private void LogRouteResults(Route route)
+        {
+            RandoMapMod.Instance.LogFine($"Found a route from {route.Node.Start.Term} to {route.Node.Current.Term}:");
+            RandoMapMod.Instance.LogFine(route.Node.DebugString);
+            RandoMapMod.Instance.LogFine($"Node states count: {route.Node.Current.States.Count()}");
             RandoMapMod.Instance.LogFine($"Stateless search: {_sp?.Stateless}");
             RandoMapMod.Instance.LogFine($"Cumulative search time: {_ss?.SearchTime} ms");
         }

@@ -32,27 +32,5 @@
   {
     "name": "Waterways_02[top3]",
     "logic": "ORIG | Waterways_02 + RMM_Waterways_Bench_Floor + (LEFTCLAW | RIGHTCLAW + WINGS)"
-  },
-  // Fixing false positives due to infection
-  {
-    "name": "Crossroads_03[bot1]",
-    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
-  },
-  {
-    "name": "Crossroads_06[right1]",
-    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
-  },
-  {
-    "name": "Crossroads_10[left1]",
-    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
-  },
-  {
-    "name": "Crossroads_19[top1]",
-    "logic": "ORIG + (RMM_Not_Infected | RMM_Not_Vanilla_Infected_Transitions)"
-  },
-  // Special fix for Dirtmouth stag
-  {
-    "name": "Room_Town_Stag_Station[left1]",
-    "logic": "Room_Town_Stag_Station[left1] + (Dirtmouth_Stag | RMM_Dirtmouth_Station_Door) | Can_Stag"
   }
 ]

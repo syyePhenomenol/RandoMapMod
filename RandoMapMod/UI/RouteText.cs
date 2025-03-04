@@ -3,13 +3,14 @@ using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
-using RandoMapMod.Pathfinder.Instructions;
+using RandoMapMod.Pathfinder.Actions;
 using RandoMapMod.Settings;
 
 namespace RandoMapMod.UI
 {
     internal class RouteText : MapUILayer
     {
+        internal static RouteManager RM => RmmPathfinder.RM;
         internal static RouteText Instance;
 
         private static TextObject route;
@@ -37,29 +38,29 @@ namespace RandoMapMod.UI
         {
             string text = "";
 
-            if (RouteManager.CurrentRoute is null) return text;
+            if (RM.CurrentRoute is null) return text;
 
             if (RandoMapMod.GS.RouteTextInGame is RouteTextInGame.NextTransitionOnly
                 && !States.QuickMapOpen && !States.WorldMapOpen)
             {
-                return RouteManager.CurrentRoute.RemainingInstructions.First().ArrowedText;
+                return RM.CurrentRoute.CurrentInstruction.ToArrowedText();
             }
 
-            foreach (Instruction instruction in RouteManager.CurrentRoute.RemainingInstructions)
+            foreach (IInstruction instruction in RM.CurrentRoute.RemainingInstructions)
             {
                 if (text.Length > 100)
                 {
-                    text += " -> ..." + RouteManager.CurrentRoute.RemainingInstructions.Last().ArrowedText;
+                    text += " -> ..." + RM.CurrentRoute.LastInstruction.SourceText;
                     break;
                 }
 
-                text += instruction.ArrowedText;
+                text += instruction.ToArrowedText();
             }
 
             if ((States.WorldMapOpen || States.QuickMapOpen)
-                && RouteManager.CurrentRoute.GetHint() is string hint)
+                && RM.CurrentRoute.GetHintText() is string hints && hints != string.Empty)
             {
-                text += $"\n\n{hint}";
+                text += $"\n\n{hints}";
             }
 
             return text;

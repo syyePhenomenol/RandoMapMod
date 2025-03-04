@@ -1,4 +1,4 @@
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.Map;
 using MapChanger.MonoBehaviours;
 using TMPro;

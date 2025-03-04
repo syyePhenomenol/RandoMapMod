@@ -5,7 +5,7 @@ using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins
 {
-    internal record AbstractPlacementPinDef
+    internal class AbstractPlacementPinDef
     {
         internal AbstractPlacement Placement { get; init; }
         internal string SceneName { get; init; }

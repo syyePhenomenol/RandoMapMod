@@ -7,7 +7,7 @@ namespace RandoMapMod.Modes
     {
         public override bool InitializeToThis()
         {
-            if (TransitionData.IsTransitionRando())
+            if (TransitionData.IsTransitionRando)
             {
                 return ModeName == RandoMapMod.GS.DefaultTransitionRandoMode.ToString().ToCleanName();
             }

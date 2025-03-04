@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using GlobalEnums;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
+using RandoMapMod.Pathfinder;
 using RandoMapMod.Settings;
-using RandoMapMod.Transition;
 using RandomizerCore.Logic;
 using UnityEngine;
 
@@ -198,7 +198,7 @@ namespace RandoMapMod.Pins
                 || (MapChanger.Settings.CurrentMode() is PinsOverRoomMode && Utils.HasMapSetting(MapZone)
                     && ((Tracker.HasVisitedScene(Finder.GetMappedScene(SceneName)) && (PlayerData.instance.GetBool(nameof(PlayerData.hasQuill)) || RandoMapMod.GS.AlwaysHaveQuill))
                         || Finder.IsMinimalMapScene(Finder.GetMappedScene(SceneName))))
-                || (Conditions.TransitionRandoModeEnabled() && TransitionTracker.GetRoomActive(SceneName));
+                || (Conditions.TransitionRandoModeEnabled() && RmmPathfinder.Slt.GetRoomActive(SceneName));
         }
 
         private protected abstract bool ActiveBySettings();

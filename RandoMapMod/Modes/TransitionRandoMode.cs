@@ -1,6 +1,6 @@
 ﻿using MapChanger;
 using MapChanger.MonoBehaviours;
-using RandoMapMod.Transition;
+using RandoMapMod.Pathfinder;
 using UnityEngine;
 
 namespace RandoMapMod.Modes
@@ -11,12 +11,12 @@ namespace RandoMapMod.Modes
 
         public override bool? RoomActiveOverride(RoomSprite roomSprite)
         {
-            return TransitionTracker.GetRoomActive(roomSprite.Rsd.SceneName);
+            return RmmPathfinder.Slt.GetRoomActive(roomSprite.Rsd.SceneName);
         }
 
         public override Vector4? RoomColorOverride(RoomSprite roomSprite)
         {
-            return roomSprite.Selected ? RmmColors.GetColor(RmmColorSetting.Room_Selected) : TransitionTracker.GetRoomColor(roomSprite.Rsd.SceneName);
+            return roomSprite.Selected ? RmmColors.GetColor(RmmColorSetting.Room_Selected) : RmmPathfinder.Slt.GetRoomColor(roomSprite.Rsd.SceneName);
         }
 
         public override Vector4? QuickMapTitleColorOverride(QuickMapTitle qmt)

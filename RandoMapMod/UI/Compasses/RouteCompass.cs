@@ -2,6 +2,7 @@
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Actions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ namespace RandoMapMod.UI
 {
     internal class RouteCompass : HookModule
     {
+        internal static RouteManager RM => RmmPathfinder.RM;
         private static GameObject goCompass;
         private static DirectionalCompass Compass => goCompass.GetComponent<DirectionalCompass>();
 
@@ -41,9 +43,9 @@ namespace RandoMapMod.UI
                 return;
             }
 
-            if (RouteManager.CurrentRoute is not null && RouteManager.CurrentRoute.RemainingInstructions.First().TryGetCompassGO(out GameObject go))
+            if (RM.CurrentRoute is Route route && route.CurrentInstruction.GetCompassLocation() is TransitionCompassLocation tcl)
             {
-                Compass.Locations = new() { { "arrow", new TransitionCompassLocation(go) } };
+                Compass.Locations = new() { { "arrow", tcl } };
             }
             else
             {

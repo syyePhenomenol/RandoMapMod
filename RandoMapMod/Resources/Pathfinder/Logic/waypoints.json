@@ -1,5 +1,46 @@
 ﻿[
   {
+    "name": "RMM_Left_Elevator_Up",
+    "logic": "Crossroads_49b[right1] + Left_Elevator/"
+  },
+  {
+    "name": "RMM_Left_Elevator_Down",
+    "logic": "(Crossroads_49[left1] | Crossroads_49[right1]) + Left_Elevator/"
+  },
+  {
+    "name": "RMM_Right_Elevator_Up",
+    "logic": "(Ruins2_10b[right2] | Ruins2_10b[left1]) + Right_Elevator/"
+  },
+  {
+    "name": "RMM_Right_Elevator_Down",
+    "logic": "(Ruins2_10[right1] | Ruins2_10[left1]) + Right_Elevator/"
+  },
+  {
+    "name": "RMM_Lower_Tram_Left",
+    "logic": "Room_Tram[door1] | (Bench-Lower_Tram ? FALSE)"
+  },
+  {
+    "name": "RMM_Lower_Tram_Middle",
+    "logic": "Room_Tram[door1] | (Bench-Lower_Tram ? FALSE)"
+  },
+  {
+    "name": "RMM_Lower_Tram_Right",
+    "logic": "Room_Tram[door1] | (Bench-Lower_Tram ? FALSE)"
+  },
+  {
+    "name": "RMM_Upper_Tram_Left",
+    "logic": "Room_Tram_RG[door1] | (Bench-Upper_Tram ? FALSE)"
+  },
+  {
+    "name": "RMM_Upper_Tram_Right",
+    "logic": "Room_Tram_RG[door1] | (Bench-Upper_Tram ? FALSE)"
+  },
+  // Used exclusively for warp actions
+  {
+    "name": "RMM_Arbitrary_Position",
+    "logic": "FALSE"
+  },
+  {
     "name": "RMM_Dung_Defender_Wall",
     "logic": "FALSE",
     "Stateless": true
@@ -180,17 +221,12 @@
     "Stateless": true
   },
   {
+    "name": "RMM_Blue_Room_Door",
+    "logic": "FALSE",
+    "Stateless" : true
+  },
+  {
     "name": "RMM_Infected",
-    "logic": "FALSE",
-    "Stateless" : true
-  },
-  {
-    "name": "RMM_Not_Infected",
-    "logic": "FALSE",
-    "Stateless" : true
-  },
-  {
-    "name": "RMM_Not_Vanilla_Infected_Transitions",
     "logic": "FALSE",
     "Stateless" : true
   }

@@ -2,7 +2,7 @@
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
-using RandoMapMod.Transition;
+using RandoMapMod.Pathfinder;
 using TMPro;
 using UnityEngine;
 
@@ -57,12 +57,11 @@ namespace RandoMapMod.Rooms
 
             ActiveModifiers.AddRange
             (
-                new Func<bool>[]
-                {
+                [
                     Conditions.TransitionRandoModeEnabled,
                     ActiveByMap,
                     GetRoomActive
-                }
+                ]
             );
 
             tmp = gameObject.AddComponent<TextMeshPro>();
@@ -90,7 +89,7 @@ namespace RandoMapMod.Rooms
 
         private bool GetRoomActive()
         {
-            return TransitionTracker.GetRoomActive(Rtd.Name);
+            return RmmPathfinder.Slt.GetRoomActive(Rtd.Name);
         }
 
         public override void OnMainUpdate(bool active)
@@ -106,7 +105,7 @@ namespace RandoMapMod.Rooms
             }
             else
             {
-                Color = TransitionTracker.GetRoomColor(Rtd.Name);
+                Color = RmmPathfinder.Slt.GetRoomColor(Rtd.Name);
             }
         }
     }

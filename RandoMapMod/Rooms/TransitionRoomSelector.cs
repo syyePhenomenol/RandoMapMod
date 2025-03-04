@@ -1,13 +1,13 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
-using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
+using RandoMapMod.Pathfinder.Actions;
 
 namespace RandoMapMod.Rooms
 {
@@ -39,7 +39,7 @@ namespace RandoMapMod.Rooms
             {
                 attackHoldTimer.Reset();
 
-                RouteManager.TryGetNextRouteTo(SelectedObjectKey);
+                RmmPathfinder.RM.TryGetNextRouteTo(SelectedObjectKey);
 
                 RouteText.Instance.Update();
                 RouteSummaryText.Instance.Update();
@@ -61,7 +61,7 @@ namespace RandoMapMod.Rooms
             {
                 attackHoldTimer.Reset();
 
-                if (RmmPinSelector.Instance.VisitedBenchNotSelected() && RouteManager.TryGetBenchwarpKey(out var benchKey))
+                if (RmmPinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out var benchKey))
                 {
                     GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(benchKey));
                 }
@@ -86,7 +86,7 @@ namespace RandoMapMod.Rooms
         internal string GetText()
         {
             string instructions = GetInstructionText();
-            string transitions = TransitionData.GetUncheckedVisited(SelectedObjectKey);
+            string transitions = TransitionStringBuilder.GetUncheckedVisited(SelectedObjectKey);
 
             if (transitions is "") return instructions;
 
@@ -109,7 +109,7 @@ namespace RandoMapMod.Rooms
 
             text += $"\n\n{"Press".L()} {Utils.GetBindingsText(bindings)}";
 
-            if (RouteManager.CanCycleRoute(selectedScene))
+            if (RmmPathfinder.RM.CanCycleRoute(selectedScene))
             {
                 text += $" {"to change starting / final transitions of current route".L()}.";
             }
@@ -118,7 +118,7 @@ namespace RandoMapMod.Rooms
                 text += $" {"to find a new route".L()}.";
             }
 
-            if (RmmPinSelector.Instance.VisitedBenchNotSelected() && RouteManager.TryGetBenchwarpKey(out RmmBenchKey _))
+            if (RmmPinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out RmmBenchKey _))
             {
                 bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
 
@@ -126,6 +126,17 @@ namespace RandoMapMod.Rooms
             }
 
             return text;
+        }
+
+        private static bool TryGetBenchwarpKey(out RmmBenchKey key)
+        {
+            if (RmmPathfinder.RM.CurrentRoute is Route currentRoute && currentRoute.CurrentInstruction is BenchwarpAction ba)
+            {
+                key = ba.BenchKey;
+                return true;
+            }
+            key = default;
+            return false;
         }
     }
 }

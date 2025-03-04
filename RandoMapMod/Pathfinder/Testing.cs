@@ -1,11 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Transition;
 using RandomizerCore.Logic;
 using RCPathfinder;
 using RCPathfinder.Actions;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pathfinder
 {
@@ -20,41 +18,57 @@ namespace RandoMapMod.Pathfinder
             foreach (Term term in sd.LocalPM.lm.Terms)
             {
                 RandoMapMod.Instance.LogDebug($"    {term.Name}");
-                RandoMapMod.Instance.LogDebug($"      Reference: {RM.RS.TrackerData.lm.Terms.IsTerm(term.Name) && RM.RS.TrackerData.pm.Has(term)}");
-                RandoMapMod.Instance.LogDebug($"      Local: {sd.LocalPM.Has(term)}");
+
+                if (sd.ReferencePM.lm.Terms.IsTerm(term.Name))
+                {
+                    RandoMapMod.Instance.LogDebug($"      Reference:");
+
+                    if (sd.ReferencePM.lm.LogicLookup.TryGetValue(term.Name, out LogicDef ld1))
+                    {
+                        RandoMapMod.Instance.LogDebug($"        Logic: {ld1.InfixSource}");
+                    }
+
+                    RandoMapMod.Instance.LogDebug($"        Value: {sd.ReferencePM.Has(term)}");
+                }
+                
+                RandoMapMod.Instance.LogDebug($"      Local:");
+
+                if (sd.LocalPM.lm.LogicLookup.TryGetValue(term.Name, out LogicDef ld2))
+                {
+                    RandoMapMod.Instance.LogDebug($"        Logic: {ld2.InfixSource}");
+                }
+
+                RandoMapMod.Instance.LogDebug($"        Value: {sd.LocalPM.Has(term)}");
             }
         }
 
         internal static void DebugActions(RmmSearchData sd)
         {
-            sd.UpdateProgression();
+            RandoMapMod.Instance?.LogDebug($"  Debug OneToOneActions");
 
-            foreach (KeyValuePair<Term, ReadOnlyCollection<AbstractAction>> kvp in sd.ActionLookup)
+            sd.LocalPM.StartTemp();
+
+            foreach (KeyValuePair<Term, ReadOnlyCollection<StandardAction>> kvp in sd.StandardActionLookup)
             {
-                RandoMapMod.Instance?.LogDebug($"  Testing actions from {kvp.Key.Name}");
-
-                foreach (AbstractAction action in kvp.Value)
+                foreach (StandardAction action in kvp.Value)
                 {
-                    sd.LocalPM.SetState(kvp.Key, sd.CurrentState);
-
-                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, sd.CurrentState, out var _)}");
-
-                    sd.LocalPM.SetState(kvp.Key, null);
+                    Position start = new(kvp.Key, sd.Updater.CurrentState, 0);
+                    sd.LocalPM.SetState(start);
+                    RandoMapMod.Instance?.LogDebug($"    {action.DebugString}, {action.Cost}: {action.TryDo(new Node(start), sd.LocalPM, out var _)}");
                 }
             }
+
+            sd.LocalPM.RemoveTempItems();
         }
 
         internal static void SingleStartDestinationTest(RmmSearchData sd)
         {
-            Term[] inLogicTransitions = sd.Positions.Where(p => TransitionData.GetTransitionDef(p.Name) is not null
-                    && (RM.RS.TrackerData.pm.lm.GetTerm(p.Name) is null || RM.RS.TrackerData.pm.Has(p))).ToArray();
-
-            sd.UpdateProgression();
+            Term[] inLogicTransitions = sd.GetAllStateTerms().Where(p => TransitionData.GetTransitionDef(p.Name) is not null
+                    && sd.LocalPM.Has(p)).ToArray();
 
             SearchParams sp = new()
             {
                 StartPositions = null,
-                StartState = RmmPathfinder.SD.CurrentState,
                 Destinations = null,
                 MaxCost = 1000f,
                 MaxTime = 1000f,
@@ -75,35 +89,28 @@ namespace RandoMapMod.Pathfinder
                 Term start = GetRandomTerm(inLogicTransitions);
                 Term destination = GetRandomTerm(inLogicTransitions);
 
-                sp.StartPositions = [new(start.Name, start, 0f)];
+                sp.StartPositions = [new(start, sd.Updater.CurrentState, 0f), new ArbitraryPosition(sd.Updater.CurrentState, -0.5f)];
                 sp.Destinations = [destination];
-
                 SearchState ss = new(sp);
 
                 RandoMapMod.Instance?.LogDebug($"Trying {start} -> ? -> {destination}");
 
                 sw.Restart();
-
                 if (DoTest(sd, sp, ss))
                 {
-                    foreach (Instruction instruction in InstructionData.GetInstructions(ss.NewResultNodes[0]))
-                    {
-                        RandoMapMod.Instance?.LogDebug($"    {instruction.ArrowedText}");
-                    }
-
+                    RandoMapMod.Instance?.LogDebug($"{ss.NewResultNodes[0].DebugString}");
                     successes++;
                 }
                 else
                 {
                     RandoMapMod.Instance?.LogDebug($"{start} to {destination} failed");
                 }
-
                 sw.Stop();
 
                 float localElapsedMS = sw.ElapsedTicks * 1000f / Stopwatch.Frequency;
                 RandoMapMod.Instance?.LogDebug($"Explored {ss.NodesPopped} nodes in {localElapsedMS} ms. Average nodes/ms: {ss.NodesPopped / localElapsedMS}");
             }
-
+            
             globalSW.Stop();
 
             float globalElapsedMS = globalSW.ElapsedTicks * 1000f / Stopwatch.Frequency;
@@ -113,16 +120,11 @@ namespace RandoMapMod.Pathfinder
             RandoMapMod.Instance?.LogDebug($"Average serarch time: {globalElapsedMS / testCount} ms");
         }
 
-        internal static void SceneToSceneTest(RmmSearchData sd)
+        internal static void SceneToSceneTest(RmmSearchData sd, SceneLogicTracker slt)
         {
-            TransitionTracker.Update();
-
-            sd.UpdateProgression();
-
             SearchParams sp = new()
             {
                 StartPositions = null,
-                StartState = RmmPathfinder.SD.CurrentState,
                 Destinations = null,
                 MaxCost = 1000f,
                 MaxTime = 1000f,
@@ -141,11 +143,11 @@ namespace RandoMapMod.Pathfinder
             {
                 HashSet<Route> routes = [];
 
-                string startScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
-                string destScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
+                string startScene = slt.InLogicScenes.ElementAt(rng.Next(slt.InLogicScenes.Count));
+                string destScene = slt.InLogicScenes.ElementAt(rng.Next(slt.InLogicScenes.Count));
 
-                sp.StartPositions = GetPrunedTransitions(sd, startScene).Select(t => new StartPosition(t.Name, t, 0f)).ToArray();
-                sp.Destinations = [.. GetPrunedTransitions(sd, destScene)];
+                sp.StartPositions = sd.GetPrunedPositionsFromScene(startScene).Select(sd.GetNormalStartPosition);
+                sp.Destinations = sd.GetPrunedPositionsFromScene(destScene);
 
                 if (!sp.StartPositions.Any() || !sp.Destinations.Any())
                 {
@@ -153,40 +155,17 @@ namespace RandoMapMod.Pathfinder
                     continue;
                 }
 
-                //List<(string, Term)> benchStartWarps = BenchwarpInterop.BenchNames.Values
-                //    .Where(sd.PositionLookup.ContainsKey)
-                //    .Select(b => ("benchStart", sd.PositionLookup[b])).ToList();
-
-                //if (sd.StartTerm is not null)
-                //{
-                //    benchStartWarps.Add(("benchStart", sd.StartTerm));
-                //}
-
-                //sp.StartPositions = sp.StartPositions.Concat(benchStartWarps).ToArray();
-
                 SearchState ss = new(sp);
 
                 RandoMapMod.Instance?.LogDebug($"Trying {startScene} -> ? -> {destScene}");
 
                 sw.Restart();
-
                 while (DoTest(sd, sp, ss))
                 {
-                    Route route = new(ss.NewResultNodes[0]);
-                    if (routes.Contains(route))
-                    {
-                        RandoMapMod.Instance?.LogDebug($"    Duplicate route detected");
-                    }
-                    else
-                    {
-                        routes.Add(route);
-                        foreach (Instruction instruction in route.RemainingInstructions)
-                        {
-                            RandoMapMod.Instance?.LogDebug($"    {instruction.ArrowedText}");
-                        }
-                    }
+                    Route route = new(ss.NewResultNodes[0], null);
+                    routes.Add(route);
+                    RandoMapMod.Instance?.LogDebug($"    {string.Join(", ", route.RemainingInstructions.Select(i => i.SourceText))}");
                 }
-
                 sw.Stop();
 
                 float localElapsedMS = sw.ElapsedTicks * 1000f / Stopwatch.Frequency;
@@ -199,47 +178,6 @@ namespace RandoMapMod.Pathfinder
 
             RandoMapMod.Instance?.LogDebug($"Total computation time: {globalElapsedMS} ms");
             RandoMapMod.Instance?.LogDebug($"Average serarch time: {globalElapsedMS / testCount} ms");
-        }
-
-        /// <summary>
-        /// Removes transitions that are immediately accesible from another transition in the same scene.
-        /// </summary>
-        private static Term[] GetPrunedTransitions(RmmSearchData sd, string scene)
-        {
-            if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return [];
-
-            SearchParams sp = new()
-            {
-                StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-                StartState = RmmPathfinder.SD.CurrentState,
-                Destinations = [.. transitions],
-                MaxCost = 1f,
-                MaxTime = 1000f,
-                DisallowBacktracking = false
-            };
-
-            SearchState ss = new(sp);
-
-            Algorithms.DijkstraSearch(sd, sp, ss);
-
-            List<Node> nodes = new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
-
-            HashSet<Term> prunedTransitions = new(transitions);
-
-            foreach (Term transition in transitions)
-            {
-                if (!prunedTransitions.Contains(transition)) continue;
-
-                foreach (Term transition2 in new List<Term>(prunedTransitions))
-                {
-                    if (nodes.Any(n => n.StartPosition.Term == transition && n.Actions.Last().Destination == transition2))
-                    {
-                        prunedTransitions.Remove(transition2);
-                    }
-                }
-            }
-
-            return [.. prunedTransitions];
         }
 
         private static bool DoTest(SearchData sd, SearchParams sp, SearchState search)

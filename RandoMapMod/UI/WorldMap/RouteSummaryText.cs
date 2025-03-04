@@ -4,12 +4,13 @@ using MapChanger.UI;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
-using RandoMapMod.Pathfinder.Instructions;
+using RandoMapMod.Pathfinder.Actions;
 
 namespace RandoMapMod.UI
 {
     internal class RouteSummaryText: MapUILayer
     {
+        internal static RouteManager RM => RmmPathfinder.RM;
         internal static RouteSummaryText Instance;
 
         private static TextObject routeSummary;
@@ -35,29 +36,29 @@ namespace RandoMapMod.UI
         {
             string text = $"{"Current route".L()}: ";
 
-            if (RouteManager.CurrentRoute is null)
+            if (RM.CurrentRoute is null)
             {
                 return text += "None".L();
             }
 
-            Instruction first = RouteManager.CurrentRoute.FirstInstruction;
-            Instruction last = RouteManager.CurrentRoute.RemainingInstructions.Last();
+            IInstruction first = RM.CurrentRoute.FirstInstruction;
+            IInstruction last = RM.CurrentRoute.LastInstruction;
 
-            if (last is TransitionInstruction ti)
+            if (last.TargetText is not null)
             {
-                text += $"{first.Text.LT().ToCleanName()} ->...-> {ti.TargetTransition.LT().ToCleanName()}";
+                text += $"{first.SourceText.LT().ToCleanName()} ->...-> {last.TargetText.LT().ToCleanName()}";
             }
             else
             {
-                text += first.Text.LT().ToCleanName();
+                text += first.SourceText.LT().ToCleanName();
 
                 if (first != last)
                 {
-                    text += $" ->...-> {last.Text.LT().ToCleanName()}";
+                    text += $" ->...-> {last.SourceText.LT().ToCleanName()}";
                 }
             }
 
-            return text += $"\n\n{"Transitions".L()}: {RouteManager.CurrentRoute.TotalInstructionCount}";
+            return text += $"\n\n{"Transitions".L()}: {RM.CurrentRoute.TotalInstructionCount}";
         }
     }
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "Abyss_09[right2]": {
     "Abyss_09": "lighthouse_top/right2"
   },
@@ -26,6 +26,9 @@
   "Fungus1_11[top1]": {
     "Fungus1_11": "Missing Prefab/Missing Prefab (Dummy)/top1"
   },
+  "GG_Atrium[door1_blueRoom]": {
+    "GG_Atrium": "Door_Blue_Room"
+  },
   "Room_Temple[door1]": {
     "Room_Temple": "Final Boss Door/door1"
   },
@@ -47,19 +50,22 @@
   "Town[door_station]": {
     "Town": "_Props/Stag_station/open/door_station"
   },
-  "Right_Elevator-Down": {
+  "White_Palace_11[door2]": {
+    "White_Palace_11": "Palace Gate/door2"
+  },
+  "RMM_Right_Elevator_Down": {
     "Ruins2_10": "elev_main/Lift Call Lever"
   },
-  "Right_Elevator-Up": {
+  "RMM_Right_Elevator_Up": {
     "Ruins2_10b": "elev_main/Lift Call Lever"
   },
-  "Left_Elevator-Down": {
+  "RMM_Left_Elevator_Down": {
     "Crossroads_49": "_Scenery/elev_main/Lift Call Lever"
   },
-  "Left_Elevator-Up": {
+  "RMM_Left_Elevator_Up": {
     "Crossroads_49b": "elev_main/Lift Call Lever"
   },
-  "Stag-City_Storerooms": {
+  "Can_Stag": {
     "Abyss_22": "Station Bell/Bell",
     "Crossroads_47": "_Scenery/Station Bell/Bell",
     "Deepnest_09": "Station Bell/Bell",
@@ -71,146 +77,12 @@
     "Ruins1_29": "Station Bell/Bell",
     "Ruins2_08": "Station Bell/Bell"
   },
-  "Stag-Crossroads": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Dirtmouth": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Distant_Village": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Greenpath": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Hidden_Station": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-King's_Station": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Queen's_Gardens": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Queen's_Station": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Resting_Grounds": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Stag-Stag_Nest": {
-    "Abyss_22": "Station Bell/Bell",
-    "Crossroads_47": "_Scenery/Station Bell/Bell",
-    "Deepnest_09": "Station Bell/Bell",
-    "Fungus1_16_alt": "Station Bell/Bell",
-    "Fungus2_02": "Station Bell/Bell",
-    "Fungus3_40": "Station Bell/Bell",
-    "RestingGrounds_09": "Station Bell Lever/Bell",
-    "Room_Town_Stag_Station": "Station Bell/Bell",
-    "Ruins1_29": "Station Bell/Bell",
-    "Ruins2_08": "Station Bell/Bell"
-  },
-  "Lower_Tram-Left": {
+  "Lower_Tram": {
     "Abyss_03": "Tram Call Box",
     "Abyss_03_b": "Tram Call Box",
     "Abyss_03_c": "Tram Call Box"
   },
-  "Lower_Tram-Middle": {
-    "Abyss_03": "Tram Call Box",
-    "Abyss_03_b": "Tram Call Box",
-    "Abyss_03_c": "Tram Call Box"
-  },
-  "Lower_Tram-Right": {
-    "Abyss_03": "Tram Call Box",
-    "Abyss_03_b": "Tram Call Box",
-    "Abyss_03_c": "Tram Call Box"
-  },
-  "Upper_Tram-Left": {
-    "Crossroads_46": "Tram Call Box",
-    "Crossroads_46b": "Tram Call Box"
-  },
-  "Upper_Tram-Right": {
+  "Upper_Tram": {
     "Crossroads_46": "Tram Call Box",
     "Crossroads_46b": "Tram Call Box"
   },

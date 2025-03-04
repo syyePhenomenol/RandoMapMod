@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using MapChanger;
-using RandoMapMod.Localization;
 using RandomizerMod.RandomizerData;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
@@ -9,97 +9,165 @@ namespace RandoMapMod.Transition
 {
     internal class TransitionData : HookModule
     {
-        internal static (string location, string item)[] ExtraVanillaTransitions { get; } =
-        [
-            ( "Room_temple[door1]", "Room_Final_Boss_Atrium[left1]" ),
-            ( "Room_Final_Boss_Atrium[left1]", "Room_temple[door1]" ),
-            ( "GG_Atrium[Door_Workshop]", "GG_Workshop[left1]" ),
-            ( "GG_Workshop[left1]", "GG_Atrium[Door_Workshop]" )
-        ];
-
-        internal static ReadOnlyCollection<RmmTransitionDef> Transitions { get; private set; }
-        private static Dictionary<string, RmmTransitionDef> _vanillaTransitions;
-        private static Dictionary<string, RmmTransitionDef> _randomizedTransitions;
-
-        public static ReadOnlyDictionary<string, string> Placements { get; private set; }
-        private static Dictionary<string, string> _placements;
+        internal static bool IsTransitionRando { get; private set; }
+        internal static ReadOnlyDictionary<string, TransitionDef> RandomizedTransitions { get; private set; }
+        internal static ReadOnlyDictionary<string, TransitionDef> VanillaTransitions { get; private set; }
+        internal static ReadOnlyDictionary<string, TransitionDef> ExtraTransitions { get; private set; }
+        internal static ReadOnlyDictionary<string, string> PlacementLookup { get; private set; }
 
         public override void OnEnterGame()
         {
-            _vanillaTransitions = [];
-            _randomizedTransitions = [];
-            _placements = [];
+            Dictionary<string, TransitionDef> randomizedTransitions = [];
+            Dictionary<string, TransitionDef> vanillaTransitions = [];
+            Dictionary<string, TransitionDef> extraTransitions = [];
+            Dictionary<string, string> placements = [];
+            HashSet<string> extraScenes = [];
 
-            // Add transition placements
-            foreach ((string location, string item) in RM.RS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name)).Concat(ExtraVanillaTransitions))
+            // Add randomized transition placements
+            if (RM.RS.Context.transitionPlacements is not null && RM.RS.Context.transitionPlacements.Any())
             {
-                if (RD.IsTransition(location) && RD.IsTransition(item))
-                {
-                    _vanillaTransitions[location] = new(RD.GetTransitionDef(location));
-                    _vanillaTransitions[item] = new(RD.GetTransitionDef(item));
-                    _placements[location] = item;
-                    continue;
-                }
-
-                // Connection-provided vanilla transitions, including extra ones
-                if (RmmTransitionDef.TryMake(location, out var locationTD)
-                    && RmmTransitionDef.TryMake(item, out var itemTD)
-                    && locationTD is not null && itemTD is not null)
-                {
-                    _vanillaTransitions[location] = locationTD;
-                    _vanillaTransitions[item] = itemTD;
-                    _placements[location] = item;
-                }
-            }
-            if (RM.RS.Context.transitionPlacements is not null)
-            {
+                IsTransitionRando = true;
                 foreach ((TransitionDef source, TransitionDef target) in RM.RS.Context.transitionPlacements.Select(p => (p.Source.TransitionDef, p.Target.TransitionDef)))
                 {
-                    _randomizedTransitions[source.Name] = new(source);
-                    _randomizedTransitions[target.Name] = new(target);
-                    _placements[source.Name] = target.Name;
+                    AddTransitionPlacement(randomizedTransitions, source, target);
+                }
+            }
+            // Add vanilla transitions
+            foreach ((string location, string item) in RM.RS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name)))
+            {
+                if ((RD.GetTransitionDef(location) is TransitionDef source && RD.GetTransitionDef(item) is TransitionDef target)
+                    || (TryMakeModdedVanillaTransitionDef(location, out source) && TryMakeModdedVanillaTransitionDef(item, out target)))
+                {
+                    AddTransitionPlacement(vanillaTransitions, source, target);
                 }
             }
 
-            Placements = new(_placements);
+            foreach (var td in MapChanger.JsonUtil.DeserializeFromAssembly<TransitionDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.extraTransitions.json"))
+            {
+                if (randomizedTransitions.ContainsKey(td.Name) || vanillaTransitions.ContainsKey(td.Name)) continue;
 
-            Transitions = new(_vanillaTransitions.Values.Concat(_randomizedTransitions.Values).ToArray());
+                extraTransitions[td.Name] = td;
+
+                if (td.VanillaTarget is not null) placements[td.Name] = td.VanillaTarget;
+
+                if (!RD.IsRoom(td.SceneName)) extraScenes.Add(td.SceneName);
+            }
+
+            RandomizedTransitions = new(randomizedTransitions);
+            VanillaTransitions = new(vanillaTransitions);
+            ExtraTransitions =  new(extraTransitions);
+            PlacementLookup = new(placements);
+
+            static bool TryMakeModdedVanillaTransitionDef(string str, out TransitionDef td)
+            {
+                var sourceMatch = Regex.Match(str, @"^(\w+)\[(\w+)\]$");
+
+                if (sourceMatch.Groups.Count == 3 && RD.IsRoom(sourceMatch.Groups[1].Value))
+                {
+                    // The other properties don't matter as they are not used
+                    td = new()
+                    {
+                        SceneName = sourceMatch.Groups[1].Value,
+                        DoorName = sourceMatch.Groups[2].Value
+                    };
+                    return true;
+                }
+
+                td = default;
+                return false;
+            }
+
+            void AddTransitionPlacement(Dictionary<string, TransitionDef> lookup, TransitionDef source, TransitionDef target)
+            {
+                lookup[source.Name] = source;
+                lookup[target.Name] = target;
+                placements[source.Name] = target.Name;
+
+                if (!RD.IsRoom(source.SceneName)) extraScenes.Add(source.SceneName);
+                if (!RD.IsRoom(target.SceneName)) extraScenes.Add(target.SceneName);
+            }
         }
 
         public override void OnQuitToMenu()
         {
-            _vanillaTransitions = null;
-            _randomizedTransitions = null;
-            _placements = null;
+            RandomizedTransitions = null;
+            VanillaTransitions = null;
+            ExtraTransitions = null;
         }
 
-        public static bool IsTransitionRando()
+        internal static IEnumerable<TransitionDef> GetTransitions()
         {
-            return _randomizedTransitions.Any();
+            return RandomizedTransitions.Values.Concat(VanillaTransitions.Values).Concat(ExtraTransitions.Values);
         }
 
-        public static bool IsVanillaTransition(string transition)
+        internal static IEnumerable<(TransitionDef, TransitionDef)> GetPlacements()
         {
-            return _vanillaTransitions.ContainsKey(transition);
+            return PlacementLookup.Select(kvp => (GetTransitionDef(kvp.Key), GetTransitionDef(kvp.Value)));
         }
-
-        public static bool IsRandomizedTransition(string transition)
+        
+        internal static bool IsTransition(string transition)
         {
-            return _randomizedTransitions.ContainsKey(transition);
+            return IsRandomizedTransition(transition) || IsVanillaTransition(transition) || IsExtraTransition(transition);
         }
 
-        internal static bool IsVanillaOrCheckedTransition(string transition)
+        internal static bool IsRandomizedTransition(string transition)
+        {
+            return RandomizedTransitions.ContainsKey(transition);
+        }
+
+        internal static bool IsVanillaTransition(string transition)
+        {
+            return VanillaTransitions.ContainsKey(transition);
+        }
+
+        internal static bool IsExtraTransition(string transition)
+        {
+            return ExtraTransitions.ContainsKey(transition);
+        }
+
+        internal static bool IsVisitedTransition(string transition)
         {
             return RM.RS.TrackerData.HasVisited(transition)
-                || (_vanillaTransitions.ContainsKey(transition)
-                    && (RM.RS.TrackerData.lm.GetTerm(transition) is null || RM.RS.TrackerData.pm.Get(transition) > 0));
+                || IsVanillaTransition(transition)
+                || IsExtraTransition(transition);
         }
 
-        public static bool TryGetScene(string str, out string scene)
+        internal static TransitionDef GetTransitionDef(string transition)
         {
-            if (GetTransitionDef(str) is RmmTransitionDef td)
+            if (RandomizedTransitions.TryGetValue(transition, out var def)) return def;
+            if (VanillaTransitions.TryGetValue(transition, out def)) return def;
+            if (ExtraTransitions.TryGetValue(transition, out def)) return def;
+
+            return null;
+        }
+
+        // Works for in/out transitions, localized waypoints (scene names, but NOT Can_Stag, Lower_Tram etc.), bench names
+        internal static bool TryGetScene(string name, out string scene)
+        {
+            if (IsScene(name))
+            {
+                scene = name;
+                return true;
+            }
+
+            if (GetTransitionDef(name) is TransitionDef td)
             {
                 scene = td.SceneName;
+                return true;
+            }
+
+            // The following matches other non-TransitionDef transition names in SearchData
+            var sourceMatch = Regex.Match(name, @"^(\w+)\[(\w+)\]$");
+
+            if (sourceMatch.Groups.Count == 3 && IsScene(sourceMatch.Groups[1].Value))
+            {
+                scene = sourceMatch.Groups[1].Value;
+                return true;
+            }
+
+            if (Interop.HasBenchwarp && BenchwarpInterop.BenchKeys.TryGetValue(name, out RmmBenchKey benchKey))
+            {
+                scene = benchKey.SceneName;
                 return true;
             }
 
@@ -107,111 +175,9 @@ namespace RandoMapMod.Transition
             return false;
         }
 
-        public static RmmTransitionDef GetTransitionDef(string str)
+        internal static bool IsScene(string scene)
         {
-            if (_vanillaTransitions.TryGetValue(str, out var def)) return def;
-            if (_randomizedTransitions.TryGetValue(str, out def)) return def;
-
-            return null;
-        }
-
-        internal static string GetUncheckedVisited(string scene)
-        {
-            string text = "";
-
-            IEnumerable<string> uncheckedTransitions = RM.RS.TrackerData.uncheckedReachableTransitions
-                .Where(t => TryGetScene(t, out string s) && s == scene);
-
-            if (uncheckedTransitions.Any())
-            {
-                text += $"{"Unchecked".L()}:";
-
-                foreach (string transition in uncheckedTransitions)
-                {
-                    if (GetTransitionDef(transition) is not RmmTransitionDef td) continue;
-
-                    text += "\n";
-
-                    if (!RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
-                    {
-                        text += "*";
-                    }
-
-                    text += td.DoorName.LC();
-                }
-            }
-
-            Dictionary<RmmTransitionDef, RmmTransitionDef> visitedTransitions = RM.RS.TrackerData.visitedTransitions
-                .Where(t => TryGetScene(t.Key, out string s) && s == scene)
-                .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
-
-            text += BuildTransitionStringList(visitedTransitions, "Visited".LC(), false, text != "");
-
-            Dictionary<RmmTransitionDef, RmmTransitionDef> visitedTransitionsTo = RM.RS.TrackerData.visitedTransitions
-                .Where(t => TryGetScene(t.Value, out string s) && s == scene)
-                .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
-
-            // Display only one-way transitions in coupled rando
-            if (RM.RS.GenerationSettings.TransitionSettings.Coupled)
-            {
-                visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
-                    .ToDictionary(t => t.Key, t => t.Value);
-            }
-
-            text += BuildTransitionStringList(visitedTransitionsTo, "Visited to".L(), true, text != "");
-
-            Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitions = RM.RS.Context.Vanilla
-                .Where(t => RD.IsTransition(t.Location.Name)
-                    && TryGetScene(t.Location.Name, out string s) && s == scene)
-                .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
-
-
-            text += BuildTransitionStringList(vanillaTransitions, "Vanilla".L(), false, text != "");
-
-            Dictionary<RmmTransitionDef, RmmTransitionDef> vanillaTransitionsTo = RM.RS.Context.Vanilla
-                .Where(t => RD.IsTransition(t.Location.Name)
-                    && TryGetScene(t.Item.Name, out string s) && s == scene
-                    && !vanillaTransitions.Keys.Any(td => td.Name == t.Item.Name))
-                .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
-
-            text += BuildTransitionStringList(vanillaTransitionsTo, "Vanilla to".L(), true, text != "");
-
-            return text;
-        }
-
-        private static string BuildTransitionStringList(Dictionary<RmmTransitionDef, RmmTransitionDef> transitions, string subtitle, bool to, bool addNewLines)
-        {
-            string text = "";
-
-            if (!transitions.Any()) return text;
-
-            if (addNewLines)
-            {
-                text += "\n\n";
-            }
-
-            text += $"{subtitle.L()}:";
-
-            foreach (KeyValuePair<RmmTransitionDef, RmmTransitionDef> kvp in transitions)
-            {
-                text += "\n";
-
-                if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(kvp.Key.Name))
-                {
-                    text += "*";
-                }
-
-                if (to)
-                {
-                    text += $"{$"{kvp.Key.SceneName.LC()}[{kvp.Key.DoorName.LC()}]"} -> {kvp.Value.DoorName.LC()}";
-                }
-                else
-                {
-                    text += $"{kvp.Key.DoorName.LC()} -> {$"{kvp.Value.SceneName.LC()}[{kvp.Value.DoorName.LC()}]"}";
-                }
-            }
-
-            return text;
+            return Finder.IsScene(scene);
         }
     }
 }

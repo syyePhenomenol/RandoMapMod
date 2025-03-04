@@ -6,7 +6,6 @@ using Modding;
 using RandoMapMod.Modes;
 using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
-using RandoMapMod.Pathfinder.Instructions;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandoMapMod.Transition;
@@ -81,9 +80,6 @@ namespace RandoMapMod
             new TransitionData(),
             new RmmPathfinder(),
             new RmmPinManager(),
-            new TransitionTracker(),
-            new DreamgateTracker(),
-            new RouteManager(),
             new ItemCompass(),
             new RouteCompass()
         ];
@@ -124,8 +120,6 @@ namespace RandoMapMod
             }
 
             Interop.FindInteropMods();
-            Instruction.LoadRouteCompassOverrides();
-            InstructionData.LoadWaypointInstructions();
             RmmRoomManager.Load();
 
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));

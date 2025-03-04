@@ -24,10 +24,16 @@
   "White_Palace_19": null,
   "White_Palace_20": null,
   "GG_Atrium": null,
+  "GG_Blue_Room": {
+    "Name": "GG_Blue_Room",
+    "X": 7.7,
+    "Y": 14.7,
+    "MapZone": "GODS_GLORY"
+  },
   "GG_Workshop": {
     "Name": "GG_Workshop",
-    "X": 9.4,
-    "Y": 14.9,
+    "X": 10.1,
+    "Y": 14.7,
     "MapZone": "GODS_GLORY"
   },
   "GG_Atrium_Roof": null

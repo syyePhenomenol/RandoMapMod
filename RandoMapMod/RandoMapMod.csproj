@@ -73,9 +73,11 @@
 		<EmbeddedResource Include="Resources\Compass\routeCompassOverrides.json" />
 		<EmbeddedResource Include="Resources\Compass\worldCoordinates.json" />
 		<EmbeddedResource Include="Resources\defaultBenches.json" />
+		<EmbeddedResource Include="Resources\extraTransitions.json" />
 		<EmbeddedResource Include="Resources\locationHints.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointInstructions.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Data\routeHints.json" />
+		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointActions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
 		<EmbeddedResource Include="Resources\Pathfinder\Logic\transitions.json" />

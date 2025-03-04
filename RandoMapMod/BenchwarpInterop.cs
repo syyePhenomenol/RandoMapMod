@@ -45,21 +45,6 @@ namespace RandoMapMod
             BenchKeys = BenchNames.ToDictionary(t => t.Value, t => t.Key);
         }
 
-        internal static bool IsVisitedBench(string benchName)
-        {
-            return benchName is BENCH_WARP_START 
-                || (BenchKeys.TryGetValue(benchName, out RmmBenchKey key)
-                && GetVisitedBenchKeys().Contains(key));
-        }
-
-        internal static IEnumerable<string> GetVisitedBenchNames()
-        {
-            return GetVisitedBenchKeys()
-                .Where(BenchNames.ContainsKey)
-                .Select(b => BenchNames[b])
-                .Concat([BENCH_WARP_START]);
-        }
-
         internal static IEnumerator DoBenchwarp(string benchName)
         {
             if (BenchKeys.TryGetValue(benchName, out RmmBenchKey benchKey))
@@ -94,12 +79,40 @@ namespace RandoMapMod
             }
         }
 
+        internal static bool TryGetLastWarp(out string benchName, out RmmBenchKey benchKey)
+        {
+            benchKey = new(PlayerData.instance.respawnScene, PlayerData.instance.respawnMarkerName);
+
+            if (BenchNames.TryGetValue(benchKey, out benchName))
+            {
+                return true;
+            }
+
+            benchName = default;
+            return false;
+        }
+
+        internal static bool IsVisitedBench(string benchName)
+        {
+            return benchName is BENCH_WARP_START 
+                || (BenchKeys.TryGetValue(benchName, out RmmBenchKey key)
+                && GetVisitedBenchKeys().Contains(key));
+        }
+
         /// <summary>
         /// Gets the BenchKeys from Benchwarp's visited benches and converts them to RmmBenchKeys. 
         /// </summary>
-        private static HashSet<RmmBenchKey> GetVisitedBenchKeys()
+        internal static HashSet<RmmBenchKey> GetVisitedBenchKeys()
         {
             return new(Benchwarp.Benchwarp.LS.visitedBenchScenes.Select(bwKey => new RmmBenchKey(bwKey.SceneName, bwKey.RespawnMarkerName)));
+        }
+
+        internal static IEnumerable<string> GetVisitedBenchNames()
+        {
+            return GetVisitedBenchKeys()
+                .Where(BenchNames.ContainsKey)
+                .Select(b => BenchNames[b])
+                .Concat([BENCH_WARP_START]);
         }
     }
 }
