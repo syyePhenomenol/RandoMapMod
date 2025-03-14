@@ -84,7 +84,7 @@ namespace RandoMapMod.UI
 
             Root.ListenForPlayerAction(InputHandler.Instance.inputActions.superDash, () =>
             {
-                ProgressHintPanel.Instance.UpdateHint();
+                ProgressHintPanel.Instance.UpdateNewHint();
             }, () => GlobalHotkeyCondition() && States.WorldMapOpen && RandoMapMod.GS.ProgressHint is not Settings.ProgressHintSetting.Off && NoCtrl());
 
             Root.ListenForHotkey(KeyCode.Alpha1, () =>
