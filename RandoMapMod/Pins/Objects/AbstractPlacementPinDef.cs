@@ -1,6 +1,5 @@
 using ConnectionMetadataInjector;
 using ItemChanger;
-using RandomizerCore.Logic;
 using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins
@@ -11,8 +10,6 @@ namespace RandoMapMod.Pins
         internal string SceneName { get; init; }
         internal string LocationPoolGroup { get; init; }
         internal IReadOnlyCollection<string> ItemPoolGroups { get; init; }
-        internal LogicDef Logic { get; init; }
-        internal HintDef HintDef { get; init; }
 
         internal AbstractPlacementState State { get; private set; }
 
@@ -35,10 +32,6 @@ namespace RandoMapMod.Pins
                 itemPoolGroups.Add(SD.Of(item).Get(InjectedProps.ItemPoolGroup));
             }
             ItemPoolGroups = itemPoolGroups;
-
-            Logic = SD.Of(placement).Get(InteropProperties.Logic);
-
-            HintDef = new(SD.Of(placement).Get(InteropProperties.LocationHints));
 
             InitializeState();
         }

@@ -6,10 +6,11 @@ using RandoMapMod.Settings;
 using RandomizerCore;
 using RandomizerCore.Logic;
 using UnityEngine;
+using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pins
 {
-    internal sealed class VanillaPin : RmmPin
+    internal sealed class VanillaPin : RmmPin, ILogicPin
     {
         internal static Vector4 VanillaColor => new(SHRINK_COLOR_MULTIPLIER, SHRINK_COLOR_MULTIPLIER, SHRINK_COLOR_MULTIPLIER, 1f);
 
@@ -19,13 +20,13 @@ namespace RandoMapMod.Pins
         private readonly Dictionary<string, string> itemPoolGroups = [];
 
         internal override IReadOnlyCollection<string> ItemPoolGroups => new HashSet<string> (itemPoolGroups.Values);
-        internal override IReadOnlyCollection<string> LocationPoolGroups => new string[] { locationPoolGroup };
+        internal override IReadOnlyCollection<string> LocationPoolGroups => [locationPoolGroup];
 
         private LogicDef logic;
-        internal override LogicDef Logic => logic;
+        public LogicDef Logic => logic;
 
         private HintDef hintDef;
-        internal override string HintText => hintDef.Text;
+        public HintDef HintDef => hintDef;
 
         internal void Initialize(GeneralizedPlacement placement)
         {
@@ -46,9 +47,23 @@ namespace RandoMapMod.Pins
                 RmmPinManager.GridPins.Add(this);
             }
 
-            logic = InteropProperties.GetDefaultLogic(name);
+            if (RM.RS.TrackerData.lm.LogicLookup.TryGetValue(placement.Location.Name, out LogicDef ld))
+            {
+                logic = ld;
+            }
+            else
+            {
+                RandoMapMod.Instance.LogWarn($"No well-defined logic for vanilla placement {placement.Location.Name}");
+            }
 
             hintDef = new(InteropProperties.GetDefaultLocationHints(placement.Location.Name));
+
+            textBuilders.InsertRange(textBuilders.IndexOf(GetLockText),
+                [
+                    this.GetLogicText,
+                    this.GetHintText
+                ]
+            );
         }
 
         // internal void AddPlacement(GeneralizedPlacement gp)
@@ -63,7 +78,7 @@ namespace RandoMapMod.Pins
         //     itemPoolGroups.Add(gp.Item.Name, SubcategoryFinder.GetItemPoolGroup(gp.Item.Name).FriendlyName());
         // }
 
-        private protected override void UpdateHintText()
+        public void UpdateLogic()
         {
             hintDef.UpdateHintText();
         }

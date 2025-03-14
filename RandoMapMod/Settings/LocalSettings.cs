@@ -38,7 +38,7 @@ namespace RandoMapMod.Settings
                     RandoLocationPoolGroups.UnionWith(pin.LocationPoolGroups);
                     RandoItemPoolGroups.UnionWith(pin.ItemPoolGroups);
                 }
-                if (pin is VanillaPin or ModdedVanillaPin)
+                if (pin is VanillaPin or NonRandoPin)
                 {
                     VanillaLocationPoolGroups.UnionWith(pin.LocationPoolGroups);
                     VanillaItemPoolGroups.UnionWith(pin.ItemPoolGroups);

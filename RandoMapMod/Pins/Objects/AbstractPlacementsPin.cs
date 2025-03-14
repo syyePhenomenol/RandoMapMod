@@ -5,7 +5,6 @@ using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
-using RandomizerCore.Logic;
 using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins
@@ -17,11 +16,11 @@ namespace RandoMapMod.Pins
         private protected List<AbstractPlacement> placements = [];
         internal ReadOnlyCollection<AbstractPlacement> Placements => placements.AsReadOnly();
 
-        private protected Dictionary<AbstractPlacement, AbstractPlacementPinDef> placementDefs = [];
+        private protected Dictionary<string, AbstractPlacementPinDef> placementDefs = [];
 
         private protected List<AbstractPlacement> activePlacements = [];
         private protected AbstractPlacement CurrentPlacement => activePlacements.FirstOrDefault();
-        private protected AbstractPlacementPinDef CurrentPlacementDef => placementDefs[CurrentPlacement];
+        private protected AbstractPlacementPinDef CurrentPlacementDef => placementDefs[CurrentPlacement.Name];
         private protected AbstractPlacementState CurrentPlacementState => CurrentPlacementDef.State;
 
         internal string[] HighlightScenes { get; private set; }
@@ -33,8 +32,8 @@ namespace RandoMapMod.Pins
         private readonly HashSet<string> itemPoolGroups = [];
         internal override IReadOnlyCollection<string> ItemPoolGroups => itemPoolGroups;
 
-        internal override LogicDef Logic => CurrentPlacementDef.Logic;
-        internal override string HintText => CurrentPlacementDef.HintDef.Text;
+        private IEnumerable<AbstractItem> activeItems;
+        private bool showPersistentItems;
 
         internal virtual void Initialize(AbstractPlacement placement)
         {
@@ -95,42 +94,40 @@ namespace RandoMapMod.Pins
                 RmmPinManager.GridPins.Add(this);
             }
 
-            textBuilders.InsertRange(textBuilders.IndexOf(GetLogicText), new Func<string>[]
-                {
+            textBuilders.InsertRange(textBuilders.IndexOf(GetLockText),
+                [
                     GetPreviewText,
                     GetObtainedText,
                     GetPersistentText,
                     GetUnobtainedText
-                }
+                ]
             );
         }
 
-        internal void AddPlacement(AbstractPlacementPinDef appd)
+        internal virtual void AddPlacement(AbstractPlacementPinDef appd)
         {
             placements.Add(appd.Placement);
-            placementDefs.Add(appd.Placement, appd);
+            placementDefs.Add(appd.Placement.Name, appd);
 
             locationPoolGroups.Add(appd.LocationPoolGroup);
             itemPoolGroups.UnionWith(appd.ItemPoolGroups);
         }
 
-        private protected override void UpdateHintText()
+        public override void BeforeMainUpdate()
         {
-            foreach (var placementDef in placementDefs.Values)
-            {
-                placementDef.HintDef.UpdateHintText();
-            }
+            base.BeforeMainUpdate();
+            activePlacements.Clear();
+            activeItems = null;
+            showPersistentItems = false;
         }
 
         private protected override bool ActiveBySettings()
         {
-            activePlacements.Clear();
-
             if (RandoMapMod.LS.GroupBy is GroupBySetting.Item)
             {
                 foreach (var placement in placements)
                 {
-                    if (placementDefs[placement].ItemPoolGroups.Any(p => RandoMapMod.LS.IsActivePoolGroup(p, PoolsCollection)))
+                    if (placementDefs[placement.Name].ItemPoolGroups.Any(p => RandoMapMod.LS.IsActivePoolGroup(p, PoolsCollection)))
                     {
                         activePlacements.Add(placement);
                     }
@@ -140,7 +137,7 @@ namespace RandoMapMod.Pins
             {
                 foreach (var placement in placements)
                 {
-                    if (RandoMapMod.LS.IsActivePoolGroup(placementDefs[placement].LocationPoolGroup, PoolsCollection))
+                    if (RandoMapMod.LS.IsActivePoolGroup(placementDefs[placement.Name].LocationPoolGroup, PoolsCollection))
                     {
                         activePlacements.Add(placement);
                     }
@@ -148,19 +145,13 @@ namespace RandoMapMod.Pins
             }
 
             // Sort by Previewable > NotCleared > Cleared (persistent) > Cleared
-            activePlacements.OrderBy(p => placementDefs[p].State).ThenByDescending(p => p.GetObtainablePersistentItems().Count());
+            activePlacements.OrderBy(p => placementDefs[p.Name].State).ThenByDescending(p => p.GetObtainablePersistentItems().Count());
 
             return activePlacements.Any();
         }
-        
-        private protected IEnumerable<AbstractItem> activeItems;
-        private protected bool showPersistentItems;
 
         private protected override bool ActiveByProgress()
         {
-            activeItems = null;
-            showPersistentItems = false;
-
             // The first placement determines what set of sprites to show
             switch (CurrentPlacementState)
             {

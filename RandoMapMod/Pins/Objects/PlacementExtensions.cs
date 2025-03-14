@@ -59,7 +59,7 @@ namespace RandoMapMod.Pins
                 return placement.Items.Where(i => i.CanPreview() && !i.WasEverObtained());
             }
 
-            return Enumerable.Empty<AbstractItem>();
+            return [];
         }
 
         static internal IEnumerable<AbstractItem> GetPreviewableItems(this IEnumerable<AbstractPlacement> placements)

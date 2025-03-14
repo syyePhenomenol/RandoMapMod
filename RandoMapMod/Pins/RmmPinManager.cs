@@ -82,9 +82,10 @@ namespace RandoMapMod.Pins
 
                 if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
 
-                if (SupplementalMetadata.Of(placement).Get(InteropProperties.OverlapWith) is AbstractPlacement other)
+                if (SupplementalMetadata.Of(placement).Get(InteropProperties.OverlapWith) is string otherName
+                    && ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(otherName, out AbstractPlacement otherPlacement))
                 {
-                    overlapPlacements.Add(placement, other);
+                    overlapPlacements.Add(placement, otherPlacement);
                     continue;
                 }
 
@@ -104,9 +105,9 @@ namespace RandoMapMod.Pins
 
             foreach (var (placement, other) in overlapPlacements.Select(kvp => (kvp.Key, kvp.Value)))
             {
-                if (Pins.TryGetValue(other.Name, out RmmPin pin) && pin is AbstractPlacementsPin app)
+                if (Pins.TryGetValue(other.Name, out RmmPin pin) && pin is RandomizedPin rp)
                 {
-                    app.AddPlacement(new(placement));
+                    rp.AddPlacement(new(placement));
                     continue;
                 }
 
@@ -127,6 +128,16 @@ namespace RandoMapMod.Pins
             pinSelector.Initialize(Pins.Values);
         }
 
+        internal static RawLogicDef[] GetDefaultLocationHints(string name)
+        {
+            if (LocationHints.TryGetValue(name, out var hints))
+            {
+                return hints;
+            }
+
+            return [];
+        }
+
         private static void MakeAbstractPlacementPin(AbstractPlacement placement)
         {
             if (placement.HasTag<RandoPlacementTag>())
@@ -135,9 +146,9 @@ namespace RandoMapMod.Pins
                 return;
             }
 
-            if (SupplementalMetadata.Of(placement).Get(InteropProperties.MakeVanillaPin))
+            if (SupplementalMetadata.Of(placement).Get(InteropProperties.MakeNonRandoPin))
             {
-                MakeModdedVanillaPin(placement);
+                MakeNonRandoPin(placement);
             }
         }
 
@@ -158,12 +169,12 @@ namespace RandoMapMod.Pins
             Pins.Add(placement.Name, randoPin);
         }
 
-        private static void MakeModdedVanillaPin(AbstractPlacement placement)
+        private static void MakeNonRandoPin(AbstractPlacement placement)
         {
-            ModdedVanillaPin moddedVanillaRmmPin = Utils.MakeMonoBehaviour<ModdedVanillaPin>(MoPins.gameObject, placement.Name);
-            moddedVanillaRmmPin.Initialize(placement);
-            MoPins.AddChild(moddedVanillaRmmPin);
-            Pins.Add(placement.Name, moddedVanillaRmmPin);
+            NonRandoPin nonRandoPin = Utils.MakeMonoBehaviour<NonRandoPin>(MoPins.gameObject, placement.Name);
+            nonRandoPin.Initialize(placement);
+            MoPins.AddChild(nonRandoPin);
+            Pins.Add(placement.Name, nonRandoPin);
         }
 
         // GeneralizedPlacements are one-to-one, but some may share the same location (e.g. shops)
@@ -211,7 +222,10 @@ namespace RandoMapMod.Pins
             // RandoMapMod.Instance.LogDebug("On Tracker Update");
             foreach (RmmPin pin in Pins.Values)
             {
-                pin.OnTrackerUpdate();
+                if (pin is ILogicPin ilp)
+                {
+                    ilp.UpdateLogic();
+                }
             }
         }
 

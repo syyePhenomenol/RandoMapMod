@@ -1,12 +1,9 @@
-using ConnectionMetadataInjector;
+﻿using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Placements;
-using MapChanger;
 using MapChanger.Defs;
-using RandoMapMod.UI;
 using RandomizerCore.Logic;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pins
 {
@@ -49,12 +46,12 @@ namespace RandoMapMod.Pins
         /// If you want a placement to be overlapped with another AbstractPlacement as a single pin.
         /// Multiple placement overlapping is generally not compatible with: grid pins, highlighting rooms and bench pins.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, AbstractPlacement> OverlapWith = new("OverlapWith", (placement) => null);
+        internal static readonly MetadataProperty<AbstractPlacement, string> OverlapWith = new("OverlapWith", (placement) => null);
 
         /// <summary>
-        /// If you want to make a pin for a non-randomized placement. Has limited functionality.
+        /// If you want to make a pin for a non-randomizer placement. Has limited functionality.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, bool> MakeVanillaPin = new("MakeVanillaPin", (placement) => false);
+        internal static readonly MetadataProperty<AbstractPlacement, bool> MakeNonRandoPin = new("MakeNonRandomizerPin", (placement) => false);
 
         /// <summary>
         /// A key to access a built in sprite, for a placement's location.
@@ -126,12 +123,12 @@ namespace RandoMapMod.Pins
         /// <summary>
         /// Value to sort pins in the miscellaneous grid on the map.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, int> PinGridIndex = new("PinGridIndex", (placement) => int.MaxValue );
+        internal static readonly MetadataProperty<AbstractPlacement, int> PinGridIndex = new("PinGridIndex", (placement) => int.MaxValue);
 
         /// <summary>
-        /// Override logic def fetched from the LogicManager.
+        /// Override logic infix fetched from the LogicManager.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, LogicDef> Logic = new("Logic", (placement) => GetDefaultLogic(placement.Name) );
+        internal static readonly MetadataProperty<AbstractPlacement, string> LogicInfix = new("LogicInfix", (placement) => null);
 
         /// <summary>
         /// Optional text that can be revealed to help players find the placement's location. name = hint, logic = requirements for the hint to be relevant.
@@ -165,9 +162,10 @@ namespace RandoMapMod.Pins
 
             RandoMapMod.Instance.LogDebug($"No MapLocationDef found for placement {name}");
 
-            if (ItemChanger.Finder.GetLocation(name) is AbstractLocation al && al.sceneName is not null)
+            if (Finder.GetLocation(name) is AbstractLocation al && al.sceneName is not null
+                && MapChanger.Finder.GetMappedScene(al.sceneName) is string mappedScene)
             {
-                return [new MapLocation() { MappedScene = MapChanger.Finder.GetMappedScene(al.sceneName) }];
+                return [new MapLocation() { MappedScene = mappedScene }];
             }
 
             RandoMapMod.Instance.LogDebug($"No MapLocation found for {name}.");
@@ -183,16 +181,6 @@ namespace RandoMapMod.Pins
                 && MapChanger.Finder.IsMappedScene(sceneName))
             {
                 return [(sceneName, location.x, location.y)];
-            }
-
-            return null;
-        }
-
-        internal static LogicDef GetDefaultLogic(string name)
-        {
-            if (RM.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out LogicDef ld))
-            {
-                return ld;
             }
 
             return null;

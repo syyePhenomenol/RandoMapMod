@@ -6,13 +6,14 @@ using UnityEngine;
 
 namespace RandoMapMod.Rooms
 {
-    internal class RmmRoomManager
+    internal class RmmRoomManager : HookModule
     {
+        internal static MapObject MoRoomTexts { get; private set; }        
+        internal static Dictionary<string, RoomText> RoomTextLookup { get; private set; }
+
         private static Dictionary<string, RoomTextDef> roomTextDefs;
 
-        internal static MapObject MoRoomTexts { get; private set; }
-
-        internal static void Load()
+        public override void OnEnterGame()
         {
             roomTextDefs = JsonUtil.DeserializeFromAssembly<Dictionary<string, RoomTextDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTexts.json");
 
@@ -34,6 +35,13 @@ namespace RandoMapMod.Rooms
             }
         }
 
+        public override void OnQuitToMenu()
+        {
+            roomTextDefs = null;
+            MoRoomTexts = null;
+            RoomTextLookup = null;
+        }
+
         internal static void Make(GameObject goMap)
         {
             MoRoomTexts = Utils.MakeMonoBehaviour<MapObject>(goMap, "Room Texts");
@@ -41,11 +49,13 @@ namespace RandoMapMod.Rooms
 
             TMP_FontAsset tmpFont = goMap.transform.Find("Cliffs").Find("Area Name (1)").GetComponent<TextMeshPro>().font;
 
+            RoomTextLookup = [];
             foreach ((string scene, RoomTextDef rtd) in roomTextDefs.Select(kvp => (kvp.Key, kvp.Value)))
             {
                 RoomText roomText = Utils.MakeMonoBehaviour<RoomText>(null, $"Room Text {rtd.Name}");
                 roomText.Initialize(rtd, tmpFont);
                 MoRoomTexts.AddChild(roomText);
+                RoomTextLookup[rtd.Name] = roomText;
             }
 
             MapObjectUpdater.Add(MoRoomTexts);

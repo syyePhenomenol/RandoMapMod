@@ -6,7 +6,6 @@ using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Settings;
-using RandomizerCore.Logic;
 using UnityEngine;
 
 namespace RandoMapMod.Pins
@@ -42,10 +41,6 @@ namespace RandoMapMod.Pins
         internal int PinGridIndex { get; private protected set; } = int.MaxValue;
         internal abstract IReadOnlyCollection<string> LocationPoolGroups { get; }
         internal abstract IReadOnlyCollection<string> ItemPoolGroups { get; }
-
-        // Dynamic properties
-        internal abstract LogicDef Logic { get; }
-        internal abstract string HintText { get; }
 
         // Pin Sprite manager
         internal PinSpriteManager Psm => RmmPinManager.Psm;
@@ -145,8 +140,6 @@ namespace RandoMapMod.Pins
                     GetNameText,
                     GetRoomText,
                     GetStatusText,
-                    GetLogicText,
-                    GetHintText,
                     GetLockText
                 ]
             );
@@ -176,13 +169,6 @@ namespace RandoMapMod.Pins
             UpdateBorderBackgroundSprite();
             UpdateBorderColor();
         }
-
-        internal virtual void OnTrackerUpdate()
-        {
-            UpdateHintText();
-        }
-
-        private protected abstract void UpdateHintText();
         
         // Active modifiers
         private protected bool CorrectMapOpen()
@@ -280,20 +266,6 @@ namespace RandoMapMod.Pins
         private protected virtual string GetStatusText()
         {
             return $"\n\n{"Status".L()}: {"Unknown".L()}";
-        }
-
-        private protected virtual string GetLogicText()
-        {
-            return Logic is not null ? $"\n\n{"Logic".L()}: {Logic.InfixSource}" : "";
-        }
-
-        private protected virtual string GetHintText()
-        {
-            if (HintText is null) return "";
-
-            if (RmmPinSelector.ShowHint) return HintText;
-
-            return $"\n\n{"Press".L()} {Utils.GetBindingsText(new(InputHandler.Instance.inputActions.quickCast.Bindings))} {"to reveal location hint".L()}.";
         }
 
         private protected virtual string GetLockText()

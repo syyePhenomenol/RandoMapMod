@@ -25,9 +25,7 @@ namespace RandoMapMod.Pins
         {
             if (RandoMapMod.GS.ShowBenchwarpPins && this.IsVisitedBench())
             {
-                activePlacements.Clear();
                 activePlacements.Add(placements.First());
-                activeItems = null;
                 return true;
             }
 
@@ -36,7 +34,12 @@ namespace RandoMapMod.Pins
 
         private protected override bool ActiveByProgress()
         {
-            if (RandoMapMod.GS.ShowBenchwarpPins && this.IsVisitedBench()) return true;
+            if (RandoMapMod.GS.ShowBenchwarpPins && this.IsVisitedBench())
+            {
+                // Update active items normally and discard result
+                base.ActiveByProgress();
+                return true;
+            }
 
             return base.ActiveByProgress();
         }

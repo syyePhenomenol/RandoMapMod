@@ -4,32 +4,75 @@ using RandoMapMod.Settings;
 using RandomizerCore.Logic;
 using UnityEngine;
 using RM = RandomizerMod.RandomizerMod;
+using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins
 {
-    internal class RandomizedPin : AbstractPlacementsPin
+    internal class RandomizedPin : AbstractPlacementsPin, ILogicPin
     {
         private protected override PoolsCollection PoolsCollection => PoolsCollection.Randomized;
 
-        private readonly Dictionary<AbstractPlacement, RandoLogicState> logicStates = [];
-       
-        private RandoLogicState CurrentLogicState => logicStates[CurrentPlacement];
+        private readonly Dictionary<string, RandoLogicState> _logicStates = [];
 
-        internal override void OnTrackerUpdate()
+        private RandoLogicState CurrentLogicState => _logicStates[CurrentPlacement.Name];
+
+        private readonly Dictionary<string, LogicDef> _logicLookup = [];
+        public LogicDef Logic => _logicLookup[CurrentPlacement.Name];
+
+        private readonly Dictionary<string, HintDef> _hintLookup = [];
+        public HintDef HintDef => _hintLookup[CurrentPlacement.Name];
+
+
+        internal override void Initialize(AbstractPlacement placement)
         {
-            base.OnTrackerUpdate();
+            base.Initialize(placement);
+
+            textBuilders.InsertRange(textBuilders.IndexOf(GetLockText),
+                [
+                    this.GetLogicText,
+                    this.GetHintText
+                ]
+            );
+        }
+
+        internal override void AddPlacement(AbstractPlacementPinDef appd)
+        {
+            base.AddPlacement(appd);
+
+            if (SD.Of(appd.Placement).Get(InteropProperties.LogicInfix) is string logicInfix)
+            {
+                _logicLookup[appd.Placement.Name] = RM.RS.TrackerData.lm.CreateDNFLogicDef(new(appd.Placement.Name, logicInfix));
+            }
+            else if (RM.RS.TrackerData.lm.LogicLookup.TryGetValue(appd.Placement.Name, out LogicDef ld))
+            {
+                _logicLookup[appd.Placement.Name] = ld;
+            }
+            else
+            {
+                RandoMapMod.Instance.LogWarn($"No well-defined logic for randomized placement {appd.Placement.Name}");
+                _logicLookup[appd.Placement.Name] = null;
+            }
+
+            _hintLookup[appd.Placement.Name] = new(SD.Of(appd.Placement).Get(InteropProperties.LocationHints));
+        }
+
+        public void UpdateLogic()
+        {
+            foreach (HintDef hintDef in _hintLookup.Values)
+            {
+                hintDef.UpdateHintText();
+            }
 
             foreach (var placement in placements)
             {
-                logicStates[placement] = GetRandoLogicState(placement);
+                _logicStates[placement.Name] = GetRandoLogicState(placement);
             }
         }
 
         private RandoLogicState GetRandoLogicState(AbstractPlacement placement)
         {
-            if (placementDefs[placement].Logic is not LogicDef logic)
+            if (_logicLookup[placement.Name] is not LogicDef logic)
             {
-                RandoMapMod.Instance.LogWarn($"No well-defined logic for randomized placement {placement.Name}");
                 return RandoLogicState.Unreachable;
             }
             if (logic.CanGet(RM.RS.TrackerDataWithoutSequenceBreaks.pm))
@@ -47,7 +90,7 @@ namespace RandoMapMod.Pins
         private protected override bool ActiveByProgress()
         {
             // Sort placements by reachable, then reachable sequence break, then unreachable
-            activePlacements.OrderBy(p => logicStates[p]);
+            activePlacements.OrderBy(p => _logicStates[p.Name]);
 
             return base.ActiveByProgress();
         }

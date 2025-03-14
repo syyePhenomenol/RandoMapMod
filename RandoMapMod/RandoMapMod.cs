@@ -77,6 +77,7 @@ namespace RandoMapMod
         private static readonly List<HookModule> hookModules =
         [
             new RmmColors(),
+            new RmmRoomManager(),
             new TransitionData(),
             new RmmPathfinder(),
             new RmmPinManager(),
@@ -120,7 +121,6 @@ namespace RandoMapMod
             }
 
             Interop.FindInteropMods();
-            RmmRoomManager.Load();
 
             Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
 

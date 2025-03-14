@@ -2,7 +2,6 @@
 using MapChanger.Defs;
 using RandoMapMod.Localization;
 using RandoMapMod.Settings;
-using RandomizerCore.Logic;
 using UnityEngine;
 
 namespace RandoMapMod.Pins
@@ -13,20 +12,11 @@ namespace RandoMapMod.Pins
         internal override IReadOnlyCollection<string> LocationPoolGroups => benches;
         internal override IReadOnlyCollection<string> ItemPoolGroups => benches;
 
-        private HintDef hintDef;
-        internal override string HintText => hintDef.Text;
-
-        private LogicDef logic;
-        internal override LogicDef Logic => logic;
-
         internal void Initialize(string sceneName)
         {
             Initialize();
 
             SceneName = sceneName;
-
-            logic = InteropProperties.GetDefaultLogic(name);
-            hintDef = new(InteropProperties.GetDefaultLocationHints(name));
 
             if (InteropProperties.GetDefaultMapLocations(name) is (string, float, float)[] mapLocations)
             {
@@ -58,11 +48,6 @@ namespace RandoMapMod.Pins
             }
 
             textBuilders.Add(this.GetBenchwarpText);
-        }
-
-        private protected override void UpdateHintText()
-        {
-            hintDef.UpdateHintText();
         }
 
         private protected override bool ActiveByCurrentMode()
