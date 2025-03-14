@@ -1,4 +1,4 @@
-﻿using ConnectionMetadataInjector;
+using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Placements;
@@ -138,12 +138,23 @@ namespace RandoMapMod.Pins
         /// If you always want the hint to show, set logic to TRUE.
         /// </summary>
         internal static readonly MetadataProperty<AbstractPlacement, RawLogicDef[]> LocationHints = new("LocationHints", (placement) => GetDefaultLocationHints(placement.Name));
-        
+
         /// <summary>
-        /// The position in the world that the item compass should point to, if at all.
-        /// Defaults to WorldMapLocation for connection-provided placements.
+        /// GameObjects (of given object path) by scene (dictionary key) to point the item compass to.
+        /// Tracking can be done either for a static or moving GameObject.
+        /// For static objects, setting updateEveryFrame to false is recommended to save computation.
         /// </summary>
-        internal static readonly MetadataProperty<AbstractPlacement, (string, float, float)?> CompassLocation = new("WorldLocation", GetDefaultWorldLocation);
+        internal static readonly MetadataProperty<AbstractPlacement, Dictionary<string, (string objectName, bool updateEveryFrame)[]>> GameObjectCompassLocations = new("GameObjectCompassLocations", (placement) => null);
+
+        /// <summary>
+        /// Fixed coordinates by scene (dictionary key) to point the item compass to.
+        /// </summary>
+        internal static readonly MetadataProperty<AbstractPlacement, Dictionary<string, (float x, float y)[]>> FixedCompassLocations = new("FixedCompassLocations", (placement) => null);
+
+        // If neither GameObjectCompassLocations or FixedCompassLocations are provided, the mod will try to fetch in the following order:
+        // - A static compass location based on internal coordinates lookup (for base/Lever/Bench rando only)
+        // - A static compass location based on the AbstractLocation
+        // - A static compass location based on WorldMapLocation
 
         internal static (string, float, float)[] GetDefaultMapLocations(string name)
         {
@@ -195,26 +206,6 @@ namespace RandoMapMod.Pins
             }
 
             return [];
-        }
-
-        private static readonly Dictionary<string, WorldCoordinates> worldCoordinates = JsonUtil.DeserializeFromAssembly<Dictionary<string, WorldCoordinates>>(RandoMapMod.Assembly, "RandoMapMod.Resources.Compass.worldCoordinates.json");
-        internal static (string, float, float)? GetDefaultWorldLocation(AbstractPlacement placement)
-        {
-            string scene = placement.GetScene();
-
-            if (scene is null) return null;
-
-            if (worldCoordinates.TryGetValue(placement.Name, out var location))
-            {
-                return (scene, location.X, location.Y);
-            }
-
-            if (SupplementalMetadata.Of(placement).Get(WorldMapLocations) is (string, float, float)[] worldMapLocations && worldMapLocations.FirstOrDefault() is var worldMapLocation)
-            {
-                return worldMapLocation;
-            }
-
-            return null;
         }
     }
 }

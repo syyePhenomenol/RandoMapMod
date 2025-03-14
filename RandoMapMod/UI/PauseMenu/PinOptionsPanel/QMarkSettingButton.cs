@@ -17,7 +17,7 @@ namespace RandoMapMod.UI
         protected override void OnClick()
         {
             RandoMapMod.GS.ToggleQMarkSetting();
-            ItemCompass.UpdateCompassSprites();
+            ItemCompass.Info.UpdateCurrentCompassTargets();
         }
 
         protected override void OnHover()

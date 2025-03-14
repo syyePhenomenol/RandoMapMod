@@ -5,7 +5,6 @@ using RCPathfinder;
 
 namespace RandoMapMod.Pathfinder.Actions
 {
-    // TODO: REDO ACTION HIERARCHY, MAKE BENCH/START WARPS GO FROM ARBITRARY STATE
     internal class StartWarpAction(Term term) : BenchwarpAction(term, BenchwarpInterop.StartKey), IInstruction
     {
         string IInstruction.SourceText => BenchwarpInterop.BENCH_WARP_START;

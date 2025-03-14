@@ -17,7 +17,7 @@ namespace RandoMapMod.UI
         protected override void OnClick()
         {
             RandoMapMod.GS.ToggleItemCompassMode();
-            ItemCompass.Update();
+            ItemCompass.Info.UpdateCompassTargets();
             OnHover();
         }
 
