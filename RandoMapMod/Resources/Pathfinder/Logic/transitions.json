@@ -123,7 +123,7 @@
   },
   {
     "name": "Room_Final_Boss_Atrium[left1]",
-    "logic": "Room_Final_Boss_Atrium[left1] | Bench-Black_Egg_Temple"
+    "logic": "Room_Final_Boss_Atrium[left1] | (Bench-Black_Egg_Temple ? NONE)"
   },
   {
     "name": "GG_Atrium[Door_Workshop]",
@@ -134,11 +134,43 @@
     "logic": "GG_Atrium[door1_blueRoom] | GG_Atrium + RMM_Blue_Room_Door"
   },
   {
+    "name": "GG_Atrium[top1]",
+    "logic": "FALSE"
+  },
+  {
+    "name": "GG_Atrium[top2]",
+    "logic": "GG_Atrium[top2] + LEFTCLAW | (GG_Atrium + LEFTCLAW + RIGHTCLAW + (RIGHTDASH | RIGHTSUPERDASH | WINGS) | (Bench-Godhome_Atrium ? NONE) + LEFTCLAW) + RMM_Godhome_Roof"
+  },
+  {
     "name": "GG_Workshop[left1]",
     "logic": "GG_Workshop[left1] | GG_Workshop"
   },
   {
     "name": "GG_Blue_Room[left1]",
     "logic": "GG_Blue_Room[left1]"
+  },
+  {
+    "name": "GG_Atrium_Roof[bot1]",
+    "logic": "GG_Atrium_Roof[bot2] + (LEFTCLAW | RIGHTCLAW) + WINGS | (Bench-Godhome_Roof ? NONE) + LEFTCLAW"
+  },
+  {
+    "name": "GG_Atrium_Roof[bot2]",
+    "logic": "GG_Atrium_Roof[bot2] | (Bench-Godhome_Roof ? NONE)"
+  },
+  {
+    "name": "Dream_Backer_Shrine[door1]",
+    "logic": "RMM_Warp-Glade_to_Backer_Shrine"
+  },
+  {
+    "name": "Dream_Backer_Shrine[door2]",
+    "logic": "Dream_Backer_Shrine[door2] | Dream_Backer_Shrine[door1]"
+  },
+  {
+    "name": "Dream_Room_Believer_Shrine[left1]",
+    "logic": "Dream_Room_Believer_Shrine[left1]"
+  },
+  {
+    "name": "RestingGrounds_08[door_dreamReturn]",
+    "logic": "RMM_Warp-Backer_Shrine_to_Glade | RMM_Warp-Believer_Shrine_to_Glade"
   }
 ]

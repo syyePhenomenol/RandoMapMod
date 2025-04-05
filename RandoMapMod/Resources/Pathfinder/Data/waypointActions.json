@@ -134,5 +134,20 @@
   {
     "Start": "Warp-Path_of_Pain_Complete",
     "Destination": "White_Palace_06[door_dreamReturn]"
+  },
+  {
+    "Start": "RMM_Warp-Glade_to_Backer_Shrine",
+    "Destination": "Dream_Backer_Shrine[door1]",
+    "Text": "Warp-Glade_to_Backer_Shrine"
+  },
+  {
+    "Start": "RMM_Warp-Backer_Shrine_to_Glade",
+    "Destination": "RestingGrounds_08[door_dreamReturn]",
+    "Text": "Warp-Backer_Shrine_to_Glade"
+  },
+  {
+    "name": "RMM_Warp-Believer_Shrine_to_Glade",
+    "Destination": "RestingGrounds_08[door_dreamReturn]",
+    "Text": "Warp-Believer_Shrine_to_Glade"
   }
 ]

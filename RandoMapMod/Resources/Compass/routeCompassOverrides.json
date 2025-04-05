@@ -106,5 +106,14 @@
   },
   "Warp-Lifeblood_Core_to_Abyss": {
     "Abyss_08": "Dream Fall Catcher/Bottom"
+  },
+  "RMM_Warp-Glade_to_Backer_Shrine": {
+    "RestingGrounds_08": "Dream Enter"
+  },
+  "RMM_Warp-Backer_Shrine_to_Glade": {
+    "Dream_Backer_Shrine": "Dream Fall Catcher/Bottom"
+  },
+  "RMM_Warp-Believer_Shrine_to_Glade": {
+    "Dream_Room_Believer_Shrine": "Dream Fall Catcher/Bottom"
   }
 }

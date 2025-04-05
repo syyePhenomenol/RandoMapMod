@@ -76,7 +76,6 @@ internal class RmmSearchData : SearchData
         }
 
         // Inject new terms and custom logic
-        ILogicFormat fmt = new JsonLogicFormat();
 
         foreach (
             var rld in JU.DeserializeFromEmbeddedResource<RawLogicDef[]>(
@@ -85,17 +84,24 @@ internal class RmmSearchData : SearchData
             )
         )
         {
-            if (!lmb.IsTerm(rld.name))
+            if (!lmb.Transitions.Contains(rld.name))
             {
                 lmb.AddTransition(rld);
             }
         }
 
-        lmb.DeserializeFile(
-            LogicFileType.Waypoints,
-            fmt,
-            RandoMapMod.Assembly.GetManifestResourceStream("RandoMapMod.Resources.Pathfinder.Logic.waypoints.json")
-        );
+        foreach (
+            var rwd in JU.DeserializeFromEmbeddedResource<RawWaypointDef[]>(
+                RandoMapMod.Assembly,
+                "RandoMapMod.Resources.Pathfinder.Logic.waypoints.json"
+            )
+        )
+        {
+            if (!lmb.Waypoints.Contains(rwd.name))
+            {
+                lmb.AddWaypoint(rwd);
+            }
+        }
 
         foreach (
             var rld in JU.DeserializeFromEmbeddedResource<RawLogicDef[]>(

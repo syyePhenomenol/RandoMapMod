@@ -100,6 +100,14 @@ internal class SearchDataUpdater
             );
         }
 
+        if (_localPM.lm.GetTerm("RMM_Godhome_Roof") is Term godhomeRoof)
+        {
+            _localPM.Set(
+                godhomeRoof,
+                pd.GetVariable<BossSequenceDoor.Completion>("bossDoorStateTier5").unlocked ? 1 : 0
+            );
+        }
+
         foreach (var pbd in SceneData.instance.persistentBoolItems)
         {
             switch (pbd.sceneName)
@@ -177,6 +185,17 @@ internal class SearchDataUpdater
             {
                 _localPM.Set("RMM_City_Toll_Lift_Up", pid.value % 2 is 1 ? 1 : 0);
                 _localPM.Set("RMM_City_Toll_Lift_Down", pid.value % 2 is 0 ? 1 : 0);
+            }
+        }
+
+        if (Interop.HasBenchwarp)
+        {
+            foreach (var bench in BenchwarpInterop.GetVisitedBenchNames())
+            {
+                if (_localLM.GetTerm(bench) is Term benchTerm && _localPM.GetState(benchTerm) is null)
+                {
+                    _localPM.SetState(benchTerm, StateUnion.Empty);
+                }
             }
         }
 
