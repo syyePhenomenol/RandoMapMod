@@ -1,58 +1,45 @@
 ﻿using MagicUI.Elements;
-using MapChanger.UI;
-using RandoMapMod.Settings;
 using RandoMapMod.Localization;
+using RandoMapMod.Settings;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class ClearedButton() : BorderlessExtraButton(nameof(ClearedButton))
 {
-    internal class ClearedButton() : ExtraButton(nameof(ClearedButton), RandoMapMod.MOD)
+    protected override void OnClick()
     {
-        public override void Make()
-        {
-            base.Make();
+        RandoMapMod.GS.ToggleShowClearedPins();
+    }
 
-            Button.Borderless = true;
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "Show pins for persistent or all cleared locations.".L();
+    }
+
+    public override void Update()
+    {
+        var text = $"{"Show cleared".L()}:\n";
+
+        switch (RandoMapMod.GS.ShowClearedPins)
+        {
+            case ClearedPinsSetting.Off:
+                text += "off".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                break;
+
+            case ClearedPinsSetting.Persistent:
+                text += "persistent".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+
+            case ClearedPinsSetting.All:
+                text += "all".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+            default:
+                break;
         }
 
-        protected override void OnClick()
-        {
-            RandoMapMod.GS.ToggleShowClearedPins();
-        }
-
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "Show pins for persistent or all cleared locations.".L();
-        }
-
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
-
-        public override void Update()
-        {
-            string text = $"{"Show cleared".L()}:\n";
-
-            switch (RandoMapMod.GS.ShowClearedPins)
-            {
-                case ClearedPinsSetting.Off:
-                    text += "off".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                    break;
-
-                case ClearedPinsSetting.Persistent:
-                    text += "persistent".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-
-                case ClearedPinsSetting.All:
-                    text += "all".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-            }
-
-
-            Button.Content = text;
-        }
+        Button.Content = text;
     }
 }

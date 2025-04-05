@@ -1,36 +1,37 @@
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using UnityEngine;
-using RandoMapMod.Localization;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class PathfinderBenchwarpText : ControlPanelText
 {
-    internal class PathfinderBenchwarpText : ControlPanelText
+    private protected override string Name => "Pathfinder Benchwarp";
+
+    private protected override bool ActiveCondition()
     {
-        private protected override string Name => "Pathfinder Benchwarp";
+        return RandoMapMod.GS.ControlPanelOn && Conditions.TransitionRandoModeEnabled();
+    }
 
-        private protected override bool ActiveCondition()
+    private protected override Vector4 GetColor()
+    {
+        if (Interop.HasBenchwarp)
         {
-            return RandoMapMod.GS.ControlPanelOn && Conditions.TransitionRandoModeEnabled();
+            return RandoMapMod.GS.PathfinderBenchwarp
+                ? RmmColors.GetColor(RmmColorSetting.UI_On)
+                : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
         }
 
-        private protected override Vector4 GetColor()
+        return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+    }
+
+    private protected override string GetText()
+    {
+        if (Interop.HasBenchwarp)
         {
-            if (Interop.HasBenchwarp)
-            {
-                return RandoMapMod.GS.PathfinderBenchwarp ? RmmColors.GetColor(RmmColorSetting.UI_On) : RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-            
-            return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+            return $"{"Pathfinder benchwarp".L()} (Ctrl-B): {(RandoMapMod.GS.PathfinderBenchwarp ? "On" : "Off").L()}";
         }
 
-        private protected override string GetText()
-        {
-            if (Interop.HasBenchwarp)
-            {
-                return $"{"Pathfinder benchwarp".L()} (Ctrl-B): {(RandoMapMod.GS.PathfinderBenchwarp ? "On" : "Off").L()}";
-            }
-
-            return "Benchwarp is not installed or outdated".L();
-        }
+        return "Benchwarp is not installed or outdated".L();
     }
 }

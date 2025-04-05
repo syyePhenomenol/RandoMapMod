@@ -1,198 +1,174 @@
-using System.Reflection;
+﻿using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
-using MapChanger.UI;
 using Modding;
 using RandoMapMod.Modes;
-using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
+using RandoMapMod.Pins;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
 using UnityEngine;
 
-namespace RandoMapMod
+namespace RandoMapMod;
+
+public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
 {
-    public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
+    private static readonly MapMode[] _modes =
+    [
+        new FullMapMode(),
+        new AllPinsMode(),
+        new PinsOverAreaMode(),
+        new PinsOverRoomMode(),
+        new TransitionNormalMode(),
+        new TransitionVisitedOnlyMode(),
+        new TransitionAllRoomsMode(),
+    ];
+
+    private static readonly List<HookModule> _hookModules =
+    [
+        new RmmColors(),
+        new RmmRoomManager(),
+        new TransitionData(),
+        new RmmPathfinder(),
+        new RmmPinManager(),
+        new ItemCompass(),
+        new RouteCompass(),
+    ];
+
+    public RandoMapMod()
     {
-        internal const string MOD = "RandoMapMod";
-        internal static Assembly Assembly => Assembly.GetExecutingAssembly();
+        Instance = this;
+    }
 
-        private static readonly string[] dependencies =
-        [
-            "MapChangerMod",
-            "Randomizer 4",
-            "CMICore",
-        ];
+    public static LocalSettings LS { get; private set; } = new();
+    public static GlobalSettings GS { get; private set; } = new();
 
-        private static readonly MapMode[] modes =
-        [
-            new FullMapMode(),
-            new AllPinsMode(),
-            new PinsOverAreaMode(),
-            new PinsOverRoomMode(),
-            new TransitionNormalMode(),
-            new TransitionVisitedOnlyMode(),
-            new TransitionAllRoomsMode()
-        ];
+    internal static Assembly Assembly => Assembly.GetExecutingAssembly();
+    internal static RandoMapMod Instance { get; private set; }
 
-        private static readonly Title title = new RmmTitle();
+    public override string GetVersion()
+    {
+        return "3.5.8";
+    }
 
-        private static readonly MainButton[] mainButtons =
-        [
-            new ModEnabledButton(),
-            new ModeButton(),
-            new PinSizeButton(),
-            new PinShapeButton(),
-            new RandomizedButton(),
-            new VanillaButton(),
-            new SpoilersButton(),
-            new PoolOptionsPanelButton(),
-            new PinOptionsPanelButton(),
-            new PathfinderOptionsPanelButton(),
-            new MiscOptionsPanelButton()
-        ];
+    public override int LoadPriority()
+    {
+        return 10;
+    }
 
-        private static readonly ExtraButtonPanel[] extraButtonPanels =
-        [
-            new PoolOptionsPanel(),
-            new PinOptionsPanel(),
-            new PathfinderOptionsPanel(),
-            new MiscOptionsPanel()
-        ];
+    public void OnLoadLocal(LocalSettings ls)
+    {
+        LS = ls;
+    }
 
-        private static readonly MapUILayer[] mapUILayers =
-        [
-            new Hotkeys(),
-            new ControlPanel(),
-            new TopLeftPanels(),
-            new SelectionPanels(),
-            new RmmBottomRowText(),
-            new RouteSummaryText(),
-            new RouteText(),
-            new QuickMapTransitions()
-        ];
+    public LocalSettings OnSaveLocal()
+    {
+        return LS;
+    }
 
-        private static readonly List<HookModule> hookModules =
-        [
-            new RmmColors(),
-            new RmmRoomManager(),
-            new TransitionData(),
-            new RmmPathfinder(),
-            new RmmPinManager(),
-            new ItemCompass(),
-            new RouteCompass()
-        ];
+    public void OnLoadGlobal(GlobalSettings gs)
+    {
+        GS = gs;
+    }
 
-        internal static RandoMapMod Instance;
+    public GlobalSettings OnSaveGlobal()
+    {
+        return GS;
+    }
 
-        public RandoMapMod()
+    public override void Initialize()
+    {
+        LogDebug($"Initializing");
+
+        if (!Dependencies.HasAll())
         {
-            Instance = this;
+            return;
         }
 
-        public override string GetVersion() => "3.5.8";
+        Interop.FindInteropMods();
 
-        public override int LoadPriority() => 10;
+        // if (Interop.HasDebugMod)
+        // {
+        //     DebugInterop.AddDebugModBindings();
+        // }
 
-        public static LocalSettings LS = new();
+        Finder.InjectLocations(
+            JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(
+                Assembly,
+                "RandoMapMod.Resources.locations.json"
+            )
+        );
 
-        public void OnLoadLocal(LocalSettings ls) => LS = ls;
+        Events.OnEnterGame += OnEnterGame;
+        Events.OnQuitToMenu += OnQuitToMenu;
 
-        public LocalSettings OnSaveLocal() => LS;
+        LogDebug($"Initialization complete.");
+    }
 
-        public static GlobalSettings GS = new();
+    internal static void ResetToDefaultSettings()
+    {
+        GS = new();
+    }
 
-        public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
-
-        public GlobalSettings OnSaveGlobal() => GS;
-
-        public override void Initialize()
+    private static void OnEnterGame()
+    {
+        if (!RandomizerMod.RandomizerMod.IsRandoSave)
         {
-            LogDebug($"Initializing");
-            foreach (string dependency in dependencies)
-            {
-                if (ModHooks.GetMod(dependency) is not Mod)
-                {
-                    MapChangerMod.Instance.LogWarn($"Dependency not found for {GetType().Name}: {dependency}");
-                    return;
-                }
-            }
-
-            Interop.FindInteropMods();
-
-            Finder.InjectLocations(JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly, "RandoMapMod.Resources.locations.json"));
-
-            Events.OnEnterGame += OnEnterGame;
-            Events.OnQuitToMenu += OnQuitToMenu;
-
-            LogDebug($"Initialization complete.");
+            return;
         }
 
-        private static void OnEnterGame()
+        MapChanger.Settings.AddModes(_modes);
+        Events.OnSetGameMap += OnSetGameMap;
+
+        if (Interop.HasBenchwarp)
         {
-            if (!RandomizerMod.RandomizerMod.IsRandoSave) return;
-
-            MapChanger.Settings.AddModes(modes);
-            Events.OnSetGameMap += OnSetGameMap;
-
-            if (Interop.HasBenchwarp)
-            {
-                BenchwarpInterop.Load();
-            }
-
-            foreach (HookModule hookModule in hookModules)
-            {
-                hookModule.OnEnterGame();
-            }
+            BenchwarpInterop.Load();
         }
 
-        private static void OnSetGameMap(GameObject goMap)
+        foreach (var hookModule in _hookModules)
         {
-            try
-            {
-                // Make rooms and pins
-                RmmRoomManager.Make(goMap);
-                RmmPinManager.Make(goMap);
+            hookModule.OnEnterGame();
+        }
+    }
 
-                LS.Initialize();
-
-                // Construct pause menu
-                title.Make();
-
-                foreach (MainButton button in mainButtons)
-                {
-                    button.Make();
-                }
-
-                foreach (ExtraButtonPanel ebp in extraButtonPanels)
-                {
-                    ebp.Make();
-                }
-
-                // Construct map UI
-                foreach (MapUILayer uiLayer in mapUILayers)
-                {
-                    MapUILayerUpdater.Add(uiLayer);
-                }
-            }
-            catch (Exception e)
-            {
-                Instance.LogError(e);
-            }
+    private static void OnQuitToMenu()
+    {
+        if (!RandomizerMod.RandomizerMod.IsRandoSave)
+        {
+            return;
         }
 
-        private static void OnQuitToMenu()
+        Events.OnSetGameMap -= OnSetGameMap;
+
+        if (Interop.HasBenchwarp)
         {
-            if (!RandomizerMod.RandomizerMod.IsRandoSave) return;
+            BenchwarpInterop.Unload();
+        }
 
-            Events.OnSetGameMap -= OnSetGameMap;
+        foreach (var hookModule in _hookModules)
+        {
+            hookModule.OnQuitToMenu();
+        }
+    }
 
-            foreach (HookModule hookModule in hookModules)
-            {
-                hookModule.OnQuitToMenu();
-            }
+    private static void OnSetGameMap(GameObject goMap)
+    {
+        try
+        {
+            // Make rooms and pins
+            RmmRoomManager.Make(goMap);
+            RmmPinManager.Make(goMap);
+
+            LS.Initialize();
+
+            RmmUIBuilder uiBuilder = new();
+            uiBuilder.Build();
+        }
+        catch (Exception e)
+        {
+            Instance.LogError(e);
         }
     }
 }

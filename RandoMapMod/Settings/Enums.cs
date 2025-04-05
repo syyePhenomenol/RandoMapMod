@@ -1,111 +1,104 @@
-﻿namespace RandoMapMod.Settings
+﻿namespace RandoMapMod.Settings;
+
+public enum PinSize
 {
-    public enum PinSize
-    {
-        Tiny,
-        Small,
-        Medium,
-        Large,
-        Huge
-    }
+    Tiny,
+    Small,
+    Medium,
+    Large,
+    Huge,
+}
 
-    public enum PinShape
-    {
-        Circle,
-        Diamond,
-        Square,
-        Pentagon,
-        Hexagon
-    }
+public enum PinShape
+{
+    Circle,
+    Diamond,
+    Square,
+    Pentagon,
+    Hexagon,
+}
 
-    public enum PinShapeSetting
-    {
-        Mixed,
-        All_Circle,
-        All_Diamond,
-        All_Square,
-        All_Pentagon,
-        All_Hexagon,
-        No_Border
-    }
+public enum PinShapeSetting
+{
+    Mixed,
+    All_Circle,
+    All_Diamond,
+    All_Square,
+    All_Pentagon,
+    All_Hexagon,
+    No_Border,
+}
 
-    public enum ClearedPinsSetting
-    {
-        Off,
-        Persistent,
-        All
-    }
+public enum ClearedPinsSetting
+{
+    Off,
+    Persistent,
+    All,
+}
 
-    public enum QMarkSetting
-    {
-        Off,
-        Red,
-        Mix
-    }
+public enum QMarkSetting
+{
+    Off,
+    Red,
+    Mix,
+}
 
-    public enum ProgressHintSetting
-    {
-        Off,
-        Area,
-        Room,
-        Location
-    }
+public enum ProgressHintSetting
+{
+    Off,
+    Area,
+    Room,
+    Location,
+}
 
-    public enum ItemCompassMode
-    {
-        Reachable,
-        ReachableOutOfLogic,
-        All
-    }
+public enum ItemCompassMode
+{
+    Reachable,
+    ReachableOutOfLogic,
+    All,
+}
 
-    public enum RouteTextInGame
-    {
-        Hide,
-        Show,
-        NextTransitionOnly
-    }
+public enum RouteTextInGame
+{
+    Hide,
+    Show,
+    NextTransitionOnly,
+}
 
-    public enum OffRouteBehaviour
-    {
-        Keep,
-        Cancel,
-        Reevaluate
-    }
+public enum OffRouteBehaviour
+{
+    Keep,
+    Cancel,
+    Reevaluate,
+}
 
-    public enum RmmMode
-    {
-        Full_Map,
-        All_Pins,
-        Pins_Over_Area,
-        Pins_Over_Room,
-        Transition_Normal,
-        Transition_Visited_Only,
-        Transition_All_Rooms,
-    }
+public enum RmmMode
+{
+    Full_Map,
+    All_Pins,
+    Pins_Over_Area,
+    Pins_Over_Room,
+    Transition_Normal,
+    Transition_Visited_Only,
+    Transition_All_Rooms,
+}
 
-    public enum GroupBySetting
-    {
-        Location,
-        Item
-    }
+public enum GroupBySetting
+{
+    Location,
+    Item,
+}
 
-    public enum PoolsCollection
-    {
-        Randomized,
-        Vanilla
-    }
+public enum PoolState
+{
+    Off,
+    On,
+    Mixed,
+}
 
-    public enum PoolState
-    {
-        Off,
-        On,
-        Mixed
-    }
-
-    public enum NextAreaSetting
-    {
-        Off,
-        Arrows,
-        Full
-    }
+public enum NextAreaSetting
+{
+    Off,
+    Arrows,
+    Full,
 }

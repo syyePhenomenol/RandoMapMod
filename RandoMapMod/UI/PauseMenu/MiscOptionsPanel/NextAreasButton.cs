@@ -1,57 +1,45 @@
 ﻿using MagicUI.Elements;
-using MapChanger.UI;
-using RandoMapMod.Settings;
 using RandoMapMod.Localization;
+using RandoMapMod.Settings;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class NextAreasButton() : BorderlessExtraButton(nameof(NextAreasButton))
 {
-    internal class NextAreasButton() : ExtraButton(nameof(NextAreasButton), RandoMapMod.MOD)
+    protected override void OnClick()
     {
-        public override void Make()
-        {
-            base.Make();
+        RandoMapMod.GS.ToggleNextAreas();
+    }
 
-            Button.Borderless = true;
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "Show next area indicators (text/arrow) on the quick map.".L();
+    }
+
+    public override void Update()
+    {
+        var text = $"{"Show next\nareas".L()}: ";
+
+        switch (RandoMapMod.GS.ShowNextAreas)
+        {
+            case NextAreaSetting.Off:
+                text += "Off".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                break;
+
+            case NextAreaSetting.Arrows:
+                text += "Arrows".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+
+            case NextAreaSetting.Full:
+                text += "Full".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+            default:
+                break;
         }
 
-        protected override void OnClick()
-        {
-            RandoMapMod.GS.ToggleNextAreas();
-        }
-
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "Show next area indicators (text/arrow) on the quick map.".L();
-        }
-
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
-
-        public override void Update()
-        {
-            string text = $"{"Show next\nareas".L()}: ";
-
-            switch (RandoMapMod.GS.ShowNextAreas)
-            {
-                case NextAreaSetting.Off:
-                    text += "Off".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                    break;
-
-                case NextAreaSetting.Arrows:
-                    text += "Arrows".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-
-                case NextAreaSetting.Full:
-                    text += "Full".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-            }
-
-            Button.Content = text;
-        }
+        Button.Content = text;
     }
 }

@@ -4,61 +4,58 @@ using MapChanger.UI;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
-using RandoMapMod.Pathfinder.Actions;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class RouteSummaryText : MapUILayer
 {
-    internal class RouteSummaryText: MapUILayer
+    private static TextObject _routeSummary;
+
+    internal static RouteManager RM => RmmPathfinder.RM;
+    internal static RouteSummaryText Instance { get; private set; }
+
+    protected override bool Condition()
     {
-        internal static RouteManager RM => RmmPathfinder.RM;
-        internal static RouteSummaryText Instance;
+        return Conditions.TransitionRandoModeEnabled() && States.WorldMapOpen;
+    }
 
-        private static TextObject routeSummary;
+    public override void BuildLayout()
+    {
+        Instance = this;
+        _routeSummary = UIExtensions.TextFromEdge(Root, "Route Summary", true);
+    }
 
-        protected override bool Condition()
+    public override void Update()
+    {
+        _routeSummary.Text = GetSummaryText();
+    }
+
+    private static string GetSummaryText()
+    {
+        var text = $"{"Current route".L()}: ";
+
+        if (RM.CurrentRoute is null)
         {
-            return Conditions.TransitionRandoModeEnabled()
-                && States.WorldMapOpen;
+            return text += "None".L();
         }
 
-        public override void BuildLayout()
+        var first = RM.CurrentRoute.FirstInstruction;
+        var last = RM.CurrentRoute.LastInstruction;
+
+        if (last.TargetText is not null)
         {
-            Instance = this;
-            routeSummary = UIExtensions.TextFromEdge(Root, "Route Summary", true);
+            text += $"{first.SourceText.LT().ToCleanName()} ->...-> {last.TargetText.LT().ToCleanName()}";
         }
-
-        public override void Update()
+        else
         {
-            routeSummary.Text = GetSummaryText();
-        }
+            text += first.SourceText.LT().ToCleanName();
 
-        private static string GetSummaryText()
-        {
-            string text = $"{"Current route".L()}: ";
-
-            if (RM.CurrentRoute is null)
+            if (first != last)
             {
-                return text += "None".L();
+                text += $" ->...-> {last.SourceText.LT().ToCleanName()}";
             }
-
-            IInstruction first = RM.CurrentRoute.FirstInstruction;
-            IInstruction last = RM.CurrentRoute.LastInstruction;
-
-            if (last.TargetText is not null)
-            {
-                text += $"{first.SourceText.LT().ToCleanName()} ->...-> {last.TargetText.LT().ToCleanName()}";
-            }
-            else
-            {
-                text += first.SourceText.LT().ToCleanName();
-
-                if (first != last)
-                {
-                    text += $" ->...-> {last.SourceText.LT().ToCleanName()}";
-                }
-            }
-
-            return text += $"\n\n{"Transitions".L()}: {RM.CurrentRoute.TotalInstructionCount}";
         }
+
+        return text += $"\n\n{"Transitions".L()}: {RM.CurrentRoute.TotalInstructionCount}";
     }
 }

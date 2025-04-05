@@ -1,31 +1,19 @@
 ﻿using MapChanger.UI;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class PinOptionsPanel : RmmOptionsPanel
 {
-    internal class PinOptionsPanel : ExtraButtonPanel
+    internal PinOptionsPanel()
+        : base(nameof(PinOptionsPanel), GetButtons())
     {
-        private static readonly ExtraButton[] buttons =
-        {
-            new ClearedButton(),
-            new ReachablePinsButton(),
-            new QMarkSettingButton()
-        };
+        Instance = this;
+    }
 
-        internal static PinOptionsPanel Instance { get; private set; }
+    internal static PinOptionsPanel Instance { get; private set; }
 
-        internal PinOptionsPanel() : base(nameof(PinOptionsPanel), RandoMapMod.MOD, 390f, 10)
-        {
-            Instance = this;
-        }
-
-        protected override void MakeButtons()
-        {
-            foreach (ExtraButton button in buttons)
-            {
-                button.Make();
-                ExtraButtonsGrid.Children.Add(button.Button);
-                ExtraButtons.Add(button);
-            }
-        }
+    private static IEnumerable<ExtraButton> GetButtons()
+    {
+        return [new ClearedButton(), new ReachablePinsButton(), new QMarkSettingButton()];
     }
 }

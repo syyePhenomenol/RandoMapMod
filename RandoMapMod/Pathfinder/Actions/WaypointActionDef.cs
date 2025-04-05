@@ -1,14 +1,15 @@
 using Newtonsoft.Json;
 
-namespace RandoMapMod.Pathfinder.Actions
+namespace RandoMapMod.Pathfinder.Actions;
+
+internal record WaypointActionDef
 {
-    internal record WaypointActionDef
-    {
-        [JsonProperty]
-        internal string Start { get; init; }
-        [JsonProperty]
-        internal string Destination { get; init; }
-        [JsonProperty]
-        internal string Text { get; init; }
-    }
+    [JsonProperty]
+    internal string Start { get; init; }
+
+    [JsonProperty]
+    internal string Destination { get; init; }
+
+    [JsonProperty]
+    internal string Text { get; init; }
 }

@@ -1,40 +1,26 @@
 ﻿using MagicUI.Elements;
 using MapChanger.UI;
-using RandoMapMod.Settings;
 using RandoMapMod.Localization;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class DefaultSettingsButton() : BorderlessExtraButton(nameof(DefaultSettingsButton))
 {
-    internal class DefaultSettingsButton() : ExtraButton(nameof(DefaultSettingsButton), RandoMapMod.MOD)
+    protected override void OnClick()
     {
-        public override void Make()
-        {
-            base.Make();
+        RandoMapMod.ResetToDefaultSettings();
+        MapUILayerUpdater.Update();
+    }
 
-            Button.Borderless = true;
-        }
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "Resets all global settings of RandoMapMod.".L();
+    }
 
-        protected override void OnClick()
-        {
-            GlobalSettings.ResetToDefaultSettings();
-            MapUILayerUpdater.Update();
-        }
+    public override void Update()
+    {
+        Button.Content = "Reset global\nsettings".L();
 
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "Resets all global settings of RandoMapMod.".L();
-        }
-
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
-
-        public override void Update()
-        {
-            Button.Content = "Reset global\nsettings".L();
-
-            Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-        }
+        Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
     }
 }

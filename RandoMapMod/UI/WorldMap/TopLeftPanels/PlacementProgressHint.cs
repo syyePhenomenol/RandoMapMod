@@ -12,259 +12,284 @@ using RandomizerMod.RandomizerData;
 using RandomizerMod.RC;
 using RM = RandomizerMod.RandomizerMod;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal abstract class PlacementProgressHint
 {
-    internal abstract class PlacementProgressHint
+    internal abstract RandoPlacement RandoPlacement { get; }
+
+    internal abstract bool IsPlacementObtained();
+    internal abstract string GetTextFragment();
+    internal abstract void DoPanning();
+
+    private protected static bool TryPanToArea(string area)
     {
-        internal abstract RandoPlacement RandoPlacement { get; }
-        internal abstract bool IsPlacementObtained();
-        internal abstract string GetTextFragment();
-        internal abstract void DoPanning();
-
-        protected private static bool TryPanToArea(string area)
+        if (area is null)
         {
-            if (area is null) return false;
-
-            var gameMap = GameManager.instance.gameMap.GetComponent<GameMap>();
-            var go = area switch
-            {
-                "Ancient Basin" => gameMap.areaAncientBasin,
-                "City of Tears" => gameMap.areaCity,
-                "Howling Cliffs" => gameMap.areaCliffs,
-                "Forgotten Crossroads" => gameMap.areaCrossroads,
-                "Crystal Peak" => gameMap.areaCrystalPeak,
-                "Deepnest" => gameMap.areaDeepnest,
-                "Dirtmouth" => gameMap.areaDirtmouth,
-                "Fog Canyon" => gameMap.areaFogCanyon,
-                "Fungal Wastes" => gameMap.areaFungalWastes,
-                "Greenpath" => gameMap.areaGreenpath,
-                "Kingdom's Edge" => gameMap.areaKingdomsEdge,
-                "Queen's Gardens" => gameMap.areaQueensGardens,
-                "Resting Grounds" => gameMap.areaRestingGrounds,
-                "Royal Waterways" => gameMap.areaWaterways,
-                "White Palace" => gameMap.gameObject.FindChild("WHITE_PALACE") ?? gameMap.areaAncientBasin,
-                "Godhome" => gameMap.gameObject.FindChild("GODS_GLORY") ?? gameMap.areaWaterways,
-                _ => null,
-            };
-
-            if (go == null) return false;
-
-            MapPanner.PanTo(go.transform.position);
-            return true;
+            return false;
         }
 
-        protected private static bool TryPanToMappedScene(string scene)
+        var gameMap = GameManager.instance.gameMap.GetComponent<GameMap>();
+        var go = area switch
         {
-            if (scene is null) return false;
+            "Ancient Basin" => gameMap.areaAncientBasin,
+            "City of Tears" => gameMap.areaCity,
+            "Howling Cliffs" => gameMap.areaCliffs,
+            "Forgotten Crossroads" => gameMap.areaCrossroads,
+            "Crystal Peak" => gameMap.areaCrystalPeak,
+            "Deepnest" => gameMap.areaDeepnest,
+            "Dirtmouth" => gameMap.areaDirtmouth,
+            "Fog Canyon" => gameMap.areaFogCanyon,
+            "Fungal Wastes" => gameMap.areaFungalWastes,
+            "Greenpath" => gameMap.areaGreenpath,
+            "Kingdom's Edge" => gameMap.areaKingdomsEdge,
+            "Queen's Gardens" => gameMap.areaQueensGardens,
+            "Resting Grounds" => gameMap.areaRestingGrounds,
+            "Royal Waterways" => gameMap.areaWaterways,
+            "White Palace" => gameMap.gameObject.FindChild("WHITE_PALACE") ?? gameMap.areaAncientBasin,
+            "Godhome" => gameMap.gameObject.FindChild("GODS_GLORY") ?? gameMap.areaWaterways,
+            _ => null,
+        };
 
-            MapPanner.PanToMappedScene(scene);
-            return true;
+        if (go == null)
+        {
+            return false;
         }
+
+        MapPanner.PanTo(go.transform.position);
+        return true;
     }
 
-    internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
+    private protected static bool TryPanToMappedScene(string scene)
     {
-        private readonly ItemPlacement _ip = ip;
-        private readonly AbstractPlacement _ap = ItemChanger.Internal.Ref.Settings.Placements.GetOrDefault(ip.Location.Name);
-
-        internal override RandoPlacement RandoPlacement => new(_ip.Item, _ip.Location);
-
-        private string[] _scenes = [];
-        private string[] _mapAreas = [];
-
-        internal override bool IsPlacementObtained()
+        if (scene is null)
         {
-            return RM.RS.TrackerData.obtainedItems.Contains(_ip.Index);
+            return false;
         }
 
-        internal override string GetTextFragment()
+        MapPanner.PanToMappedScene(scene);
+        return true;
+    }
+}
+
+internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
+{
+    private readonly ItemPlacement _ip = ip;
+    private readonly AbstractPlacement _ap = ItemChanger.Internal.Ref.Settings.Placements.GetOrDefault(
+        ip.Location.Name
+    );
+
+    private string[] _scenes = [];
+    private string[] _mapAreas = [];
+
+    internal override RandoPlacement RandoPlacement => new(_ip.Item, _ip.Location);
+
+    internal override bool IsPlacementObtained()
+    {
+        return RM.RS.TrackerData.obtainedItems.Contains(_ip.Index);
+    }
+
+    internal override string GetTextFragment()
+    {
+        UpdateScenesAndMapAreas();
+
+        var text = "";
+
+        if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
         {
-            UpdateScenesAndMapAreas();
-            
-            string text = "";
+            text += $"\n{"at".L()} {_ip.Location.Name.LC()}";
+        }
 
-            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
-            {
-                text += $"\n{"at".L()} {_ip.Location.Name.LC()}";
-            }
-
-            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location or ProgressHintSetting.Room)
-            {
-                text += $"\n{"in".L()} ";
-
-                if (_scenes.Any())
-                {
-                    text += string.Join($" {"or".L()} ", _scenes.Select(s => s.L()));
-                }
-                else
-                {
-                    text += "an unknown room".L();
-                }
-            }
-
+        if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location or ProgressHintSetting.Room)
+        {
             text += $"\n{"in".L()} ";
 
-            if (_mapAreas.Any())
+            if (_scenes.Any())
             {
-                text += string.Join($" {"or".L()} ", _mapAreas.Select(a => a.L()));
+                text += string.Join($" {"or".L()} ", _scenes.Select(s => s.L()));
             }
             else
             {
-                text += "an unknown area".L();
-            }
-
-            return text;
-        }
-
-        internal override void DoPanning()
-        {
-            string scene = _scenes.FirstOrDefault();
-            string mapArea = _mapAreas.FirstOrDefault();
-
-            switch (RandoMapMod.GS.ProgressHint)
-            {
-                case ProgressHintSetting.Area:
-                    TryPanToArea(mapArea);
-                    break;
-                case ProgressHintSetting.Room:
-                    if (!TryPanToMappedScene(scene))
-                    {
-                        TryPanToArea(mapArea);
-                    }
-                    break;
-                case ProgressHintSetting.Location:
-                    if (!TryPanToLocation(_ip.Location.Name) && !TryPanToMappedScene(scene))
-                    {
-                        TryPanToArea(mapArea);
-                    }
-                    break;
-                default:
-                    break;
+                text += "an unknown room".L();
             }
         }
 
-        private void UpdateScenesAndMapAreas()
+        text += $"\n{"in".L()} ";
+
+        if (_mapAreas.Any())
         {
-            List<string> scenes = [];
-            List<string> mapAreas = [];
+            text += string.Join($" {"or".L()} ", _mapAreas.Select(a => a.L()));
+        }
+        else
+        {
+            text += "an unknown area".L();
+        }
 
-            if (_ip.Location.LocationDef.SceneName is string scene)
-            {
-                scenes.Add(scene);
-            }
+        return text;
+    }
 
-            if (_ip.Location.LocationDef.MapArea is string mapArea)
-            {
-                mapAreas.Add(mapArea);
-            }
+    internal override void DoPanning()
+    {
+        var scene = _scenes.FirstOrDefault();
+        var mapArea = _mapAreas.FirstOrDefault();
 
-            if (_ap is not null)
-            {
-                if (SupplementalMetadata.Of(_ap).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
+        switch (RandoMapMod.GS.ProgressHint)
+        {
+            case ProgressHintSetting.Area:
+                _ = TryPanToArea(mapArea);
+                break;
+            case ProgressHintSetting.Room:
+                if (!TryPanToMappedScene(scene))
                 {
-                    var inLogicHighlightScenes = highlightScenes.Where(RmmPathfinder.Slt.IsInLogicScene);
-                    
-                    scenes.AddRange(inLogicHighlightScenes);
-                    mapAreas.AddRange(inLogicHighlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null));
+                    _ = TryPanToArea(mapArea);
                 }
-                else if (_ap.GetScene() is string placementScene)
+
+                break;
+            case ProgressHintSetting.Location:
+                if (!TryPanToLocation(_ip.Location.Name) && !TryPanToMappedScene(scene))
                 {
-                    scenes.Add(placementScene);
-                    if (Data.GetRoomDef(placementScene)?.MapArea is string apMapArea)
-                    {
-                        mapAreas.Add(apMapArea);
-                    }
+                    _ = TryPanToArea(mapArea);
                 }
-            }
 
-            _scenes = [..scenes.Distinct()];
-            _mapAreas = [..mapAreas.Distinct()];
-        }
-
-        private static bool TryPanToLocation(string location)
-        {
-            if (!RmmPinManager.Pins.TryGetValue(location, out var pin)) return false;
-
-            MapPanner.PanTo(pin.gameObject.transform.position);
-            return true;
+                break;
+            case ProgressHintSetting.Off:
+                break;
+            default:
+                break;
         }
     }
 
-    internal class TransitionPlacementHint: PlacementProgressHint
+    private void UpdateScenesAndMapAreas()
     {
-        private readonly TransitionPlacement _tp;
-        private readonly string _scene;
-        private readonly string _mapArea;
+        List<string> scenes = [];
+        List<string> mapAreas = [];
 
-        internal override RandoPlacement RandoPlacement => new(_tp.Target, _tp.Source);
-
-        internal TransitionPlacementHint(TransitionPlacement tp)
+        if (_ip.Location.LocationDef?.SceneName is string scene)
         {
-            _tp = tp;
-            _scene = tp.Source.TransitionDef.SceneName;
-            _mapArea = tp.Source.TransitionDef.MapArea;
+            scenes.Add(scene);
         }
 
-        internal override bool IsPlacementObtained()
+        if (_ip.Location.LocationDef?.MapArea is string mapArea)
         {
-            return RM.RS.TrackerData.visitedTransitions.ContainsKey(RandoPlacement.Location.Name);
+            mapAreas.Add(mapArea);
         }
 
-        internal override string GetTextFragment()
+        if (_ap is not null)
         {
-            string text = "";
-
-            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
+            if (SupplementalMetadata.Of(_ap).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
             {
-                text += $"\n{"through".L()} {_tp.Source.TransitionDef.Name.LT()}";
-            }
+                var inLogicHighlightScenes = highlightScenes.Where(RmmPathfinder.Slt.IsInLogicScene);
 
-            if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Room)
+                scenes.AddRange(inLogicHighlightScenes);
+                mapAreas.AddRange(
+                    inLogicHighlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null)
+                );
+            }
+            else if (_ap.GetScene() is string placementScene)
             {
-                text += $"\n{"in".L()} {_scene.L()}";
+                scenes.Add(placementScene);
+                if (Data.GetRoomDef(placementScene)?.MapArea is string apMapArea)
+                {
+                    mapAreas.Add(apMapArea);
+                }
             }
-
-            text += $"\n{"in".L()} ";
-
-            if (_mapArea is not null)
-            {
-                text += $"{_mapArea.L()}";
-            }
-            else
-            {
-                text += "an unknown area".L();
-            }
-
-            return text;
         }
 
-        internal override void DoPanning()
-        {
-            switch (RandoMapMod.GS.ProgressHint)
-            {
-                case ProgressHintSetting.Area:
-                    TryPanToArea(_mapArea);
-                    break;
-                case ProgressHintSetting.Room:
-                case ProgressHintSetting.Location:
-                    TryPanToScene(_scene);
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        private static bool TryPanToScene(string scene)
-        {
-            if (scene is null) return false;
+        _scenes = [.. scenes.Distinct()];
+        _mapAreas = [.. mapAreas.Distinct()];
+    }
 
-            if (RmmRoomManager.RoomTextLookup.TryGetValue(scene, out RoomText rt))
-            {
-                MapPanner.PanTo(rt.transform.position);
-                return true;
-            }
-
-            return TryPanToMappedScene(scene);
+    private static bool TryPanToLocation(string location)
+    {
+        if (!RmmPinManager.Pins.TryGetValue(location, out var pin))
+        {
+            return false;
         }
+
+        MapPanner.PanTo(pin.gameObject.transform.position);
+        return true;
+    }
+}
+
+internal class TransitionPlacementHint : PlacementProgressHint
+{
+    private readonly TransitionPlacement _tp;
+    private readonly string _scene;
+    private readonly string _mapArea;
+
+    internal TransitionPlacementHint(TransitionPlacement tp)
+    {
+        _tp = tp;
+        _scene = tp.Source.TransitionDef.SceneName;
+        _mapArea = tp.Source.TransitionDef.MapArea;
+    }
+
+    internal override RandoPlacement RandoPlacement => new(_tp.Target, _tp.Source);
+
+    internal override bool IsPlacementObtained()
+    {
+        return RM.RS.TrackerData.visitedTransitions.ContainsKey(RandoPlacement.Location.Name);
+    }
+
+    internal override string GetTextFragment()
+    {
+        var text = "";
+
+        if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
+        {
+            text += $"\n{"through".L()} {_tp.Source.TransitionDef.Name.LT()}";
+        }
+
+        if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Room)
+        {
+            text += $"\n{"in".L()} {_scene.L()}";
+        }
+
+        text += $"\n{"in".L()} ";
+
+        if (_mapArea is not null)
+        {
+            text += $"{_mapArea.L()}";
+        }
+        else
+        {
+            text += "an unknown area".L();
+        }
+
+        return text;
+    }
+
+    internal override void DoPanning()
+    {
+        switch (RandoMapMod.GS.ProgressHint)
+        {
+            case ProgressHintSetting.Area:
+                _ = TryPanToArea(_mapArea);
+                break;
+            case ProgressHintSetting.Room:
+            case ProgressHintSetting.Location:
+                _ = TryPanToScene(_scene);
+                break;
+            case ProgressHintSetting.Off:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private static bool TryPanToScene(string scene)
+    {
+        if (scene is null)
+        {
+            return false;
+        }
+
+        if (RmmRoomManager.RoomTexts.TryGetValue(scene, out var rt))
+        {
+            MapPanner.PanTo(rt.transform.position);
+            return true;
+        }
+
+        return TryPanToMappedScene(scene);
     }
 }

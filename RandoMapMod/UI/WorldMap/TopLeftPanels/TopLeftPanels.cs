@@ -1,32 +1,30 @@
 ﻿using MapChanger.UI;
 using RandoMapMod.Modes;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class TopLeftPanels : WorldMapStack
 {
-    internal class TopLeftPanels : WorldMapStack
+    private MapKeyPanel _mapKeyPanel;
+    private ProgressHintPanel _progressHintPanel;
+
+    internal static TopLeftPanels Instance { get; private set; }
+
+    protected override void BuildStack()
     {
-        internal static TopLeftPanels Instance;
+        Instance = this;
+        _mapKeyPanel = new(Root, Stack);
+        _progressHintPanel = new(Root, Stack);
+    }
 
-        private MapKeyPanel mapKeyPanel;
+    protected override bool Condition()
+    {
+        return base.Condition() && Conditions.RandoMapModEnabled();
+    }
 
-        private ProgressHintPanel progressHintPanel;
-
-        protected override void BuildStack()
-        {
-            Instance = this;
-            mapKeyPanel = new(Root, Stack);
-            progressHintPanel = new(Root, Stack);
-        }
-
-        protected override bool Condition()
-        {
-            return base.Condition() && Conditions.RandoMapModEnabled();
-        }
-
-        public override void Update()
-        {
-            mapKeyPanel.Update();
-            progressHintPanel.Update();
-        }
+    public override void Update()
+    {
+        _mapKeyPanel.Update();
+        _progressHintPanel.Update();
     }
 }

@@ -1,278 +1,245 @@
-﻿using System.Collections;
-using GlobalEnums;
-using MapChanger;
+using System.Collections;
 using MapChanger.MonoBehaviours;
-using RandoMapMod.Localization;
-using RandoMapMod.Modes;
-using RandoMapMod.Pathfinder;
 using RandoMapMod.Settings;
 using UnityEngine;
 
-namespace RandoMapMod.Pins
+namespace RandoMapMod.Pins;
+
+internal class RmmPin : BorderedBackgroundPin, ISelectable, IPeriodicUpdater, IPinSelectable
 {
-    internal abstract class RmmPin : BorderedBackgroundPin, ISelectable, IPeriodicUpdater
-    {
-        // Constants
-        private const float TINY_SCALE = 0.47f;
-        private const float SMALL_SCALE = 0.56f;
-        private const float MEDIUM_SCALE = 0.67f;
-        private const float LARGE_SCALE = 0.8f;
-        private const float HUGE_SCALE = 0.96f;
+    // Constants
+    private const float TINY_SCALE = 0.47f;
+    private const float SMALL_SCALE = 0.56f;
+    private const float MEDIUM_SCALE = 0.67f;
+    private const float LARGE_SCALE = 0.8f;
+    private const float HUGE_SCALE = 0.96f;
 
-        private protected const float SHRINK_SIZE_MULTIPLIER = 0.7f;
-        private protected const float SHRINK_COLOR_MULTIPLIER = 0.5f;
-        private protected const float NO_BORDER_MULTIPLIER = 1.3f;
+    private protected const float SHRINK_SIZE_MULTIPLIER = 0.7f;
+    private protected const float DARKEN_MULTIPLIER = 0.5f;
+    private protected const float NO_BORDER_MULTIPLIER = 1.3f;
 
-        private protected const float SELECTED_MULTIPLIER = 1.3f;
+    private protected const float SELECTED_MULTIPLIER = 1.3f;
 
-        private protected static readonly Dictionary<PinSize, float> _pinSizes = new()
+    private protected static readonly Dictionary<PinSize, float> _pinSizes =
+        new()
         {
             { PinSize.Tiny, TINY_SCALE },
             { PinSize.Small, SMALL_SCALE },
             { PinSize.Medium, MEDIUM_SCALE },
             { PinSize.Large, LARGE_SCALE },
-            { PinSize.Huge, HUGE_SCALE }
+            { PinSize.Huge, HUGE_SCALE },
         };
-        
-        // Set-once properties
-        internal string ModSource { get; private protected set; } = $"{char.MaxValue}RandoMapMod";
-        internal string SceneName { get; private protected set; }
-        internal MapZone MapZone { get; private protected set; } = MapZone.NONE;
-        internal int PinGridIndex { get; private protected set; } = int.MaxValue;
-        internal abstract IReadOnlyCollection<string> LocationPoolGroups { get; }
-        internal abstract IReadOnlyCollection<string> ItemPoolGroups { get; }
 
-        // Pin Sprite manager
-        internal PinSpriteManager Psm => RmmPinManager.Psm;
+    private IEnumerable<ScaledPinSprite> _sprites;
+    private Coroutine _periodicUpdate;
+    private bool _selected = false;
 
-        // Sprite cycling
-        internal IEnumerable<ScaledPinSprite> CycleSprites { get; private protected set; }
-        public float UpdateWaitSeconds => 1f;
-        private Coroutine periodicUpdate;
-        public IEnumerator PeriodicUpdate()
+    internal PinDef Def { get; private set; }
+
+    internal string Name => Def.Name;
+
+    public float UpdateWaitSeconds => 1f;
+
+    // Selection
+    public bool Selected
+    {
+        get => _selected;
+        set
         {
-            // Create local copy
-            ScaledPinSprite[] sprites = CycleSprites.ToArray();
-            int count = sprites.Count();
-            int i = 0;
-
-            while (true)
+            if (_selected != value)
             {
-                SetSprite(sprites[i]);
-
-                yield return new WaitForSecondsRealtime(UpdateWaitSeconds);
-
-                i = (i + 1) % count;
-            }
-        }
-
-        private void StartCyclingSprite()
-        {
-            if (CycleSprites.Count() is 1)
-            {
-                SetSprite(CycleSprites.First());
-                return;
-            }
-
-            periodicUpdate ??= StartCoroutine(PeriodicUpdate());
-        }
-
-        private void StopCyclingSprite()
-        {
-            if (periodicUpdate is not null)
-            {
-                StopCoroutine(periodicUpdate);
-                periodicUpdate = null;
-            }
-        }
-
-        private void SetSprite(ScaledPinSprite sprite)
-        {
-            Sprite = sprite.Value;
-            Sr.transform.localScale = sprite.Scale;
-        }
-
-        // Selection
-        private bool selected = false;
-        public virtual bool Selected
-        {
-            get => selected;
-            set
-            {
-                if (selected != value)
+                _selected = value;
+                if (isActiveAndEnabled)
                 {
-                    selected = value;
-                    if (isActiveAndEnabled)
-                    {
-                        UpdatePinSize();
-                    }
+                    UpdatePinSize();
                 }
             }
         }
+    }
 
-        public bool CanSelect()
+    public string Key => Name;
+    public Vector2 Position => transform.position;
+
+    // Sprite cycling
+
+    public IEnumerator PeriodicUpdate()
+    {
+        // Create local copy
+        var sprites = _sprites.ToArray();
+        var count = sprites.Count();
+        var i = 0;
+
+        while (true)
         {
-            return Sr.isVisible;
+            SetSprite(sprites[i]);
+
+            yield return new WaitForSecondsRealtime(UpdateWaitSeconds);
+
+            i = (i + 1) % count;
+        }
+    }
+
+    private void StartCyclingSprite()
+    {
+        if (_sprites.Count() is 1)
+        {
+            SetSprite(_sprites.First());
+            return;
         }
 
-        public virtual (string, Vector2) GetKeyAndPosition()
+        _periodicUpdate ??= StartCoroutine(PeriodicUpdate());
+    }
+
+    private void StopCyclingSprite()
+    {
+        if (_periodicUpdate is not null)
         {
-            return (name, transform.position);
+            StopCoroutine(_periodicUpdate);
+            _periodicUpdate = null;
+        }
+    }
+
+    private void SetSprite(ScaledPinSprite sprite)
+    {
+        Sprite = sprite.Value;
+        Sr.transform.localScale = sprite.Scale;
+    }
+
+    public bool CanSelect()
+    {
+        return Sr.isVisible;
+    }
+
+    internal void Initialize(PinDef def)
+    {
+        base.Initialize();
+
+        Def = def;
+        MapPosition = def.MapPosition;
+
+        ActiveModifiers.AddRange([CorrectMapOpen, ActiveByCurrentMode, Def.ActiveBySettings, Def.ActiveByProgress]);
+
+        BorderPlacement = BorderPlacement.InFront;
+    }
+
+    // Update triggers
+    public override void BeforeMainUpdate()
+    {
+        StopCyclingSprite();
+        Def.Update();
+    }
+
+    public override void OnMainUpdate(bool active)
+    {
+        if (!active)
+        {
+            return;
         }
 
-        public override void Initialize()
+        _sprites = Def.GetPinSprites();
+
+        if (_sprites is not null && _sprites.Any())
         {
-            base.Initialize();
-
-            ActiveModifiers.AddRange
-            (
-                [
-                    CorrectMapOpen,
-                    ActiveByCurrentMode,
-                    ActiveBySettings,
-                    ActiveByProgress
-                ]
-            );
-
-            textBuilders.AddRange
-            (
-                [
-                    GetNameText,
-                    GetRoomText,
-                    GetStatusText,
-                    GetLockText
-                ]
-            );
-
-            BorderPlacement = BorderPlacement.InFront;
-        }
-
-        // Update triggers
-        public override void BeforeMainUpdate()
-        {
-            StopCyclingSprite();
-        }
-
-        public override void OnMainUpdate(bool active)
-        {
-            if (!active) return;
-
-            UpdatePinSprites();
-
-            if (CycleSprites is not null && CycleSprites.Any())
-            {
-                StartCyclingSprite();
-            }
-
+            StartCyclingSprite();
             UpdatePinSize();
             UpdatePinColor();
             UpdateBorderBackgroundSprite();
             UpdateBorderColor();
         }
-        
-        // Active modifiers
-        private protected bool CorrectMapOpen()
+        else
         {
-            return States.WorldMapOpen || (States.QuickMapOpen && (States.CurrentMapZone == MapZone || MapZone is MapZone.NONE));
+            RandoMapMod.Instance.LogWarn($"Pin is active without any set sprites! {Name}");
+        }
+    }
+
+    // Active modifiers
+    private protected virtual bool CorrectMapOpen()
+    {
+        return Def.CorrectMapOpen();
+    }
+
+    private protected virtual bool ActiveByCurrentMode()
+    {
+        return Def.ActiveByCurrentMode();
+    }
+
+    // Pin updating
+    internal void UpdatePinSize()
+    {
+        var size = _pinSizes[RandoMapMod.GS.PinSize];
+
+        if (RandoMapMod.GS.PinShapes is PinShapeSetting.No_Border)
+        {
+            size *= NO_BORDER_MULTIPLIER;
         }
 
-        private protected virtual bool ActiveByCurrentMode()
+        if (Selected)
         {
-            return MapZone is MapZone.NONE
-                || MapChanger.Settings.CurrentMode() is FullMapMode or AllPinsMode
-                || (MapChanger.Settings.CurrentMode() is PinsOverAreaMode && Utils.HasMapSetting(MapZone))
-                || (MapChanger.Settings.CurrentMode() is PinsOverRoomMode && Utils.HasMapSetting(MapZone)
-                    && ((Tracker.HasVisitedScene(Finder.GetMappedScene(SceneName)) && (PlayerData.instance.GetBool(nameof(PlayerData.hasQuill)) || RandoMapMod.GS.AlwaysHaveQuill))
-                        || Finder.IsMinimalMapScene(Finder.GetMappedScene(SceneName))))
-                || (Conditions.TransitionRandoModeEnabled() && RmmPathfinder.Slt.GetRoomActive(SceneName));
+            size *= SELECTED_MULTIPLIER;
+        }
+        else if (Def.ShrinkPin())
+        {
+            size *= SHRINK_SIZE_MULTIPLIER;
         }
 
-        private protected abstract bool ActiveBySettings();
+        Size = size;
+    }
 
-        private protected abstract bool ActiveByProgress();
-
-        // Pin updating
-        private protected virtual void UpdatePinSprites() { }
-
-        private protected virtual void UpdatePinSize()
+    private void UpdatePinColor()
+    {
+        if (Def.DarkenPin())
         {
-            Size = _pinSizes[RandoMapMod.GS.PinSize];
+            Color = new(DARKEN_MULTIPLIER, DARKEN_MULTIPLIER, DARKEN_MULTIPLIER, 1f);
+        }
+        else
+        {
+            Color = UnityEngine.Color.white;
+        }
+    }
 
-            if (RandoMapMod.GS.PinShapes is PinShapeSetting.No_Border)
-            {
-                Size *= NO_BORDER_MULTIPLIER;
-            }
-
-            if (Selected)
-            {
-                Size *= SELECTED_MULTIPLIER;
-            }
+    private void UpdateBorderBackgroundSprite()
+    {
+        if (RandoMapMod.GS.PinShapes is PinShapeSetting.No_Border)
+        {
+            BorderSprite = null;
+            BackgroundSprite = null;
+            return;
         }
 
-        private protected virtual void UpdatePinColor() { }
-
-        private void UpdateBorderBackgroundSprite()
+        var shape = RandoMapMod.GS.PinShapes switch
         {
-            if (RandoMapMod.GS.PinShapes is PinShapeSetting.No_Border)
-            {
-                BorderSprite = null;
-                BackgroundSprite = null;
-                return;
-            }
+            PinShapeSetting.All_Circle => PinShape.Circle,
+            PinShapeSetting.All_Diamond => PinShape.Diamond,
+            PinShapeSetting.All_Square => PinShape.Square,
+            PinShapeSetting.All_Pentagon => PinShape.Pentagon,
+            PinShapeSetting.All_Hexagon => PinShape.Hexagon,
+            _ => Def.GetMixedPinShape(),
+        };
 
-            PinShape shape = RandoMapMod.GS.PinShapes switch
-            {
-                PinShapeSetting.All_Circle => PinShape.Circle,
-                PinShapeSetting.All_Diamond => PinShape.Diamond,
-                PinShapeSetting.All_Square => PinShape.Square,
-                PinShapeSetting.All_Pentagon => PinShape.Pentagon,
-                PinShapeSetting.All_Hexagon => PinShape.Hexagon,
-                _ => GetMixedPinShape()
-            };
+        BorderSprite = RmmPinManager.Psm.GetSprite($"Border{shape}").Value;
+        BackgroundSprite = RmmPinManager.Psm.GetSprite($"Background{shape}").Value;
+    }
 
-            BorderSprite = Psm.GetSprite($"Border{shape}").Value;
-            BackgroundSprite = Psm.GetSprite($"Background{shape}").Value;
-        }
-
-        private protected virtual PinShape GetMixedPinShape()
+    private void UpdateBorderColor()
+    {
+        var color = Def.GetBorderColor();
+        if (Def.DarkenPin())
         {
-            return PinShape.Circle;
+            BorderColor = new(
+                color.r * DARKEN_MULTIPLIER,
+                color.g * DARKEN_MULTIPLIER,
+                color.b * DARKEN_MULTIPLIER,
+                1f
+            );
         }
-
-        private protected abstract void UpdateBorderColor();
-
-         // Text building
-        private protected List<Func<string>> textBuilders = [];
-        internal string GetSelectionText()
+        else
         {
-            return textBuilders.Select(f => f.Invoke()).Aggregate((t1, t2) => t1 + t2);
+            BorderColor = color;
         }
+    }
 
-        private protected virtual string GetNameText()
-        {
-            return name.LC();
-        }
-
-        private protected virtual string GetRoomText()
-        {
-            if (SceneName is not null)
-            {
-                return $"\n\n{"Room".L()}: {SceneName.LC()}";
-            }
-
-            return "";
-        }
-
-        private protected virtual string GetStatusText()
-        {
-            return $"\n\n{"Status".L()}: {"Unknown".L()}";
-        }
-
-        private protected virtual string GetLockText()
-        {
-            string dreamNailBindingsText = Utils.GetBindingsText(new(InputHandler.Instance.inputActions.dreamNail.Bindings));
-
-            return $"\n\n{"Press".L()} {dreamNailBindingsText} {(RmmPinSelector.Instance.LockSelection ? "to unlock pin selection" : "to lock pin selection").L()}.";
-        }
+    public virtual string GetText()
+    {
+        return Def.GetText();
     }
 }

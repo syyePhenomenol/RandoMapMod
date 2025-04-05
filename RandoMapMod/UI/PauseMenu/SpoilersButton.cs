@@ -2,32 +2,31 @@
 using MapChanger.UI;
 using RandoMapMod.Localization;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class SpoilersButton() : MainButton(nameof(SpoilersButton), nameof(RandoMapMod), 0, 3)
 {
-    internal class SpoilersButton() : MainButton(nameof(SpoilersButton), RandoMapMod.MOD, 0, 3)
+    protected override void OnClick()
     {
-        protected override void OnClick()
-        {
-            RandoMapMod.LS.ToggleSpoilers();
-        }
+        RandoMapMod.LS.ToggleSpoilers();
+    }
 
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "Reveals the items at each location.".L();
-        }
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "Reveals the items at each location.".L();
+    }
 
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
+    protected override void OnUnhover()
+    {
+        RmmTitle.Instance.HoveredText = null;
+    }
 
-        public override void Update()
-        {
-            base.Update();
+    public override void Update()
+    {
+        base.Update();
 
-            Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
+        Button.BorderColor = RmmColors.GetColor(RmmColorSetting.UI_Borders);
 
-            this.SetButtonBoolToggle($"{"Spoilers".L()}:\n", RandoMapMod.LS.SpoilerOn);
-        }
+        this.SetButtonBoolToggle($"{"Spoilers".L()}:\n", RandoMapMod.LS.SpoilerOn);
     }
 }

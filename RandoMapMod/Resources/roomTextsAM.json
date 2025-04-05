@@ -1,40 +1,18 @@
-﻿{
-  "White_Palace_01": null,
-  "White_Palace_02": null,
-  "White_Palace_03_hub": null,
-  "White_Palace_04": null,
-  "White_Palace_05": null,
-  "White_Palace_06": null,
-  "White_Palace_07": null,
-  "White_Palace_08": null,
-  "White_Palace_09": null,
-  "White_Palace_11": {
-    "Name": "White_Palace_11",
+[
+  // AdditionalMaps overrides
+  {
+    "SceneName": "White_Palace_11",
     "X": -7.4,
-    "Y": 14.0,
-    "MapZone": "WHITE_PALACE"
+    "Y": 14.0
   },
-  "White_Palace_12": null,
-  "White_Palace_13": null,
-  "White_Palace_14": null,
-  "White_Palace_15": null,
-  "White_Palace_16": null,
-  "White_Palace_17": null,
-  "White_Palace_18": null,
-  "White_Palace_19": null,
-  "White_Palace_20": null,
-  "GG_Atrium": null,
-  "GG_Blue_Room": {
-    "Name": "GG_Blue_Room",
+  {
+    "SceneName": "GG_Blue_Room",
     "X": 7.7,
-    "Y": 14.7,
-    "MapZone": "GODS_GLORY"
+    "Y": 14.7
   },
-  "GG_Workshop": {
-    "Name": "GG_Workshop",
+  {
+    "SceneName": "GG_Workshop",
     "X": 10.1,
-    "Y": 14.7,
-    "MapZone": "GODS_GLORY"
-  },
-  "GG_Atrium_Roof": null
-}
+    "Y": 14.7
+  }
+]

@@ -3,140 +3,149 @@ using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
-using RandoMapMod.Pins;
 using RandoMapMod.Pathfinder;
+using RandoMapMod.Pathfinder.Actions;
+using RandoMapMod.Pins;
 using RandoMapMod.Transition;
 using RandoMapMod.UI;
-using RandoMapMod.Pathfinder.Actions;
 
-namespace RandoMapMod.Rooms
+namespace RandoMapMod.Rooms;
+
+internal class TransitionRoomSelector : RoomSelector
 {
-    internal class TransitionRoomSelector : RoomSelector
+    private readonly Stopwatch _attackHoldTimer = new();
+
+    internal static TransitionRoomSelector Instance { get; private set; }
+
+    public override void Initialize(IEnumerable<ISelectable> rooms)
     {
-        internal static TransitionRoomSelector Instance;
+        base.Initialize(rooms);
 
-        internal override void Initialize(IEnumerable<MapObject> rooms)
+        Instance = this;
+    }
+
+    public override void OnMainUpdate(bool active)
+    {
+        base.OnMainUpdate(active);
+
+        _attackHoldTimer.Reset();
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "CodeQuality",
+        "IDE0051:Remove unused private members",
+        Justification = "Used by Unity"
+    )]
+    private void Update()
+    {
+        if (InputHandler.Instance.inputActions.menuSubmit.WasPressed && Hotkeys.NoCtrl() && SelectedObject is not null)
         {
-            Instance = this;
+            _attackHoldTimer.Reset();
 
-            base.Initialize(rooms);
-        }
+            _ = RmmPathfinder.RM.TryGetNextRouteTo(SelectedObject.Key);
 
-        public override void OnMainUpdate(bool active)
-        {
-            base.OnMainUpdate(active);
-
-            attackHoldTimer.Reset();
-        }
-
-        private readonly Stopwatch attackHoldTimer = new();
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by Unity")]
-        private void Update()
-        {
-            if (InputHandler.Instance.inputActions.menuSubmit.WasPressed && Hotkeys.NoCtrl()
-                && SelectedObjectKey is not NONE_SELECTED)
-            {
-                attackHoldTimer.Reset();
-
-                RmmPathfinder.RM.TryGetNextRouteTo(SelectedObjectKey);
-
-                RouteText.Instance.Update();
-                RouteSummaryText.Instance.Update();
-                RoomSelectionPanel.Instance.Update();
-            }
-
-            if (InputHandler.Instance.inputActions.attack.WasPressed && Hotkeys.NoCtrl())
-            {
-                attackHoldTimer.Restart();
-            }
-
-            if (InputHandler.Instance.inputActions.attack.WasReleased)
-            {
-                attackHoldTimer.Reset();
-            }
-
-            // Disable this benchwarp if the pin selector has already selected a visited bench
-            if (attackHoldTimer.ElapsedMilliseconds >= 500)
-            {
-                attackHoldTimer.Reset();
-
-                if (RmmPinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out var benchKey))
-                {
-                    GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(benchKey));
-                }
-            }
-        }
-
-        protected private override bool ActiveByCurrentMode()
-        {
-            return Conditions.TransitionRandoModeEnabled();
-        }
-
-        protected private override bool ActiveByToggle()
-        {
-            return RandoMapMod.GS.RoomSelectionOn;
-        }
-
-        protected override void OnSelectionChanged()
-        {
+            RouteText.Instance.Update();
+            RouteSummaryText.Instance.Update();
             RoomSelectionPanel.Instance.Update();
         }
 
-        internal string GetText()
+        if (InputHandler.Instance.inputActions.attack.WasPressed && Hotkeys.NoCtrl())
         {
-            string instructions = GetInstructionText();
-            string transitions = TransitionStringBuilder.GetUncheckedVisited(SelectedObjectKey);
-
-            if (transitions is "") return instructions;
-
-            return $"{instructions}\n\n{transitions}";
+            _attackHoldTimer.Restart();
         }
 
-        private static string GetInstructionText()
+        if (InputHandler.Instance.inputActions.attack.WasReleased)
         {
-            string selectedScene = Instance.SelectedObjectKey;
-            string text = "";
-
-            text += $"{"Selected room".L()}: {selectedScene.LC()}.";
-
-            List<InControl.BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
-
-            if (selectedScene == Utils.CurrentScene())
-            {
-                text += $" {"You are here".L()}.";
-            }
-
-            text += $"\n\n{"Press".L()} {Utils.GetBindingsText(bindings)}";
-
-            if (RmmPathfinder.RM.CanCycleRoute(selectedScene))
-            {
-                text += $" {"to change starting / final transitions of current route".L()}.";
-            }
-            else
-            {
-                text += $" {"to find a new route".L()}.";
-            }
-
-            if (RmmPinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out RmmBenchKey _))
-            {
-                bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
-
-                text += $" {"Hold".L()} {Utils.GetBindingsText(bindings)} {"to benchwarp".L()}.";
-            }
-
-            return text;
+            _attackHoldTimer.Reset();
         }
 
-        private static bool TryGetBenchwarpKey(out RmmBenchKey key)
+        // Disable this benchwarp if the pin selector has already selected a visited bench
+        if (_attackHoldTimer.ElapsedMilliseconds >= 500)
         {
-            if (RmmPathfinder.RM.CurrentRoute is Route currentRoute && currentRoute.CurrentInstruction is BenchwarpAction ba)
+            _attackHoldTimer.Reset();
+
+            if (PinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out var benchKey))
             {
-                key = ba.BenchKey;
-                return true;
+                _ = GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(benchKey));
             }
-            key = default;
-            return false;
         }
+    }
+
+    private protected override bool ActiveByCurrentMode()
+    {
+        return Conditions.TransitionRandoModeEnabled();
+    }
+
+    private protected override bool ActiveByToggle()
+    {
+        return RandoMapMod.GS.RoomSelectionOn;
+    }
+
+    protected override void OnSelectionChanged()
+    {
+        RoomSelectionPanel.Instance.Update();
+    }
+
+    internal string GetText()
+    {
+        var instructions = GetInstructionText();
+        var transitions = TransitionStringBuilder.GetUncheckedVisited(SelectedObject.Key);
+
+        if (transitions is "")
+        {
+            return instructions;
+        }
+
+        return $"{instructions}\n\n{transitions}";
+    }
+
+    private static string GetInstructionText()
+    {
+        var selectedScene = Instance.SelectedObject.Key;
+        var text = "";
+
+        text += $"{"Selected room".L()}: {selectedScene.LC()}.";
+
+        List<InControl.BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
+
+        if (selectedScene == Utils.CurrentScene())
+        {
+            text += $" {"You are here".L()}.";
+        }
+
+        text += $"\n\n{"Press".L()} {Utils.GetBindingsText(bindings)}";
+
+        if (RmmPathfinder.RM.CanCycleRoute(selectedScene))
+        {
+            text += $" {"to change starting / final transitions of current route".L()}.";
+        }
+        else
+        {
+            text += $" {"to find a new route".L()}.";
+        }
+
+        if (PinSelector.Instance.VisitedBenchNotSelected() && TryGetBenchwarpKey(out var _))
+        {
+            bindings = new(InputHandler.Instance.inputActions.attack.Bindings);
+
+            text += $" {"Hold".L()} {Utils.GetBindingsText(bindings)} {"to benchwarp".L()}.";
+        }
+
+        return text;
+    }
+
+    private static bool TryGetBenchwarpKey(out RmmBenchKey key)
+    {
+        if (
+            RmmPathfinder.RM.CurrentRoute is Route currentRoute
+            && currentRoute.CurrentInstruction is BenchwarpAction ba
+        )
+        {
+            key = ba.BenchKey;
+            return true;
+        }
+
+        key = default;
+        return false;
     }
 }

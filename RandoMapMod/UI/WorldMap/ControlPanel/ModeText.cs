@@ -1,37 +1,36 @@
-﻿using RandoMapMod.Modes;
+﻿using RandoMapMod.Localization;
+using RandoMapMod.Modes;
 using UnityEngine;
-using RandoMapMod.Localization;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class ModeText : ControlPanelText
 {
-    internal class ModeText : ControlPanelText
+    private protected override string Name => "Mode";
+
+    private protected override bool ActiveCondition()
     {
-        private protected override string Name => "Mode";
+        return RandoMapMod.GS.ControlPanelOn;
+    }
 
-        private protected override bool ActiveCondition()
+    private protected override Vector4 GetColor()
+    {
+        if (MapChanger.Settings.CurrentMode() is FullMapMode)
         {
-            return RandoMapMod.GS.ControlPanelOn;
+            return RmmColors.GetColor(RmmColorSetting.UI_On);
         }
+        else if (Conditions.TransitionRandoModeEnabled())
+        {
+            return RmmColors.GetColor(RmmColorSetting.UI_Special);
+        }
+        else
+        {
+            return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+        }
+    }
 
-        private protected override Vector4 GetColor()
-        {
-            if (MapChanger.Settings.CurrentMode() is FullMapMode)
-            {
-                return RmmColors.GetColor(RmmColorSetting.UI_On);
-            }
-            else if (Conditions.TransitionRandoModeEnabled())
-            {
-                return RmmColors.GetColor(RmmColorSetting.UI_Special);
-            }
-            else
-            {
-                return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-            }
-        }
-
-        private protected override string GetText()
-        {
-            return $"{"Mode".L()} (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName.L()}";
-        }
+    private protected override string GetText()
+    {
+        return $"{"Mode".L()} (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName.L()}";
     }
 }

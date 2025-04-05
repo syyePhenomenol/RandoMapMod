@@ -3,46 +3,45 @@ using MapChanger.MonoBehaviours;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class RouteCompass : HookModule
 {
-    internal class RouteCompass : HookModule
+    private static GameObject _goCompass;
+
+    internal static RouteCompassInfo Info { get; private set; }
+
+    public override void OnEnterGame()
     {
-        internal static RouteCompassInfo Info { get; private set; }
-        private static GameObject goCompass;
+        Info = new();
+        Make();
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
+    }
 
-        public override void OnEnterGame()
-        {
-            Info = new();
-            Make();
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += AfterSceneChange;
-        }
+    public override void OnQuitToMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
+        Destroy();
+        Info = null;
+    }
 
-        public override void OnQuitToMenu()
-        {
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= AfterSceneChange;
-            Destroy();
-            Info = null;
-        }
+    internal static void Update()
+    {
+        Info.UpdateCompassTarget();
+    }
 
-        internal static void Update()
-        {
-            // RandoMapMod.Instance.LogDebug("Update route compass");
-            Info.UpdateCompassTarget();
-        }
+    private static void Make()
+    {
+        _goCompass = DirectionalCompass.Make(Info);
+    }
 
-        private static void Make()
-        {
-            goCompass = DirectionalCompass.Make(Info);
-        }
+    private static void Destroy()
+    {
+        UnityEngine.Object.Destroy(_goCompass);
+    }
 
-        private static void Destroy()
-        {
-            UnityEngine.Object.Destroy(goCompass);
-        }
-
-        private static void AfterSceneChange(Scene from, Scene to)
-        {
-            Update();
-        }
+    private static void AfterSceneChange(Scene from, Scene to)
+    {
+        Update();
     }
 }

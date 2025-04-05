@@ -6,107 +6,100 @@ using RandoMapMod.Pathfinder;
 using TMPro;
 using UnityEngine;
 
-namespace RandoMapMod.Rooms
+namespace RandoMapMod.Rooms;
+
+internal class RoomText : ColoredMapObject, ISelectable
 {
-    internal class RoomText : ColoredMapObject, ISelectable
+    private TMP_FontAsset _font;
+    private TextMeshPro _tmp;
+    private bool _selected = false;
+
+    internal RoomTextDef Rtd { get; private set; }
+
+    public override Vector4 Color
     {
-        internal RoomTextDef Rtd { get; private set; }
+        get => _tmp.color;
+        set => _tmp.color = value;
+    }
 
-        private TMP_FontAsset font;
-
-        private TextMeshPro tmp;
-        public override Vector4 Color
+    public bool Selected
+    {
+        get => _selected;
+        set
         {
-            get => tmp.color;
-            set
+            if (_selected != value)
             {
-                tmp.color = value;
+                _selected = value;
+                UpdateColor();
             }
         }
+    }
 
-        private bool selected = false;
-        public bool Selected
+    public string Key => Rtd.SceneName;
+    public Vector2 Position => transform.position;
+
+    public bool CanSelect()
+    {
+        return gameObject.activeInHierarchy;
+    }
+
+    internal void Initialize(RoomTextDef rtd, TMP_FontAsset font)
+    {
+        Rtd = rtd;
+        this._font = font;
+
+        base.Initialize();
+
+        ActiveModifiers.AddRange([Conditions.TransitionRandoModeEnabled, ActiveByMap, GetRoomActive]);
+
+        _tmp = gameObject.AddComponent<TextMeshPro>();
+        transform.localPosition = new Vector3(Rtd.X, Rtd.Y, 0f);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "CodeQuality",
+        "IDE0051:Remove unused private members",
+        Justification = "Used by Unity"
+    )]
+    private void Start()
+    {
+        _tmp.sortingLayerID = 629535577;
+        _tmp.alignment = TextAlignmentOptions.Center;
+        _tmp.font = _font;
+        _tmp.fontSize = 2.4f;
+
+        if (Language.Language.CurrentLanguage() is Language.LanguageCode.ZH)
         {
-            get => selected;
-            set
-            {
-                if (selected != value)
-                {
-                    selected = value;
-                    UpdateColor();
-                }
-            }
+            _tmp.fontSize = 3;
         }
 
-        public bool CanSelect()
+        _tmp.text = Rtd.SceneName.LC();
+    }
+
+    private bool ActiveByMap()
+    {
+        return States.WorldMapOpen || (States.QuickMapOpen && States.CurrentMapZone == Rtd.MapZone);
+    }
+
+    private bool GetRoomActive()
+    {
+        return RmmPathfinder.Slt.GetRoomActive(Rtd.SceneName);
+    }
+
+    public override void OnMainUpdate(bool active)
+    {
+        UpdateColor();
+    }
+
+    public override void UpdateColor()
+    {
+        if (_selected)
         {
-            return gameObject.activeInHierarchy;
+            Color = RmmColors.GetColor(RmmColorSetting.Room_Selected);
         }
-
-        public (string, Vector2) GetKeyAndPosition()
+        else
         {
-            return (Rtd.Name, transform.position);
-        }
-
-        internal void Initialize(RoomTextDef rtd, TMP_FontAsset font)
-        {
-            Rtd = rtd;
-            this.font = font;
-
-            base.Initialize();
-
-            ActiveModifiers.AddRange
-            (
-                [
-                    Conditions.TransitionRandoModeEnabled,
-                    ActiveByMap,
-                    GetRoomActive
-                ]
-            );
-
-            tmp = gameObject.AddComponent<TextMeshPro>();
-            transform.localPosition = new Vector3(Rtd.X, Rtd.Y, 0f);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by Unity")]
-        private void Start()
-        {
-            tmp.sortingLayerID = 629535577;
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.font = font;
-            tmp.fontSize = 2.4f; 
-            if (Language.Language.CurrentLanguage() is Language.LanguageCode.ZH)
-            {
-                tmp.fontSize = 3;
-            }
-            tmp.text = Rtd.Name.LC();
-        }
-
-        private bool ActiveByMap()
-        {
-            return States.WorldMapOpen || (States.QuickMapOpen && States.CurrentMapZone == Rtd.MapZone);
-        }
-
-        private bool GetRoomActive()
-        {
-            return RmmPathfinder.Slt.GetRoomActive(Rtd.Name);
-        }
-
-        public override void OnMainUpdate(bool active)
-        {
-            UpdateColor();
-        }
-
-        public override void UpdateColor()
-        {
-            if (selected)
-            {
-                Color = RmmColors.GetColor(RmmColorSetting.Room_Selected);
-            }
-            else
-            {
-                Color = RmmPathfinder.Slt.GetRoomColor(Rtd.Name);
-            }
+            Color = RmmPathfinder.Slt.GetRoomColor(Rtd.SceneName);
         }
     }
 }

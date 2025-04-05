@@ -1,25 +1,24 @@
-﻿using UnityEngine;
-using RandoMapMod.Localization;
+﻿using RandoMapMod.Localization;
+using UnityEngine;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class ShowHotkeysText : ControlPanelText
 {
-    internal class ShowHotkeysText : ControlPanelText
+    private protected override string Name => "Show Hotkeys";
+
+    private protected override bool ActiveCondition()
     {
-        private protected override string Name => "Show Hotkeys";
+        return true;
+    }
 
-        private protected override bool ActiveCondition()
-        {
-            return true;
-        }
+    private protected override Vector4 GetColor()
+    {
+        return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+    }
 
-        private protected override Vector4 GetColor()
-        {
-            return RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-        }
-
-        private protected override string GetText()
-        {
-            return $"Ctrl-H: {(RandoMapMod.GS.ControlPanelOn ? "Hide hotkeys" : "More hotkeys").L()}";
-        }
+    private protected override string GetText()
+    {
+        return $"Ctrl-H: {(RandoMapMod.GS.ControlPanelOn ? "Hide hotkeys" : "More hotkeys").L()}";
     }
 }

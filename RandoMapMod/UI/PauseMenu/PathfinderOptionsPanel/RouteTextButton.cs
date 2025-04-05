@@ -2,56 +2,45 @@
 using MapChanger.UI;
 using RandoMapMod.Localization;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class RouteTextButton() : BorderlessExtraButton(nameof(RouteTextButton))
 {
-    internal class RouteTextButton() : ExtraButton(nameof(RouteTextButton), RandoMapMod.MOD)
+    protected override void OnClick()
     {
-        public override void Make()
-        {
-            base.Make();
+        RandoMapMod.GS.ToggleRouteTextInGame();
+        MapUILayerUpdater.Update();
+    }
 
-            Button.Borderless = true;
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "How the route text is displayed during gameplay.".L();
+    }
+
+    public override void Update()
+    {
+        var text = $"{"Route text".L()}:\n";
+
+        switch (RandoMapMod.GS.RouteTextInGame)
+        {
+            case Settings.RouteTextInGame.Hide:
+                text += "hide".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
+                break;
+
+            case Settings.RouteTextInGame.NextTransitionOnly:
+                text += "next transition".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+
+            case Settings.RouteTextInGame.Show:
+                text += "all transitions".L();
+                Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
+                break;
+            default:
+                break;
         }
 
-        protected override void OnClick()
-        {
-            RandoMapMod.GS.ToggleRouteTextInGame();
-            MapUILayerUpdater.Update();
-        }
-
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "How the route text is displayed during gameplay.".L();
-        }
-
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
-
-        public override void Update()
-        {
-            string text = $"{"Route text".L()}:\n";
-
-            switch (RandoMapMod.GS.RouteTextInGame)
-            {
-                case Settings.RouteTextInGame.Hide:
-                    text += "hide".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-                    break;
-
-                case Settings.RouteTextInGame.NextTransitionOnly:
-                    text += "next transition".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-                    
-                case Settings.RouteTextInGame.Show:
-                    text += "all transitions".L();
-                    Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_On);
-                    break;
-            }
-
-            Button.Content = text;
-        }
+        Button.Content = text;
     }
 }

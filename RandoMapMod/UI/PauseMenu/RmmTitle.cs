@@ -1,40 +1,38 @@
 ﻿using MapChanger.UI;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class RmmTitle : Title
 {
-    internal class RmmTitle : Title
+    private string _hoveredText;
+
+    internal RmmTitle()
+        : base(nameof(RandoMapMod), nameof(RandoMapMod))
     {
-        internal static RmmTitle Instance { get; private set; }
+        Instance = this;
+    }
 
-        private string _hoveredText;
-        internal string HoveredText
+    internal static RmmTitle Instance { get; private set; }
+
+    internal string HoveredText
+    {
+        get => _hoveredText;
+        set
         {
-            get
-            {
-                return _hoveredText;
-            }
-            set
-            {
-                _hoveredText = value;
-                Update();
-            }
+            _hoveredText = value;
+            Update();
+        }
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (_hoveredText is not null)
+        {
+            TitleText.Text = _hoveredText;
         }
 
-        internal RmmTitle() : base(RandoMapMod.MOD)
-        {
-            Instance = this;
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (_hoveredText is not null)
-            {
-                TitleText.Text = _hoveredText;
-            }
-
-            TitleText.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
-        }
+        TitleText.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Neutral);
     }
 }

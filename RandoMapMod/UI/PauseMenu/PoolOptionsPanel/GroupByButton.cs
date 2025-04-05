@@ -1,51 +1,39 @@
 ﻿using MagicUI.Elements;
-using MapChanger.UI;
-using RandoMapMod.Settings;
 using RandoMapMod.Localization;
+using RandoMapMod.Settings;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class GroupByButton() : BorderlessExtraButton(nameof(GroupByButton))
 {
-    internal class GroupByButton() : ExtraButton(nameof(GroupByButton), RandoMapMod.MOD)
+    protected override void OnClick()
     {
-        public override void Make()
-        {
-            base.Make();
+        RandoMapMod.LS.ToggleGroupBy();
+    }
 
-            Button.Borderless = true;
+    protected override void OnHover()
+    {
+        RmmTitle.Instance.HoveredText = "Group pools by either location (normal) or by item (spoilers).".L();
+    }
+
+    public override void Update()
+    {
+        var text = $"{"Group by".L()}:\n";
+
+        switch (RandoMapMod.LS.GroupBy)
+        {
+            case GroupBySetting.Location:
+                text += "Location".L();
+                break;
+
+            case GroupBySetting.Item:
+                text += "Item".L();
+                break;
+            default:
+                break;
         }
 
-        protected override void OnClick()
-        {
-            RandoMapMod.LS.ToggleGroupBy();
-        }
-
-        protected override void OnHover()
-        {
-            RmmTitle.Instance.HoveredText = "Group pools by either location (normal) or by item (spoilers).".L();
-        }
-
-        protected override void OnUnhover()
-        {
-            RmmTitle.Instance.HoveredText = null;
-        }
-
-        public override void Update()
-        {
-            string text = $"{"Group by".L()}:\n";
-
-            switch (RandoMapMod.LS.GroupBy)
-            {
-                case GroupBySetting.Location:
-                    text += "Location".L();
-                    break;
-
-                case GroupBySetting.Item:
-                    text += "Item".L();
-                    break;
-            }
-
-            Button.Content = text;
-            Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
-        }
+        Button.Content = text;
+        Button.ContentColor = RmmColors.GetColor(RmmColorSetting.UI_Special);
     }
 }

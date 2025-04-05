@@ -1,30 +1,22 @@
 ﻿using MapChanger.UI;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class PoolOptionsPanel : RmmOptionsPanel
 {
-    internal class PoolOptionsPanel : ExtraButtonPanel
+    internal PoolOptionsPanel()
+        : base(nameof(PoolOptionsPanel), GetButtons())
     {
-        internal static PoolOptionsPanel Instance { get; private set; }
+        Instance = this;
+    }
 
-        internal PoolOptionsPanel() : base(nameof(PoolOptionsPanel), RandoMapMod.MOD, 390f, 10)
-        {
-            Instance = this;
-        }
+    internal static PoolOptionsPanel Instance { get; private set; }
 
-        protected override void MakeButtons()
-        {
-            foreach (string poolGroup in RandoMapMod.LS.AllPoolGroups)
-            {
-                PoolButton poolButton = new(poolGroup);
-                poolButton.Make();
-                ExtraButtonsGrid.Children.Add(poolButton.Button);
-                ExtraButtons.Add(poolButton);
-            }
-
-            GroupByButton groupByButton = new();
-            groupByButton.Make();
-            ExtraButtonsGrid.Children.Add(groupByButton.Button);
-            ExtraButtons.Add(groupByButton);
-        }
+    private static IEnumerable<ExtraButton> GetButtons()
+    {
+        return RandoMapMod
+            .LS.AllPoolGroups.Select(p => new PoolButton(p))
+            .Cast<ExtraButton>()
+            .Append(new GroupByButton());
     }
 }

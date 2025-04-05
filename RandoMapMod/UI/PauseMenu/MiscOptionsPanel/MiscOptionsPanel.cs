@@ -1,11 +1,21 @@
 ﻿using MapChanger.UI;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class MiscOptionsPanel : RmmOptionsPanel
 {
-    internal class MiscOptionsPanel : ExtraButtonPanel
+    internal MiscOptionsPanel()
+        : base(nameof(MiscOptionsPanel), GetButtons())
     {
-        private static readonly ExtraButton[] buttons =
-        {
+        Instance = this;
+    }
+
+    internal static MiscOptionsPanel Instance { get; private set; }
+
+    private static IEnumerable<ExtraButton> GetButtons()
+    {
+        return
+        [
             new ItemCompassModeButton(),
             new AreaNamesButton(),
             new NextAreasButton(),
@@ -13,24 +23,7 @@ namespace RandoMapMod.UI
             new QuillButton(),
             new DefaultItemModeButton(),
             new DefaultTransitionModeButton(),
-            new DefaultSettingsButton()
-        };
-
-        internal static MiscOptionsPanel Instance { get; private set; }
-
-        internal MiscOptionsPanel() : base(nameof(MiscOptionsPanel), RandoMapMod.MOD, 390f, 10)
-        {
-            Instance = this;
-        }
-
-        protected override void MakeButtons()
-        {
-            foreach (ExtraButton button in buttons)
-            {
-                button.Make();
-                ExtraButtonsGrid.Children.Add(button.Button);
-                ExtraButtons.Add(button);
-            }
-        }
+            new DefaultSettingsButton(),
+        ];
     }
 }

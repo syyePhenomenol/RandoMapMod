@@ -1,68 +1,80 @@
-﻿using MapChanger;
+﻿using System.Collections.ObjectModel;
+using MapChanger;
 using MapChanger.Map;
 using MapChanger.MonoBehaviours;
 using TMPro;
 using UnityEngine;
 
-namespace RandoMapMod.Rooms
+namespace RandoMapMod.Rooms;
+
+internal class RmmRoomManager : HookModule
 {
-    internal class RmmRoomManager : HookModule
+    private static Dictionary<string, RoomTextDef> _roomTextDefs;
+
+    internal static MapObject MoRoomTexts { get; private set; }
+    internal static ReadOnlyDictionary<string, RoomText> RoomTexts { get; private set; }
+
+    public override void OnEnterGame()
     {
-        internal static MapObject MoRoomTexts { get; private set; }        
-        internal static Dictionary<string, RoomText> RoomTextLookup { get; private set; }
+        _roomTextDefs = JsonUtil
+            .DeserializeFromAssembly<RoomTextDef[]>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTexts.json")
+            .Where(r => !Finder.IsMappedScene(r.SceneName))
+            .ToDictionary(r => r.SceneName, r => r);
 
-        private static Dictionary<string, RoomTextDef> roomTextDefs;
-
-        public override void OnEnterGame()
+        if (!MapChanger.Dependencies.HasAdditionalMaps)
         {
-            roomTextDefs = JsonUtil.DeserializeFromAssembly<Dictionary<string, RoomTextDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTexts.json");
+            return;
+        }
 
-            if (Dependencies.HasAdditionalMaps)
+        foreach (
+            var rtd in JsonUtil.DeserializeFromAssembly<RoomTextDef[]>(
+                RandoMapMod.Assembly,
+                "RandoMapMod.Resources.roomTextsAM.json"
+            )
+        )
+        {
+            if (_roomTextDefs.ContainsKey(rtd.SceneName))
             {
-                Dictionary<string, RoomTextDef> roomTextDefsAM = JsonUtil.DeserializeFromAssembly<Dictionary<string, RoomTextDef>>(RandoMapMod.Assembly, "RandoMapMod.Resources.roomTextsAM.json");
-                foreach ((string scene, RoomTextDef rtd) in roomTextDefsAM.Select(kvp => (kvp.Key, kvp.Value)))
-                {
-                    if (!roomTextDefs.ContainsKey(scene)) continue;
-                    if (rtd is null)
-                    {
-                        roomTextDefs.Remove(scene);
-                    }
-                    else
-                    {
-                        roomTextDefs[scene] = rtd;
-                    }
-                }
+                _roomTextDefs[rtd.SceneName] = rtd;
             }
         }
+    }
 
-        public override void OnQuitToMenu()
+    public override void OnQuitToMenu()
+    {
+        _roomTextDefs = null;
+        MoRoomTexts = null;
+        RoomTexts = null;
+    }
+
+    internal static void Make(GameObject goMap)
+    {
+        MoRoomTexts = Utils.MakeMonoBehaviour<MapObject>(goMap, "Room Texts");
+        MoRoomTexts.Initialize();
+
+        var tmpFont = goMap.transform.Find("Cliffs").Find("Area Name (1)").GetComponent<TextMeshPro>().font;
+
+        Dictionary<string, RoomText> roomTexts = [];
+        foreach (var rtd in _roomTextDefs.Values)
         {
-            roomTextDefs = null;
-            MoRoomTexts = null;
-            RoomTextLookup = null;
+            var roomText = Utils.MakeMonoBehaviour<RoomText>(null, $"Room Text {rtd.SceneName}");
+            roomText.Initialize(rtd, tmpFont);
+            MoRoomTexts.AddChild(roomText);
+            roomTexts[rtd.SceneName] = roomText;
         }
 
-        internal static void Make(GameObject goMap)
-        {
-            MoRoomTexts = Utils.MakeMonoBehaviour<MapObject>(goMap, "Room Texts");
-            MoRoomTexts.Initialize();
+        RoomTexts = new(roomTexts);
 
-            TMP_FontAsset tmpFont = goMap.transform.Find("Cliffs").Find("Area Name (1)").GetComponent<TextMeshPro>().font;
+        MapObjectUpdater.Add(MoRoomTexts);
 
-            RoomTextLookup = [];
-            foreach ((string scene, RoomTextDef rtd) in roomTextDefs.Select(kvp => (kvp.Key, kvp.Value)))
-            {
-                RoomText roomText = Utils.MakeMonoBehaviour<RoomText>(null, $"Room Text {rtd.Name}");
-                roomText.Initialize(rtd, tmpFont);
-                MoRoomTexts.AddChild(roomText);
-                RoomTextLookup[rtd.Name] = roomText;
-            }
+        List<ISelectable> rooms = [.. BuiltInObjects.SelectableRooms.Values.Cast<ISelectable>()];
+        rooms.AddRange(RoomTexts.Values.Cast<ISelectable>());
 
-            MapObjectUpdater.Add(MoRoomTexts);
-
-            // The Selector base class already adds to MapObjectUpdater (gets destroyed on return to Menu)
-            TransitionRoomSelector transitionRoomSelector = Utils.MakeMonoBehaviour<TransitionRoomSelector>(null, "RandoMapMod Transition Room Selector");
-            transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
-        }
+        // The Selector base class already adds to MapObjectUpdater (gets destroyed on return to Menu)
+        var transitionRoomSelector = Utils.MakeMonoBehaviour<TransitionRoomSelector>(
+            null,
+            "RandoMapMod Transition Room Selector"
+        );
+        transitionRoomSelector.Initialize(rooms);
     }
 }

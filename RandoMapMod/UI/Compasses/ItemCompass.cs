@@ -1,63 +1,67 @@
 ﻿using MapChanger;
 using MapChanger.MonoBehaviours;
-using Modding;
+using RandomizerMod.IC;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class ItemCompass : HookModule
 {
-    internal class ItemCompass : HookModule
+    private static GameObject _goCompass;
+
+    private bool _finishedLateUpdate;
+
+    internal static ItemCompassInfo Info { get; private set; }
+
+    public override void OnEnterGame()
     {
-        internal static ItemCompassInfo Info { get; private set; }
-        private static GameObject goCompass;
+        Info = new();
+        Make();
 
-        public override void OnEnterGame()
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += EarlyUpdate;
+        On.PlayMakerFSM.Start += LateUpdate;
+        TrackerUpdate.OnFinishedUpdate += Info.UpdateCurrentCompassTargets;
+    }
+
+    public override void OnQuitToMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= EarlyUpdate;
+        On.PlayMakerFSM.Start -= LateUpdate;
+        TrackerUpdate.OnFinishedUpdate -= Info.UpdateCurrentCompassTargets;
+
+        Destroy();
+        Info = null;
+    }
+
+    private void EarlyUpdate(Scene from, Scene to)
+    {
+        Info.UpdateCompassTargets();
+
+        _finishedLateUpdate = false;
+    }
+
+    private void LateUpdate(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
+    {
+        orig(self);
+
+        if (_finishedLateUpdate)
         {
-            Info = new();
-            Make();
-            On.PlayMakerFSM.Start += LateUpdate;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += EarlyUpdate;
+            return;
         }
 
-        public override void OnQuitToMenu()
-        {
-            On.PlayMakerFSM.Start -= LateUpdate;
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= EarlyUpdate;
-            Destroy();
-            Info = null;
-        }
+        RandoMapMod.Instance.LogFine("Update item compass");
+        Info.UpdateCurrentCompassTargets();
+        _finishedLateUpdate = true;
+    }
 
-        private static void EarlyUpdate(Scene from, Scene to)
-        {
-            Info.UpdateCompassTargets();
+    private void Make()
+    {
+        _goCompass = DirectionalCompass.Make(Info);
+    }
 
-            finishedLateUpdate = false;
-        }
-
-        private static bool finishedLateUpdate;
-
-        private static void LateUpdate(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
-        {
-            orig(self);
-
-            if (finishedLateUpdate)
-            {
-                return;
-            }
-
-            RandoMapMod.Instance.LogFine("Update item compass");
-            Info.UpdateCurrentCompassTargets();
-            finishedLateUpdate = true;
-        }
-
-        private static void Make()
-        {
-            goCompass = DirectionalCompass.Make(Info);
-        }
-
-        private static void Destroy()
-        {
-            UnityEngine.Object.Destroy(goCompass);
-        }
+    private void Destroy()
+    {
+        UnityEngine.Object.Destroy(_goCompass);
     }
 }

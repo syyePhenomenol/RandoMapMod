@@ -1,31 +1,19 @@
 ﻿using MapChanger.UI;
 
-namespace RandoMapMod.UI
+namespace RandoMapMod.UI;
+
+internal class PathfinderOptionsPanel : RmmOptionsPanel
 {
-    internal class PathfinderOptionsPanel : ExtraButtonPanel
+    internal PathfinderOptionsPanel()
+        : base(nameof(PathfinderOptionsPanel), GetButtons())
     {
-        private static readonly ExtraButton[] buttons =
-        {
-            new RouteCompassButton(),
-            new RouteTextButton(),
-            new OffRouteButton()
-        };
+        Instance = this;
+    }
 
-        internal static PathfinderOptionsPanel Instance { get; private set; }
+    internal static PathfinderOptionsPanel Instance { get; private set; }
 
-        internal PathfinderOptionsPanel() : base(nameof(PathfinderOptionsPanel), RandoMapMod.MOD, 390f, 10)
-        {
-            Instance = this;
-        }
-
-        protected override void MakeButtons()
-        {
-            foreach (ExtraButton button in buttons)
-            {
-                button.Make();
-                ExtraButtonsGrid.Children.Add(button.Button);
-                ExtraButtons.Add(button);
-            }
-        }
+    private static IEnumerable<ExtraButton> GetButtons()
+    {
+        return [new RouteCompassButton(), new RouteTextButton(), new OffRouteButton()];
     }
 }

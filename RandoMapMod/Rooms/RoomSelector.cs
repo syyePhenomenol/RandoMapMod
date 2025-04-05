@@ -1,64 +1,37 @@
 ﻿using MapChanger.MonoBehaviours;
 
-namespace RandoMapMod.Rooms
+namespace RandoMapMod.Rooms;
+
+internal abstract class RoomSelector : Selector
 {
-    internal abstract class RoomSelector : Selector
+    public override float SelectionRadius { get; } = 2.5f;
+
+    public override float SpriteSize { get; } = 0.6f;
+
+    public override void Initialize(IEnumerable<ISelectable> rooms)
     {
-        public override float SelectionRadius { get; } = 2.5f;
+        base.Initialize(rooms);
 
-        public override float SpriteSize { get; } = 0.6f;
+        ActiveModifiers.AddRange([ActiveByCurrentMode, ActiveByToggle]);
+    }
 
-        internal virtual void Initialize(IEnumerable<MapObject> rooms)
-        {
-            base.Initialize();
+    private protected abstract bool ActiveByCurrentMode();
+    private protected abstract bool ActiveByToggle();
 
-            ActiveModifiers.AddRange(
-            [
-                ActiveByCurrentMode,
-                ActiveByToggle
-            ]);
+    public override void OnMainUpdate(bool active)
+    {
+        base.OnMainUpdate(active);
 
-            foreach (MapObject room in rooms)
-            {
-                string sceneName = "";
-                if (room is RoomSprite roomSprite)
-                {
-                    sceneName = roomSprite.Rsd.SceneName;
-                }
-                if (room is RoomText roomText)
-                {
-                    sceneName = roomText.Rtd.Name;
-                }
+        SpriteObject.SetActive(RandoMapMod.GS.ShowReticle);
+    }
 
-                if (Objects.TryGetValue(sceneName, out List<ISelectable> selectables))
-                {
-                    selectables.Add((ISelectable)room);
-                }
-                else
-                {
-                    Objects[sceneName] = [(ISelectable)room];
-                }
-            }
-        }
+    protected override void Select(ISelectable selectable)
+    {
+        selectable.Selected = true;
+    }
 
-        protected private abstract bool ActiveByCurrentMode();
-        protected private abstract bool ActiveByToggle();
-
-        public override void OnMainUpdate(bool active)
-        {
-            base.OnMainUpdate(active);
-
-            SpriteObject.SetActive(RandoMapMod.GS.ShowReticle);
-        }
-
-        protected override void Select(ISelectable selectable)
-        {
-            selectable.Selected = true;
-        }
-
-        protected override void Deselect(ISelectable selectable)
-        {
-            selectable.Selected = false;
-        }
+    protected override void Deselect(ISelectable selectable)
+    {
+        selectable.Selected = false;
     }
 }

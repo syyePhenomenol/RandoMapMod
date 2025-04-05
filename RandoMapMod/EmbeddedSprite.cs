@@ -1,27 +1,24 @@
 ﻿using ItemChanger;
 using UnityEngine;
 
-namespace RandoMapMod
+namespace RandoMapMod;
+
+/// <summary>
+/// Uses MapChanger's SpriteManager to get a Sprite.
+/// </summary>
+internal class EmbeddedSprite : ISprite
 {
-    /// <summary>
-    /// Uses MapChanger's SpriteManager to get a Sprite.
-    /// </summary>
-    internal class EmbeddedSprite : ISprite
+    public string Key { get; }
+    public Sprite Value { get; }
+
+    internal EmbeddedSprite(string key)
     {
-        public string Key { get; init; }
-        
-        private readonly Sprite value;
-        public Sprite Value => value;
+        Key = key;
+        Value = MapChanger.SpriteManager.Instance.GetSprite(key);
+    }
 
-        internal EmbeddedSprite(string key)
-        {
-            Key = key;
-            value = MapChanger.SpriteManager.Instance.GetSprite(key);
-        }
-
-        public ISprite Clone()
-        {
-            return (ISprite)MemberwiseClone();
-        }
+    public ISprite Clone()
+    {
+        return (ISprite)MemberwiseClone();
     }
 }
