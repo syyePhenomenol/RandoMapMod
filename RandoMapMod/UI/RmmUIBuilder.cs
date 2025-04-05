@@ -1,3 +1,4 @@
+using MapChanger;
 using MapChanger.UI;
 
 namespace RandoMapMod.UI;
@@ -61,5 +62,12 @@ internal class RmmUIBuilder
         {
             MapUILayerUpdater.Add(uiLayer);
         }
+
+        // Automatically gets destroyed on returning to Main Menu
+        var progressHintInputListener = Utils.MakeMonoBehaviour<ProgressHintInputListener>(
+            null,
+            "RandoMapMod Progress Hint Input Listener"
+        );
+        progressHintInputListener.Initialize();
     }
 }

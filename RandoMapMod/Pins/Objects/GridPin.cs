@@ -95,8 +95,13 @@ internal class GridPin : RmmPin
 
     public override string GetText()
     {
-        var dreamNailBindingsText = Utils.GetBindingsText(new(InputHandler.Instance.inputActions.dreamNail.Bindings));
+        var bindingsText = PinSelector.Instance.LockGridPinInput.GetBindingsText();
+        var lockSelectionText = (
+            PinSelector.Instance.LockSelection
+                ? "to unlock pin selection"
+                : "to lock pin selection and view highlighted rooms"
+        ).L();
 
-        return $"{base.GetText()}\n\n{"Press".L()} {dreamNailBindingsText} {(PinSelector.Instance.LockSelection ? "to unlock pin selection" : "to lock pin selection and view highlighted rooms").L()}.";
+        return $"{base.GetText()}\n\n{"Press".L()} {bindingsText} {lockSelectionText}.";
     }
 }

@@ -1,4 +1,3 @@
-using MapChanger;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.Pins;
@@ -21,6 +20,8 @@ internal class BenchInfo(string name)
             return null;
         }
 
-        return $"{"Hold".L()} {Utils.GetBindingsText(new(InputHandler.Instance.inputActions.attack.Bindings))} {"to benchwarp".L()}.";
+        var bindingsText = PinSelector.Instance.PinBenchwarpInput.GetBindingsText();
+
+        return $"{"Hold".L()} {bindingsText} {"to benchwarp".L()}.";
     }
 }

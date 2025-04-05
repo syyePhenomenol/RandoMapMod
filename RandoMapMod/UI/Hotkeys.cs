@@ -1,5 +1,4 @@
 ﻿using MagicUI.Core;
-using MapChanger;
 using MapChanger.UI;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
@@ -139,24 +138,11 @@ internal class Hotkeys : MapUILayer
             () =>
             {
                 RandoMapMod.GS.ToggleProgressHint();
+                ProgressHintInputListener.Instance.MainUpdate();
                 MapUILayerUpdater.Update();
             },
             ModifierKeys.Ctrl,
             GlobalHotkeyCondition
-        );
-
-        Root.ListenForPlayerAction(
-            InputHandler.Instance.inputActions.superDash,
-            () =>
-            {
-                UpdateSelectors();
-                ProgressHintPanel.Instance.UpdateNewHint();
-            },
-            () =>
-                GlobalHotkeyCondition()
-                && States.WorldMapOpen
-                && RandoMapMod.GS.ProgressHint is not Settings.ProgressHintSetting.Off
-                && NoCtrl()
         );
 
         Root.ListenForHotkey(

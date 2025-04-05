@@ -47,6 +47,18 @@ internal class PinSelectionPanel
 
     internal static PinSelectionPanel Instance { get; private set; }
 
+    internal bool ShowHint { get; private set; }
+
+    internal void RevealHint()
+    {
+        ShowHint = true;
+    }
+
+    internal void HideHint()
+    {
+        ShowHint = false;
+    }
+
     internal void Update()
     {
         if (_pinPanel is null || _pinPanelText is null)

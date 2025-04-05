@@ -6,11 +6,11 @@ using static RandomizerMod.Settings.TrackerData;
 
 namespace RandoMapMod.UI;
 
-internal class ProgressHintMainUpdater : MainUpdater
+internal class ProgressHintLogicUpdater : MainUpdater
 {
     private readonly bool _terminateOnNewProgress = false;
 
-    public ProgressHintMainUpdater(TrackerData td, ProgressionManager newPM)
+    public ProgressHintLogicUpdater(TrackerData td, ProgressionManager newPM)
         : base(td.lm, newPM)
     {
         // To avoid modifying TrackerData, keep a local copy to track what OOL stuff is added back in
@@ -170,7 +170,7 @@ internal class ProgressHintMainUpdater : MainUpdater
 
     public bool NewProgressFound { get; private set; } = false;
 
-    private class TrackedStateUpdateEntry(ProgressHintMainUpdater mu, Term term, StateLogicDef logic)
+    private class TrackedStateUpdateEntry(ProgressHintLogicUpdater mu, Term term, StateLogicDef logic)
         : StateUpdateEntry(term, logic)
     {
         private readonly List<State> _stateAccumulator = [];
@@ -206,7 +206,7 @@ internal class ProgressHintMainUpdater : MainUpdater
         }
     }
 
-    private class TrackedPreplacedItemUpdateEntry(ProgressHintMainUpdater mu, ILogicItem item, ILogicDef location)
+    private class TrackedPreplacedItemUpdateEntry(ProgressHintLogicUpdater mu, ILogicItem item, ILogicDef location)
         : PrePlacedItemUpdateEntry(item, location)
     {
         public override void OnAdd(ProgressionManager pm)

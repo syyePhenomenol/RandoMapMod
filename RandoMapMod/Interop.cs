@@ -6,8 +6,6 @@ internal static class Interop
 
     internal static bool HasBenchRando { get; private set; } = false;
 
-    // internal static bool HasDebugMod { get; private set; } = false;
-
     internal static void FindInteropMods()
     {
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -20,9 +18,6 @@ internal static class Interop
                 case "BenchRando":
                     HasBenchRando = true;
                     continue;
-                // case "DebugMod":
-                //     HasDebugMod = true;
-                //     continue;
                 default:
                     continue;
             }

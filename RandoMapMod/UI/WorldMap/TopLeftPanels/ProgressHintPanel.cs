@@ -72,7 +72,8 @@ internal class ProgressHintPanel
         if (_selectedHint is null || _selectedHint.IsPlacementObtained())
         {
             _selectedHint = null;
-            _progressHintText.Text = $"{"Press".L()} {GetQuickCastBindingsText()} {"to reveal progress hint".L()}.";
+            var bindingsText = ProgressHintInputListener.Instance.ProgressHintInput.GetBindingsText();
+            _progressHintText.Text = $"{"Press".L()} {bindingsText} {"to reveal progress hint".L()}.";
         }
         else
         {
@@ -99,7 +100,7 @@ internal class ProgressHintPanel
         var ctx = RM.RS.Context;
         ProgressionManager newPM = new(lm, ctx);
 
-        var mu = new ProgressHintMainUpdater(td, newPM);
+        var mu = new ProgressHintLogicUpdater(td, newPM);
 
         Random rng = new();
 
@@ -196,19 +197,15 @@ internal class ProgressHintPanel
     {
         if (_selectedHint is not null)
         {
+            var bindingsText = ProgressHintInputListener.Instance.ProgressHintInput.GetBindingsText();
             _progressHintText.Text =
                 $"{"You will find progress".L()}"
                 + _selectedHint.GetTextFragment()
-                + $".\n\n{"Press".L()} {GetQuickCastBindingsText()} {"to refresh hint".L()}.";
+                + $".\n\n{"Press".L()} {bindingsText} {"to refresh hint".L()}.";
         }
         else
         {
             _progressHintText.Text = "Current reachable locations/transitions will not unlock any more progress.".L();
         }
-    }
-
-    private static string GetQuickCastBindingsText()
-    {
-        return Utils.GetBindingsText(new(InputHandler.Instance.inputActions.superDash.Bindings));
     }
 }

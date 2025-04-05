@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using Modding;
@@ -35,6 +35,16 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         new RmmPinManager(),
         new ItemCompass(),
         new RouteCompass(),
+    ];
+
+    private static readonly IEnumerable<string> _debugModBindings =
+    [
+        "Show Location Hint",
+        "Lock Grid Pin",
+        "Toggle Overlapping Pins",
+        "World Map Benchwarp",
+        "Select Pathfinder Route",
+        "Show Progress Hint",
     ];
 
     public RandoMapMod()
@@ -89,10 +99,13 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
         Interop.FindInteropMods();
 
-        // if (Interop.HasDebugMod)
-        // {
-        //     DebugInterop.AddDebugModBindings();
-        // }
+        if (MapChanger.Dependencies.HasDebugMod)
+        {
+            foreach (var binding in _debugModBindings)
+            {
+                DebugModInterop.AddBinding(binding, nameof(RandoMapMod));
+            }
+        }
 
         Finder.InjectLocations(
             JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(

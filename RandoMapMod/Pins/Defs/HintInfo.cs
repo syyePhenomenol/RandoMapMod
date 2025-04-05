@@ -1,5 +1,5 @@
-using MapChanger;
 using RandoMapMod.Localization;
+using RandoMapMod.UI;
 using RandomizerCore.Logic;
 
 namespace RandoMapMod.Pins;
@@ -42,11 +42,12 @@ internal class HintInfo
             return null;
         }
 
-        if (PinSelector.Instance.ShowHint)
+        if (PinSelectionPanel.Instance.ShowHint)
         {
             return _text;
         }
 
-        return $"{"Press".L()} {Utils.GetBindingsText(new(InputHandler.Instance.inputActions.quickCast.Bindings))} {"to reveal location hint".L()}.";
+        var bindingsText = PinSelector.Instance.ShowLocationHintInput.GetBindingsText();
+        return $"{"Press".L()} {bindingsText} {"to reveal location hint".L()}.";
     }
 }

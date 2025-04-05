@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
 using RandoMapMod.UI;
@@ -8,16 +7,18 @@ namespace RandoMapMod.Pins;
 
 internal class PinSelector : Selector
 {
-    private readonly Stopwatch _attackHoldTimer = new();
-
     internal static PinSelector Instance { get; private set; }
 
+    internal LockGridPinInput LockGridPinInput { get; } = new();
+    internal TogglePinClusterInput TogglePinClusterInput { get; } = new();
+    internal ShowLocationHintInput ShowLocationHintInput { get; } = new();
+    internal PinBenchwarpInput PinBenchwarpInput { get; } = new();
+
     internal GridPinRoomHighlighter Highlighter { get; private set; }
-    internal bool ShowHint { get; private set; }
 
     internal void Initialize(IEnumerable<IPinSelectable> pins)
     {
-        base.Initialize(pins);
+        base.Initialize([LockGridPinInput, TogglePinClusterInput, ShowLocationHintInput, PinBenchwarpInput], pins);
 
         Instance = this;
 
@@ -25,61 +26,6 @@ internal class PinSelector : Selector
         Highlighter.gameObject.SetActive(true);
 
         ActiveModifiers.AddRange([ActiveByCurrentMode, ActiveByToggle]);
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "CodeQuality",
-        "IDE0051:Remove unused private members",
-        Justification = "Used by Unity"
-    )]
-    private void Update()
-    {
-        // Press dream nail to toggle lock selection
-        if (InputHandler.Instance.inputActions.dreamNail.WasPressed && Hotkeys.NoCtrl())
-        {
-            if (SelectedObject is GridPin)
-            {
-                ToggleLockSelection();
-            }
-            else if (SelectedObject is PinCluster pinCluster)
-            {
-                pinCluster.ToggleSelectedPin();
-                ShowHint = false;
-            }
-
-            PinSelectionPanel.Instance.Update();
-        }
-
-        // Press quick cast for location hint
-        if (InputHandler.Instance.inputActions.quickCast.WasPressed && Hotkeys.NoCtrl())
-        {
-            if (!ShowHint)
-            {
-                ShowHint = true;
-                PinSelectionPanel.Instance.Update();
-            }
-        }
-
-        // Hold attack to benchwarp
-        if (InputHandler.Instance.inputActions.attack.WasPressed && Hotkeys.NoCtrl())
-        {
-            _attackHoldTimer.Restart();
-        }
-
-        if (InputHandler.Instance.inputActions.attack.WasReleased)
-        {
-            _attackHoldTimer.Reset();
-        }
-
-        if (_attackHoldTimer.ElapsedMilliseconds >= 500)
-        {
-            _attackHoldTimer.Reset();
-
-            if (VisitedBenchSelected())
-            {
-                _ = GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(SelectedObject?.Key));
-            }
-        }
     }
 
     public override void OnMainUpdate(bool active)
@@ -126,8 +72,9 @@ internal class PinSelector : Selector
 
     protected override void OnSelectionChanged()
     {
-        ShowHint = false;
-        SelectionPanels.Instance.Update();
+        PinSelectionPanel.Instance.HideHint();
+        PinSelectionPanel.Instance.Update();
+        RoomSelectionPanel.Instance.Update();
     }
 
     private bool ActiveByCurrentMode()
