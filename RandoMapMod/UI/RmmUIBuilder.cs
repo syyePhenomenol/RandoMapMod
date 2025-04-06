@@ -1,4 +1,3 @@
-using MapChanger;
 using MapChanger.UI;
 
 namespace RandoMapMod.UI;
@@ -32,7 +31,6 @@ internal class RmmUIBuilder
 
     private readonly MapUILayer[] _mapUILayers =
     [
-        new Hotkeys(),
         new ControlPanel(),
         new TopLeftPanels(),
         new SelectionPanels(),
@@ -62,12 +60,5 @@ internal class RmmUIBuilder
         {
             MapUILayerUpdater.Add(uiLayer);
         }
-
-        // Automatically gets destroyed on returning to Main Menu
-        var progressHintInputListener = Utils.MakeMonoBehaviour<ProgressHintInputListener>(
-            null,
-            "RandoMapMod Progress Hint Input Listener"
-        );
-        progressHintInputListener.Initialize();
     }
 }

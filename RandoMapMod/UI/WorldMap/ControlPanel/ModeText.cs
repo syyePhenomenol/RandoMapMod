@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using MapChanger.Input;
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using UnityEngine;
 
@@ -31,6 +32,6 @@ internal class ModeText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Mode".L()} (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName.L()}";
+        return $"{"Mode".L()} {ToggleModeInput.Instance.GetBindingsText()}: {MapChanger.Settings.CurrentMode().ModeName.L()}";
     }
 }

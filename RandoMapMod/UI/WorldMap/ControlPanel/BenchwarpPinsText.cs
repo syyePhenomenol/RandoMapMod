@@ -1,3 +1,4 @@
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ internal class BenchwarpPinsText : ControlPanelText
     {
         if (Interop.HasBenchwarp)
         {
-            return $"{"Benchwarp pins".L()} (Ctrl-W): {(RandoMapMod.GS.ShowBenchwarpPins ? "On" : "Off").L()}";
+            return $"{"Benchwarp pins".L()} {ToggleBenchwarpPinsInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.ShowBenchwarpPins ? "On" : "Off").L()}";
         }
 
         return "Benchwarp is not installed or outdated".L();

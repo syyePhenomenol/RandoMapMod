@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -19,6 +20,6 @@ internal class ShowHotkeysText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"Ctrl-H: {(RandoMapMod.GS.ControlPanelOn ? "Hide hotkeys" : "More hotkeys").L()}";
+        return $"{ControlPanelInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.ControlPanelOn ? "Hide hotkeys" : "More hotkeys").L()}";
     }
 }

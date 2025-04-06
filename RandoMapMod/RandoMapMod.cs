@@ -1,7 +1,8 @@
-using System.Reflection;
+﻿using System.Reflection;
 using MapChanger;
 using MapChanger.Defs;
 using Modding;
+using RandoMapMod.Input;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pins;
@@ -15,7 +16,7 @@ namespace RandoMapMod;
 
 public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
 {
-    private static readonly MapMode[] _modes =
+    private static readonly IEnumerable<MapMode> _modes =
     [
         new FullMapMode(),
         new AllPinsMode(),
@@ -26,7 +27,7 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         new TransitionAllRoomsMode(),
     ];
 
-    private static readonly List<HookModule> _hookModules =
+    private static readonly IEnumerable<HookModule> _hookModules =
     [
         new RmmColors(),
         new RmmRoomManager(),
@@ -35,16 +36,6 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         new RmmPinManager(),
         new ItemCompass(),
         new RouteCompass(),
-    ];
-
-    private static readonly IEnumerable<string> _debugModBindings =
-    [
-        "Show Location Hint",
-        "Lock Grid Pin",
-        "Toggle Overlapping Pins",
-        "World Map Benchwarp",
-        "Select Pathfinder Route",
-        "Show Progress Hint",
     ];
 
     public RandoMapMod()
@@ -99,13 +90,31 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
         Interop.FindInteropMods();
 
-        if (MapChanger.Dependencies.HasDebugMod)
-        {
-            foreach (var binding in _debugModBindings)
-            {
-                DebugModInterop.AddBinding(binding, nameof(RandoMapMod));
-            }
-        }
+        InputManager.AddRange(
+            [
+                new LocationHintInput(),
+                new TogglePinClusterInput(),
+                new LockGridPinInput(),
+                new SelectRoomRouteInput(),
+                new BenchwarpInput(),
+                new ProgressHintInput(),
+                new ControlPanelInput(),
+                new MapKeyInput(),
+                new PinPanelInput(),
+                new ToggleItemCompassInput(),
+                new ToggleBenchwarpPinsInput(),
+                new RoomPanelInput(),
+                new SelectionReticleInput(),
+                new PathfinderBenchwarpInput(),
+                new ProgressHintPanelInput(),
+                new ToggleSpoilersInput(),
+                new ToggleVanillaInput(),
+                new ToggleRandomizedInput(),
+                new ToggleShapeInput(),
+                new ToggleSizeInput(),
+                new DebugInput(),
+            ]
+        );
 
         Finder.InjectLocations(
             JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(

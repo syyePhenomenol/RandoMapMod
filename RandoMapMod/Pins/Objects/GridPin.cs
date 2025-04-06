@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using RandoMapMod.Rooms;
 
@@ -95,7 +96,7 @@ internal class GridPin : RmmPin
 
     public override string GetText()
     {
-        var bindingsText = PinSelector.Instance.LockGridPinInput.GetBindingsText();
+        var bindingsText = LockGridPinInput.Instance.GetBindingsText();
         var lockSelectionText = (
             PinSelector.Instance.LockSelection
                 ? "to unlock pin selection"

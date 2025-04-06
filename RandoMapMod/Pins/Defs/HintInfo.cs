@@ -1,3 +1,4 @@
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using RandoMapMod.UI;
 using RandomizerCore.Logic;
@@ -47,7 +48,7 @@ internal class HintInfo
             return _text;
         }
 
-        var bindingsText = PinSelector.Instance.ShowLocationHintInput.GetBindingsText();
+        var bindingsText = LocationHintInput.Instance.GetBindingsText();
         return $"{"Press".L()} {bindingsText} {"to reveal location hint".L()}.";
     }
 }

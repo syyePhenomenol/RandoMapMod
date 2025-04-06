@@ -8,9 +8,9 @@ internal abstract class RoomSelector : Selector
 
     public override float SpriteSize { get; } = 0.6f;
 
-    public override void Initialize(IEnumerable<MapInput> mapInputs, IEnumerable<ISelectable> rooms)
+    public override void Initialize(IEnumerable<ISelectable> rooms)
     {
-        base.Initialize(mapInputs, rooms);
+        base.Initialize(rooms);
 
         ActiveModifiers.AddRange([ActiveByCurrentMode, ActiveByToggle]);
     }

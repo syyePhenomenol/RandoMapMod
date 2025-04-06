@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -21,6 +22,6 @@ internal class ItemCompassText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle item compass".L()} (Ctrl-C): {(RandoMapMod.GS.ItemCompassOn ? "On" : "Off").L()}";
+        return $"{"Toggle item compass".L()} {ToggleItemCompassInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.ItemCompassOn ? "On" : "Off").L()}";
     }
 }

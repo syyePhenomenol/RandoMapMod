@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -21,6 +22,6 @@ internal class MapKeyText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle map key".L()} (Ctrl-K): {(RandoMapMod.GS.MapKeyOn ? "On" : "Off").L()}";
+        return $"{"Toggle map key".L()} {MapKeyInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.MapKeyOn ? "On" : "Off").L()}";
     }
 }

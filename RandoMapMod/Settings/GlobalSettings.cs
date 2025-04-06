@@ -174,11 +174,6 @@ public class GlobalSettings
         QMarks = (QMarkSetting)(((int)QMarks + 1) % Enum.GetNames(typeof(QMarkSetting)).Length);
     }
 
-    internal void ToggleBenchPins()
-    {
-        ShowBenchwarpPins = !ShowBenchwarpPins;
-    }
-
     internal void ToggleAreaNames()
     {
         ShowAreaNames = !ShowAreaNames;

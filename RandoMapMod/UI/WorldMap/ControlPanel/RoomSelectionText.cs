@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using UnityEngine;
 
@@ -22,6 +23,6 @@ internal class RoomSelectionText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle room selection".L()} (Ctrl-R): {(RandoMapMod.GS.RoomSelectionOn ? "On" : "Off").L()}";
+        return $"{"Toggle room selection".L()} {RoomPanelInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.RoomSelectionOn ? "On" : "Off").L()}";
     }
 }

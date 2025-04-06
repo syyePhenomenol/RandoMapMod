@@ -7,7 +7,7 @@ internal class RmmTitle : Title
     private string _hoveredText;
 
     internal RmmTitle()
-        : base(nameof(RandoMapMod), nameof(RandoMapMod))
+        : base("Mod Title", nameof(RandoMapMod))
     {
         Instance = this;
     }

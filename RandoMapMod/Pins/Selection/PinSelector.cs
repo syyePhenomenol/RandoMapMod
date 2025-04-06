@@ -9,16 +9,11 @@ internal class PinSelector : Selector
 {
     internal static PinSelector Instance { get; private set; }
 
-    internal LockGridPinInput LockGridPinInput { get; } = new();
-    internal TogglePinClusterInput TogglePinClusterInput { get; } = new();
-    internal ShowLocationHintInput ShowLocationHintInput { get; } = new();
-    internal PinBenchwarpInput PinBenchwarpInput { get; } = new();
-
     internal GridPinRoomHighlighter Highlighter { get; private set; }
 
     internal void Initialize(IEnumerable<IPinSelectable> pins)
     {
-        base.Initialize([LockGridPinInput, TogglePinClusterInput, ShowLocationHintInput, PinBenchwarpInput], pins);
+        base.Initialize(pins);
 
         Instance = this;
 

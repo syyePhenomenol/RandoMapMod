@@ -1,4 +1,5 @@
 ﻿using MapChanger.UI;
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Settings;
@@ -31,7 +32,7 @@ internal sealed class RmmBottomRowText : BottomRowText
             return;
         }
 
-        var text = $"{"Spoilers".L()} (ctrl-1): ";
+        var text = $"{"Spoilers".L()} {ToggleSpoilersInput.Instance.GetBindingsText()}: ";
 
         if (RandoMapMod.LS.SpoilerOn)
         {
@@ -54,7 +55,7 @@ internal sealed class RmmBottomRowText : BottomRowText
             return;
         }
 
-        var text = $"{"Randomized".L()} (ctrl-2): ";
+        var text = $"{"Randomized".L()} {ToggleRandomizedInput.Instance.GetBindingsText()}: ";
 
         if (RandoMapMod.LS.RandomizedOn)
         {
@@ -82,7 +83,7 @@ internal sealed class RmmBottomRowText : BottomRowText
             return;
         }
 
-        var text = $"{"Vanilla".L()} (ctrl-3): ";
+        var text = $"{"Vanilla".L()} {ToggleVanillaInput.Instance.GetBindingsText()}: ";
 
         if (RandoMapMod.LS.VanillaOn)
         {
@@ -110,7 +111,7 @@ internal sealed class RmmBottomRowText : BottomRowText
             return;
         }
 
-        var text = $"{"Shape".L()} (ctrl-4): ";
+        var text = $"{"Shape".L()} {ToggleShapeInput.Instance.GetBindingsText()}: ";
 
         switch (RandoMapMod.GS.PinShapes)
         {
@@ -156,7 +157,7 @@ internal sealed class RmmBottomRowText : BottomRowText
             return;
         }
 
-        var text = $"{"Size".L()} (ctrl-5): ";
+        var text = $"{"Size".L()} {ToggleSizeInput.Instance.GetBindingsText()}: ";
 
         switch (RandoMapMod.GS.PinSize)
         {

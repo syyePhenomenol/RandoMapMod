@@ -1,3 +1,4 @@
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 
 namespace RandoMapMod.Pins;
@@ -53,7 +54,7 @@ internal class PinCluster(List<RmmPin> selectables) : SelectableGroup<RmmPin>(se
 
         var nextPin = _sortedPins[(_selectionIndex + 1) % _sortedPins.Length];
 
-        var bindingsText = PinSelector.Instance.TogglePinClusterInput.GetBindingsText();
+        var bindingsText = TogglePinClusterInput.Instance.GetBindingsText();
         return $"{SelectedPin.GetText()}\n\n{"Press".L()} {bindingsText} {"to toggle selected pin to".L()} {nextPin.Name.LC()}.";
     }
 }

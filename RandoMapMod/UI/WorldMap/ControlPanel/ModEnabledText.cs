@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using MapChanger.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -19,6 +20,6 @@ internal class ModEnabledText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"Ctrl-M: {"Disable mod".L()}";
+        return $"{ModEnabledInput.Instance.GetBindingsText()}: {"Disable mod".L()}";
     }
 }

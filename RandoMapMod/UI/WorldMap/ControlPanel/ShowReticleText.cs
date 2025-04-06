@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -21,6 +22,6 @@ internal class ShowReticleText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Show reticles".L()} (Ctrl-S): {(RandoMapMod.GS.ShowReticle ? "On" : "Off").L()}";
+        return $"{"Show reticles".L()} {SelectionReticleInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.ShowReticle ? "On" : "Off").L()}";
     }
 }

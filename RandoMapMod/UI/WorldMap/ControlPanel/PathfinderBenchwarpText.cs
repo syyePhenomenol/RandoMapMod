@@ -1,3 +1,4 @@
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using UnityEngine;
@@ -29,7 +30,7 @@ internal class PathfinderBenchwarpText : ControlPanelText
     {
         if (Interop.HasBenchwarp)
         {
-            return $"{"Pathfinder benchwarp".L()} (Ctrl-B): {(RandoMapMod.GS.PathfinderBenchwarp ? "On" : "Off").L()}";
+            return $"{"Pathfinder benchwarp".L()} {PathfinderBenchwarpInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.PathfinderBenchwarp ? "On" : "Off").L()}";
         }
 
         return "Benchwarp is not installed or outdated".L();

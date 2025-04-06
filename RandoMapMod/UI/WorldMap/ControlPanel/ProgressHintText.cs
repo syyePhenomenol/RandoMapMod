@@ -22,7 +22,7 @@ internal class ProgressHintText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle progress hint".L()} (Ctrl-G): "
+        return $"{"Toggle progress hint".L()} {ProgressHintInput.Instance.GetBindingsText()}: "
             + RandoMapMod.GS.ProgressHint switch
             {
                 ProgressHintSetting.Area => "Area".L(),

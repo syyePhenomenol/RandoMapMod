@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using UnityEngine;
 
 namespace RandoMapMod.UI;
@@ -21,6 +22,6 @@ internal class PinSelectionText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle pin selection".L()} (Ctrl-P): {(RandoMapMod.GS.PinSelectionOn ? "On" : "Off").L()}";
+        return $"{"Toggle pin selection".L()} {PinPanelInput.Instance.GetBindingsText()}: {(RandoMapMod.GS.PinSelectionOn ? "On" : "Off").L()}";
     }
 }

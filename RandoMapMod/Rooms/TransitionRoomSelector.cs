@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using MapChanger;
+﻿using MapChanger;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Input;
 using RandoMapMod.Localization;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
@@ -12,25 +12,13 @@ namespace RandoMapMod.Rooms;
 
 internal class TransitionRoomSelector : RoomSelector
 {
-    private readonly Stopwatch _attackHoldTimer = new();
-
     internal static TransitionRoomSelector Instance { get; private set; }
 
-    internal SelectRoomRouteInput SelectRoomRouteInput { get; } = new();
-    internal RouteBenchwarpInput RouteBenchwarpInput { get; } = new();
-
-    internal void Initialize(IEnumerable<ISelectable> rooms)
+    public override void Initialize(IEnumerable<ISelectable> rooms)
     {
-        base.Initialize([SelectRoomRouteInput, RouteBenchwarpInput], rooms);
+        base.Initialize(rooms);
 
         Instance = this;
-    }
-
-    public override void OnMainUpdate(bool active)
-    {
-        base.OnMainUpdate(active);
-
-        _attackHoldTimer.Reset();
     }
 
     private protected override bool ActiveByCurrentMode()
@@ -73,7 +61,7 @@ internal class TransitionRoomSelector : RoomSelector
             text += $" {"You are here".L()}.";
         }
 
-        var selectBindingText = SelectRoomRouteInput.GetBindingsText();
+        var selectBindingText = SelectRoomRouteInput.Instance.GetBindingsText();
         text += $"\n\n{"Press".L()} {selectBindingText}";
 
         if (RmmPathfinder.RM.CanCycleRoute(selectedScene))
@@ -85,8 +73,8 @@ internal class TransitionRoomSelector : RoomSelector
             text += $" {"to find a new route".L()}.";
         }
 
-        var benchBindingText = RouteBenchwarpInput.GetBindingsText();
-        if (PinSelector.Instance.VisitedBenchNotSelected() && RouteBenchwarpInput.TryGetBenchwarpKey(out var _))
+        var benchBindingText = BenchwarpInput.Instance.GetBindingsText();
+        if (PinSelector.Instance.VisitedBenchNotSelected() && BenchwarpInput.TryGetBenchwarpFromRoute(out var _))
         {
             text += $" {"Hold".L()} {benchBindingText} {"to benchwarp".L()}.";
         }

@@ -72,7 +72,7 @@ internal class ProgressHintPanel
         if (_selectedHint is null || _selectedHint.IsPlacementObtained())
         {
             _selectedHint = null;
-            var bindingsText = ProgressHintInputListener.Instance.ProgressHintInput.GetBindingsText();
+            var bindingsText = ProgressHintInput.Instance.GetBindingsText();
             _progressHintText.Text = $"{"Press".L()} {bindingsText} {"to reveal progress hint".L()}.";
         }
         else
@@ -197,7 +197,7 @@ internal class ProgressHintPanel
     {
         if (_selectedHint is not null)
         {
-            var bindingsText = ProgressHintInputListener.Instance.ProgressHintInput.GetBindingsText();
+            var bindingsText = ProgressHintInput.Instance.GetBindingsText();
             _progressHintText.Text =
                 $"{"You will find progress".L()}"
                 + _selectedHint.GetTextFragment()
