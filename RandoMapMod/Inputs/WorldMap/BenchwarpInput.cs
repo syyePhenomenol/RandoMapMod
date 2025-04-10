@@ -26,9 +26,16 @@ internal class BenchwarpInput : RmmWorldMapInput
 
     public override void DoAction()
     {
-        if (PinSelector.Instance.SelectedObject?.Key is string key && BenchwarpInterop.IsVisitedBench(key))
+        if (PinSelector.Instance.SelectedObject is RmmPin pin && BenchwarpInterop.IsVisitedBench(pin.Name))
         {
-            _ = GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(key));
+            _ = GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(pin.Name));
+        }
+        else if (
+            PinSelector.Instance.SelectedObject is PinCluster pinCluster
+            && BenchwarpInterop.IsVisitedBench(pinCluster.SelectedPin.Name)
+        )
+        {
+            _ = GameManager.instance.StartCoroutine(BenchwarpInterop.DoBenchwarp(pinCluster.SelectedPin.Name));
         }
         else if (TryGetBenchwarpFromRoute(out var benchKey))
         {
