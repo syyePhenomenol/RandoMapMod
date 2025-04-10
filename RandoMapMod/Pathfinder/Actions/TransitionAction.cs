@@ -18,17 +18,28 @@ internal class TransitionAction(Term sourceTerm, Term targetTerm, Dictionary<str
 
     public override bool TryDo(Node node, ProgressionManager pm, out StateUnion satisfiableStates)
     {
-        // Never do two transitions in a row (to prevent false positives where re-entry in the transition isn't possible)
-        if (
-            node.Depth is 0
-            || (node.Actions.Last() is not PlacementAction && TransitionData.IsVisitedTransition(node.Term.Name))
-        )
+        if (IsInvalidTransition(node, pm))
         {
-            return base.TryDo(node, pm, out satisfiableStates);
+            satisfiableStates = default;
+            return false;
         }
 
-        satisfiableStates = default;
-        return false;
+        return base.TryDo(node, pm, out satisfiableStates);
+    }
+
+    public override bool TryDoStateless(Node node, ProgressionManager pm)
+    {
+        if (IsInvalidTransition(node, pm))
+        {
+            return false;
+        }
+
+        return base.TryDoStateless(node, pm);
+    }
+
+    private protected virtual bool IsInvalidTransition(Node node, ProgressionManager pm)
+    {
+        return !TransitionData.IsVisitedTransition(node.Term.Name);
     }
 
     bool IInstruction.IsFinished(ItemChanger.Transition lastTransition)
@@ -43,17 +54,23 @@ internal class TransitionAction(Term sourceTerm, Term targetTerm, Dictionary<str
     }
 }
 
+internal class TopFallTransitionAction(TransitionAction ta, LogicDef logic)
+    : TransitionAction(ta.Source, ta.Target, ((IInstruction)ta).CompassObjectPaths)
+{
+    internal LogicDef Logic { get; } = logic;
+
+    private protected override bool IsInvalidTransition(Node node, ProgressionManager pm)
+    {
+        return base.IsInvalidTransition(node, pm)
+            || ((node.Depth is 0 || node.Actions.Last() is TransitionAction) && !Logic.CanGet(pm));
+    }
+}
+
 internal class InfectionTransitionAction(TransitionAction ta)
     : TransitionAction(ta.Source, ta.Target, ((IInstruction)ta).CompassObjectPaths)
 {
-    public override bool TryDo(Node node, ProgressionManager pm, out StateUnion satisfiableStates)
+    private protected override bool IsInvalidTransition(Node node, ProgressionManager pm)
     {
-        if (pm.Get("RMM_Infected") is 0)
-        {
-            return base.TryDo(node, pm, out satisfiableStates);
-        }
-
-        satisfiableStates = default;
-        return false;
+        return base.IsInvalidTransition(node, pm) || pm.Get("RMM_Infected") > 0;
     }
 }

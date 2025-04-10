@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using RandoMapMod.Pathfinder.Actions;
 using RandoMapMod.Transition;
-using RandomizerCore.Json;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 using RandomizerMod.RC;
@@ -17,7 +16,63 @@ internal class RmmSearchData : SearchData
     internal const string STARTWARP = "Start Warp";
     internal const string DREAMGATE = "Dreamgate";
 
-    private static readonly string[] _infectionTransitions =
+    private static readonly HashSet<string> _topFallTransitions =
+    [
+        "Crossroads_21[top1]",
+        "Fungus2_14[top1]",
+        "Fungus2_30[top1]",
+        "Deepnest_01b[top1]",
+        "Deepnest_03[top1]",
+        "Fungus2_25[top1]",
+        "Deepnest_34[top1]",
+        "Deepnest_35[top1]",
+        "Deepnest_39[top1]",
+        "Deepnest_East_02[top1]",
+        "Deepnest_East_03[top1]",
+        "Deepnest_East_06[top1]",
+        "Deepnest_East_08[top1]",
+        "Deepnest_East_11[top1]",
+        "Deepnest_East_14[top2]",
+        "Deepnest_East_14b[top1]",
+        "Room_Colosseum_02[top1]",
+        "Room_Colosseum_02[top2]",
+        "Abyss_06_Core[top1]",
+        "Abyss_15[top1]",
+        "Abyss_17[top1]",
+        "Waterways_01[top1]",
+        "Waterways_02[top1]",
+        "Waterways_02[top2]",
+        "Waterways_02[top3]",
+        "Waterways_06[top1]",
+        "Waterways_07[top1]",
+        "Waterways_08[top1]",
+        "Waterways_15[top1]",
+        "Room_GG_Shortcut[top1]",
+        "Ruins1_03[top1]",
+        "Ruins1_05b[top1]",
+        "Ruins1_05c[top1]",
+        "Ruins1_05c[top2]",
+        "Ruins1_05c[top3]",
+        "Ruins1_05[top1]",
+        "Ruins1_09[top1]",
+        "Ruins1_23[top1]",
+        "Ruins2_03b[top1]",
+        "Ruins2_03b[top2]",
+        "Ruins2_07[top1]",
+        "RestingGrounds_10[top1]",
+        "RestingGrounds_10[top2]",
+        "Mines_02[top1]",
+        "Mines_04[top1]",
+        "Mines_18[top1]",
+        "Mines_25[top1]",
+        "Fungus3_08[top1]",
+        "Fungus3_34[top1]",
+        "White_Palace_03_hub[top1]",
+        "White_Palace_04[top1]",
+        "White_Palace_18[top1]",
+    ];
+
+    private static readonly HashSet<string> _infectionTransitions =
     [
         "Crossroads_03[bot1]",
         "Crossroads_06[right1]",
@@ -211,6 +266,11 @@ internal class RmmSearchData : SearchData
             else
             {
                 ta = new(sourceTerm, targetTerm, new() { { sourceDef.SceneName, sourceDef.DoorName } });
+            }
+
+            if (_topFallTransitions.Contains(ta.Source.Name))
+            {
+                ta = new TopFallTransitionAction(ta, LocalPM.lm.GetLogicDefStrict(ta.Source.Name));
             }
 
             if (vanillaInfectionTransitions && _infectionTransitions.Contains(ta.Source.Name))
