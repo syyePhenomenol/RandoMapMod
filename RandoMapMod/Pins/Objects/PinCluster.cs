@@ -14,7 +14,7 @@ internal class PinCluster(List<RmmPin> selectables) : SelectableGroup<RmmPin>(se
     internal void UpdateSelectablePins()
     {
         _sortedPins = [.. Selectables.Where(s => s.CanSelect()).OrderBy(p => p.Def.GetZPriority())];
-        _zValues = [.. _sortedPins.Select(p => p.transform.position.z)];
+        _zValues = [.. _sortedPins.Select(p => p.transform.localPosition.z)];
         ResetSelectionIndex();
     }
 
@@ -35,7 +35,9 @@ internal class PinCluster(List<RmmPin> selectables) : SelectableGroup<RmmPin>(se
         // Shift z position of sorted pins in a circular array
         for (var i = 0; i < _sortedPins.Length; i++)
         {
-            _sortedPins[(_selectionIndex + i) % _sortedPins.Length].transform.SetPositionZ(_zValues[i]);
+            var pinTransform = _sortedPins[(_selectionIndex + i) % _sortedPins.Length].gameObject.transform;
+            var origLocalPosition = pinTransform.localPosition;
+            pinTransform.localPosition = new(origLocalPosition.x, origLocalPosition.y, _zValues[i]);
         }
     }
 
