@@ -13,14 +13,18 @@ internal class TransitionData : HookModule
     internal static ReadOnlyDictionary<string, TransitionDef> RandomizedTransitions { get; private set; }
     internal static ReadOnlyDictionary<string, TransitionDef> VanillaTransitions { get; private set; }
     internal static ReadOnlyDictionary<string, TransitionDef> ExtraTransitions { get; private set; }
-    internal static ReadOnlyDictionary<string, string> PlacementLookup { get; private set; }
+    internal static ReadOnlyDictionary<TransitionDef, TransitionDef> RandomizedPlacements { get; private set; }
+    internal static ReadOnlyDictionary<TransitionDef, TransitionDef> VanillaPlacements { get; private set; }
+    internal static ReadOnlyDictionary<TransitionDef, TransitionDef> ExtraPlacements { get; private set; }
 
     public override void OnEnterGame()
     {
         Dictionary<string, TransitionDef> randomizedTransitions = [];
         Dictionary<string, TransitionDef> vanillaTransitions = [];
         Dictionary<string, TransitionDef> extraTransitions = [];
-        Dictionary<string, string> placements = [];
+        Dictionary<TransitionDef, TransitionDef> randomizedPlacements = [];
+        Dictionary<TransitionDef, TransitionDef> vanillaPlacements = [];
+        Dictionary<TransitionDef, TransitionDef> extraPlacements = [];
         HashSet<string> extraScenes = [];
 
         // Add randomized transition placements
@@ -33,7 +37,9 @@ internal class TransitionData : HookModule
                 )
             )
             {
-                AddTransitionPlacement(randomizedTransitions, source, target);
+                AddTransition(randomizedTransitions, source);
+                AddTransition(randomizedTransitions, target);
+                AddPlacement(randomizedPlacements, source, target);
             }
         }
 
@@ -51,7 +57,9 @@ internal class TransitionData : HookModule
                 )
             )
             {
-                AddTransitionPlacement(vanillaTransitions, source, target);
+                AddTransition(vanillaTransitions, source);
+                AddTransition(vanillaTransitions, target);
+                AddPlacement(vanillaPlacements, source, target);
             }
         }
 
@@ -67,23 +75,23 @@ internal class TransitionData : HookModule
                 continue;
             }
 
-            extraTransitions[td.Name] = td;
+            AddTransition(extraTransitions, td);
+        }
 
-            if (td.VanillaTarget is not null)
+        foreach (var source in extraTransitions.Values)
+        {
+            if (source.VanillaTarget is not null && extraTransitions.TryGetValue(source.VanillaTarget, out var target))
             {
-                placements[td.Name] = td.VanillaTarget;
-            }
-
-            if (!RD.IsRoom(td.SceneName))
-            {
-                _ = extraScenes.Add(td.SceneName);
+                AddPlacement(extraPlacements, source, target);
             }
         }
 
         RandomizedTransitions = new(randomizedTransitions);
         VanillaTransitions = new(vanillaTransitions);
         ExtraTransitions = new(extraTransitions);
-        PlacementLookup = new(placements);
+        RandomizedPlacements = new(randomizedPlacements);
+        VanillaPlacements = new(vanillaPlacements);
+        ExtraPlacements = new(extraPlacements);
 
         static bool TryMakeModdedVanillaTransitionDef(string str, out TransitionDef td)
         {
@@ -100,26 +108,20 @@ internal class TransitionData : HookModule
             return false;
         }
 
-        void AddTransitionPlacement(
-            Dictionary<string, TransitionDef> lookup,
-            TransitionDef source,
-            TransitionDef target
-        )
+        void AddTransition(Dictionary<string, TransitionDef> lookup, TransitionDef transition)
         {
-            lookup[source.Name] = source;
-            lookup[target.Name] = target;
-            placements[source.Name] = target.Name;
-
-            if (!RD.IsRoom(source.SceneName))
+            lookup[transition.Name] = transition;
+            if (!RD.IsRoom(transition.SceneName))
             {
-                _ = extraScenes.Add(source.SceneName);
-            }
-
-            if (!RD.IsRoom(target.SceneName))
-            {
-                _ = extraScenes.Add(target.SceneName);
+                _ = extraScenes.Add(transition.SceneName);
             }
         }
+
+        void AddPlacement(
+            Dictionary<TransitionDef, TransitionDef> placementLookup,
+            TransitionDef source,
+            TransitionDef target
+        ) => placementLookup[source] = target;
     }
 
     public override void OnQuitToMenu()
@@ -127,17 +129,14 @@ internal class TransitionData : HookModule
         RandomizedTransitions = null;
         VanillaTransitions = null;
         ExtraTransitions = null;
-        PlacementLookup = null;
+        RandomizedPlacements = null;
+        VanillaPlacements = null;
+        ExtraPlacements = null;
     }
 
     internal static IEnumerable<TransitionDef> GetTransitions()
     {
         return RandomizedTransitions.Values.Concat(VanillaTransitions.Values).Concat(ExtraTransitions.Values);
-    }
-
-    internal static IEnumerable<(TransitionDef, TransitionDef)> GetPlacements()
-    {
-        return PlacementLookup.Select(kvp => (GetTransitionDef(kvp.Key), GetTransitionDef(kvp.Value)));
     }
 
     internal static bool IsTransition(string transition)
@@ -179,6 +178,27 @@ internal class TransitionData : HookModule
         }
 
         return null;
+    }
+
+    internal static IEnumerable<(TransitionDef, TransitionDef)> GetPlacements()
+    {
+        return RandomizedPlacements
+            .Select(kvp => (kvp.Key, kvp.Value))
+            .Concat(VanillaPlacements.Select(kvp => (kvp.Key, kvp.Value)))
+            .Concat(ExtraPlacements.Select(kvp => (kvp.Key, kvp.Value)));
+    }
+
+    internal static bool TryGetPlacementTarget(string source, out TransitionDef target)
+    {
+        if (GetTransitionDef(source) is not TransitionDef sourceTD)
+        {
+            target = null;
+            return false;
+        }
+
+        return RandomizedPlacements.TryGetValue(sourceTD, out target)
+            || VanillaPlacements.TryGetValue(sourceTD, out target)
+            || ExtraPlacements.TryGetValue(sourceTD, out target);
     }
 
     // Works for in/out transitions, localized waypoints (scene names, but NOT Can_Stag, Lower_Tram etc.), bench names

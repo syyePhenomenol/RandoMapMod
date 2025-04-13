@@ -63,8 +63,8 @@ internal class SearchDataUpdater
 
             // Add update entry for the placement
             if (
-                TransitionData.PlacementLookup.TryGetValue(lt.Name, out var target)
-                && _localPM.lm.GetTerm(target) is Term targetTerm
+                TransitionData.TryGetPlacementTarget(lt.Name, out var target)
+                && _localPM.lm.GetTerm(target.Name) is Term targetTerm
             )
             {
                 _mu.LinkState(lt.term, targetTerm);

@@ -39,7 +39,7 @@ internal class TransitionRoomSelector : RoomSelector
     internal string GetText()
     {
         var instructions = GetInstructionText();
-        var transitions = TransitionStringBuilder.GetUncheckedVisited(SelectedObject.Key);
+        var transitions = new TransitionStringDef(SelectedObject.Key).GetFullText();
 
         if (transitions is "")
         {
