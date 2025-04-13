@@ -37,11 +37,14 @@ internal class BenchwarpAction(Term term, RmmBenchKey benchKey) : StartJumpActio
     string IInstruction.SourceText => _benchText;
     string IInstruction.TargetText => null;
 
-    Dictionary<string, string> IInstruction.CompassObjectPaths => null;
-
     bool IInstruction.IsFinished(ItemChanger.Transition lastTransition)
     {
         return lastTransition.ToString() == $"{BenchKey.SceneName}[]"
             && PlayerData.instance.GetString("respawnMarkerName") == BenchKey.RespawnMarkerName;
+    }
+
+    string IInstruction.GetCompassObjectPath(string scene)
+    {
+        return null;
     }
 }

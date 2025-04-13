@@ -6,15 +6,14 @@ using RCPathfinder.Actions;
 
 namespace RandoMapMod.Pathfinder.Actions;
 
-internal class TransitionAction(Term sourceTerm, Term targetTerm, Dictionary<string, string> compassObjects)
+internal class TransitionAction(Term sourceTerm, Term targetTerm, string compassObj)
     : PlacementAction(sourceTerm, targetTerm),
         IInstruction
 {
+    internal string CompassObj { get; } = compassObj;
+
     string IInstruction.SourceText => Source.Name;
     string IInstruction.TargetText => Target.Name;
-
-    Dictionary<string, string> IInstruction.CompassObjectPaths =>
-        compassObjects is not null ? new(compassObjects) : null;
 
     public override bool TryDo(Node node, ProgressionManager pm, out StateUnion satisfiableStates)
     {
@@ -42,6 +41,16 @@ internal class TransitionAction(Term sourceTerm, Term targetTerm, Dictionary<str
         return !TransitionData.IsVisitedTransition(node.Term.Name);
     }
 
+    string IInstruction.GetCompassObjectPath(string scene)
+    {
+        if (!Source.Name.StartsWith(scene))
+        {
+            return null;
+        }
+
+        return CompassObj;
+    }
+
     bool IInstruction.IsFinished(ItemChanger.Transition lastTransition)
     {
         // Fix for big mantis village transition
@@ -55,7 +64,7 @@ internal class TransitionAction(Term sourceTerm, Term targetTerm, Dictionary<str
 }
 
 internal class TopFallTransitionAction(TransitionAction ta, LogicDef logic)
-    : TransitionAction(ta.Source, ta.Target, ((IInstruction)ta).CompassObjectPaths)
+    : TransitionAction(ta.Source, ta.Target, ta.CompassObj)
 {
     internal LogicDef Logic { get; } = logic;
 
@@ -66,8 +75,7 @@ internal class TopFallTransitionAction(TransitionAction ta, LogicDef logic)
     }
 }
 
-internal class InfectionTransitionAction(TransitionAction ta)
-    : TransitionAction(ta.Source, ta.Target, ((IInstruction)ta).CompassObjectPaths)
+internal class InfectionTransitionAction(TransitionAction ta) : TransitionAction(ta.Source, ta.Target, ta.CompassObj)
 {
     private protected override bool IsInvalidTransition(Node node, ProgressionManager pm)
     {

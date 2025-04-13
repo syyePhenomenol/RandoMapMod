@@ -7,10 +7,11 @@ namespace RandoMapMod.UI;
 public class TransitionCompassTarget : CompassTarget
 {
     private readonly Sprite _sprite = new EmbeddedSprite("GUI.Arrow").Value;
-    private readonly Color _color = RmmColors.GetColor(RmmColorSetting.UI_Compass);
+    private readonly Color _color;
 
-    internal TransitionCompassTarget(string goPath)
+    internal TransitionCompassTarget(string goPath, Color color)
     {
+        _color = color;
         Position = new TransitionCompassPosition(goPath);
     }
 
@@ -26,7 +27,7 @@ public class TransitionCompassTarget : CompassTarget
 
     public override Vector3 GetScale()
     {
-        return Vector2.one;
+        return Vector3.one;
     }
 
     public override Color GetColor()

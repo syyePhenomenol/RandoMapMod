@@ -41,12 +41,15 @@ internal class DreamgateAction() : StartJumpAction, IInstruction
     string IInstruction.SourceText => "Dreamgate";
     string IInstruction.TargetText => null;
 
-    Dictionary<string, string> IInstruction.CompassObjectPaths => null;
-
     bool IInstruction.IsFinished(ItemChanger.Transition lastTransition)
     {
         return lastTransition.GateName is "dreamGate"
             && Dgt.DreamgateLinkedPosition is not null
             && Dgt.DreamgateLinkedPosition == _lastSearchTarget;
+    }
+
+    string IInstruction.GetCompassObjectPath(string scene)
+    {
+        return null;
     }
 }

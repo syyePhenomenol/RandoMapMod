@@ -20,9 +20,9 @@ public class RouteCompassInfo : CompassInfo
         return Conditions.TransitionRandoModeEnabled() && RandoMapMod.GS.ShowRouteCompass;
     }
 
-    public override GameObject GetEntity()
+    public override Vector2 GetCompassCenter()
     {
-        return HeroController.instance?.gameObject;
+        return (Vector2)HeroController.instance?.gameObject?.transform?.position;
     }
 
     internal void UpdateCompassTarget()
@@ -31,11 +31,10 @@ public class RouteCompassInfo : CompassInfo
 
         if (
             RmmPathfinder.RM.CurrentRoute is Route route
-            && route.CurrentInstruction.CompassObjectPaths is Dictionary<string, string> paths
-            && paths.TryGetValue(Utils.CurrentScene(), out var goPath)
+            && route.CurrentInstruction.GetCompassObjectPath(Utils.CurrentScene()) is string goPath
         )
         {
-            CompassTargets.Add(new TransitionCompassTarget(goPath));
+            CompassTargets.Add(new TransitionCompassTarget(goPath, RmmColors.GetColor(RmmColorSetting.UI_Compass)));
         }
     }
 }

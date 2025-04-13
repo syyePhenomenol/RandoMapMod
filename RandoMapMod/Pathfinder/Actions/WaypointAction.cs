@@ -11,14 +11,23 @@ internal class WaypointAction(
     Dictionary<string, string> compassObjects
 ) : StateLogicAction(start, destination, logic), IInstruction
 {
+    private readonly Dictionary<string, string> _compassObjects = compassObjects;
+
     string IInstruction.SourceText => text;
     string IInstruction.TargetText => null;
-
-    Dictionary<string, string> IInstruction.CompassObjectPaths =>
-        compassObjects is not null ? new(compassObjects) : null;
 
     bool IInstruction.IsFinished(ItemChanger.Transition lastTransition)
     {
         return lastTransition.ToString() == Target.Name;
+    }
+
+    string IInstruction.GetCompassObjectPath(string scene)
+    {
+        if (_compassObjects is not null && _compassObjects.TryGetValue(scene, out var path))
+        {
+            return path;
+        }
+
+        return null;
     }
 }

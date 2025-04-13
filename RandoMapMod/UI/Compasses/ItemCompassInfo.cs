@@ -81,9 +81,9 @@ public class ItemCompassInfo : CompassInfo
         return Conditions.RandoMapModEnabled() && RandoMapMod.GS.ItemCompassOn;
     }
 
-    public override GameObject GetEntity()
+    public override Vector2 GetCompassCenter()
     {
-        return HeroController.instance?.gameObject;
+        return (Vector2)HeroController.instance?.gameObject?.transform?.position;
     }
 
     internal void UpdateCompassTargets()

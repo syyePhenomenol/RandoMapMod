@@ -102,6 +102,13 @@ internal class RmmSearchData : SearchData
             positionsByScene.ToDictionary(kvp => kvp.Key, kvp => new ReadOnlyCollection<Term>([.. kvp.Value]))
         );
 
+        TransitionActions = new(
+            StandardActionLookup
+                .Values.SelectMany(list => list)
+                .Where(a => a is TransitionAction)
+                .ToDictionary(ta => ta.Source.Name, ta => (TransitionAction)ta)
+        );
+
         Updater = new(this);
         Updater.Update();
     }
@@ -111,6 +118,8 @@ internal class RmmSearchData : SearchData
     // Only for terms with a single defined scene. Should not be using these to look up terms like
     // Can_Stag or Lower_Tram
     internal ReadOnlyDictionary<string, ReadOnlyCollection<Term>> PositionsByScene { get; }
+
+    internal ReadOnlyDictionary<string, TransitionAction> TransitionActions { get; }
 
     public override void UpdateProgression()
     {
@@ -131,7 +140,6 @@ internal class RmmSearchData : SearchData
         }
 
         // Inject new terms and custom logic
-
         foreach (
             var rld in JU.DeserializeFromEmbeddedResource<RawLogicDef[]>(
                 RandoMapMod.Assembly,
@@ -261,11 +269,11 @@ internal class RmmSearchData : SearchData
             TransitionAction ta;
             if (routeCompassOverrides.TryGetValue(sourceDef.Name, out var compassObjects))
             {
-                ta = new(sourceTerm, targetTerm, compassObjects);
+                ta = new(sourceTerm, targetTerm, compassObjects.Values.First());
             }
             else
             {
-                ta = new(sourceTerm, targetTerm, new() { { sourceDef.SceneName, sourceDef.DoorName } });
+                ta = new(sourceTerm, targetTerm, sourceDef.DoorName);
             }
 
             if (_topFallTransitions.Contains(ta.Source.Name))
