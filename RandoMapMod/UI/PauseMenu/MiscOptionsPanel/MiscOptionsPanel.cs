@@ -17,6 +17,7 @@ internal class MiscOptionsPanel : RmmOptionsPanel
         return
         [
             new ItemCompassModeButton(),
+            new QuickMapCompassesButton(),
             new AreaNamesButton(),
             new NextAreasButton(),
             new MapMarkersButton(),

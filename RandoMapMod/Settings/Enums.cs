@@ -102,3 +102,9 @@ public enum NextAreaSetting
     Arrows,
     Full,
 }
+
+public enum QuickMapCompassSetting
+{
+    Unchecked,
+    All,
+}

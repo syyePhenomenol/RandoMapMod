@@ -29,6 +29,9 @@ public class GlobalSettings
     public ItemCompassMode ItemCompassMode { get; private set; } = ItemCompassMode.Reachable;
 
     [JsonProperty]
+    public QuickMapCompassSetting ShowQuickMapCompasses { get; private set; } = QuickMapCompassSetting.Unchecked;
+
+    [JsonProperty]
     public bool PathfinderBenchwarp { get; private set; } = true;
 
     [JsonProperty]
@@ -125,6 +128,13 @@ public class GlobalSettings
     internal void ToggleItemCompassMode()
     {
         ItemCompassMode = (ItemCompassMode)(((int)ItemCompassMode + 1) % Enum.GetNames(typeof(ItemCompassMode)).Length);
+    }
+
+    internal void ToggleQuickMapCompasses()
+    {
+        ShowQuickMapCompasses = (QuickMapCompassSetting)(
+            ((int)ShowQuickMapCompasses + 1) % Enum.GetNames(typeof(QuickMapCompassSetting)).Length
+        );
     }
 
     internal void ToggleAllowBenchWarpSearch()

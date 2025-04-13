@@ -41,55 +41,69 @@ internal class QuickMapTransitions : MapUILayer
 
         var tsd = new TransitionStringDef(Utils.CurrentScene());
 
-        if (tsd.Unchecked.Placements.Any())
-        {
-            StackLayout uncheckedStack =
-                new(Root, $"Quick Map Unchecked Stack")
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 0f,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                };
-
-            _stack.Children.Add(uncheckedStack);
-
-            uncheckedStack.Children.Add(RightCenteredText($"Unchecked Header", tsd.Unchecked.FormattedHeader));
-
-            foreach (var placement in tsd.Unchecked.Placements)
-            {
-                StackLayout uncheckedLineStack =
-                    new(Root, $"Quick Map Unchecked Line Stack {placement}")
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Spacing = 10f,
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Center,
-                    };
-
-                uncheckedStack.Children.Add(uncheckedLineStack);
-
-                uncheckedLineStack.Children.Add(
-                    RightCenteredText(
-                        $"Unchecked Placement {placement.Key.Name}",
-                        tsd.Unchecked.GetFormattedPlacement(placement.Key, placement.Value)
-                    )
-                );
-
-                if (RmmPathfinder.SD.TransitionActions.TryGetValue(placement.Key.Name, out var ta))
-                {
-                    uncheckedLineStack.Children.Add(
-                        new QuickMapCompass(Root, placement.Key.Name, new TransitionCompassPosition(ta.CompassObj))
-                    );
-                }
-            }
-        }
+        MakeTransitionsWithCompasses(tsd.Unchecked);
 
         foreach (var tsl in new TransitionStringList[] { tsd.VisitedOut, tsd.VisitedIn, tsd.VanillaOut, tsd.VanillaIn })
         {
+            if (RandoMapMod.GS.ShowQuickMapCompasses is Settings.QuickMapCompassSetting.All)
+            {
+                MakeTransitionsWithCompasses(tsl);
+                continue;
+            }
+
             if (tsl.Placements.Any())
             {
                 _stack.Children.Add(RightCenteredText($"Text {tsl.Header}", tsl.GetFullText()));
+                continue;
+            }
+        }
+    }
+
+    private void MakeTransitionsWithCompasses(TransitionStringList tsl)
+    {
+        if (!tsl.Placements.Any())
+        {
+            return;
+        }
+
+        StackLayout listStack =
+            new(Root, $"Quick Map Stack {tsl.Header}")
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 10f,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+
+        _stack.Children.Add(listStack);
+
+        listStack.Children.Add(RightCenteredText($"Header {tsl.Header}", tsl.FormattedHeader));
+
+        foreach (var placement in tsl.Placements)
+        {
+            StackLayout lineStack =
+                new(Root, $"Quick Map Unchecked Line Stack {placement}")
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 10f,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+
+            listStack.Children.Add(lineStack);
+
+            lineStack.Children.Add(
+                RightCenteredText(
+                    $"Unchecked Placement {placement.Key.Name}",
+                    tsl.GetFormattedPlacement(placement.Key, placement.Value)
+                )
+            );
+
+            if (RmmPathfinder.SD.TransitionActions.TryGetValue(placement.Key.Name, out var ta))
+            {
+                lineStack.Children.Add(
+                    new QuickMapCompass(Root, placement.Key.Name, new TransitionCompassPosition(ta.CompassObj))
+                );
             }
         }
     }
