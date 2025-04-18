@@ -2,6 +2,7 @@ using ItemChanger;
 using RandoMapMod.Localization;
 using RandoMapMod.Settings;
 using RandomizerCore.Logic;
+using UnityEngine;
 using SM = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins;
@@ -60,14 +61,22 @@ internal abstract class LogicICPinDef : ICPinDef
             && Logic.State is LogicState.Unreachable;
     }
 
+    internal override Color GetBorderColor()
+    {
+        return Logic.State switch
+        {
+            LogicState.ReachableSequenceBreak => RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic),
+            _ => base.GetBorderColor(),
+        };
+    }
+
     internal override PinShape GetMixedPinShape()
     {
-        if (Logic.State is LogicState.ReachableSequenceBreak)
+        return Logic.State switch
         {
-            return PinShape.Pentagon;
-        }
-
-        return base.GetMixedPinShape();
+            LogicState.ReachableSequenceBreak => PinShape.Pentagon,
+            _ => base.GetMixedPinShape(),
+        };
     }
 
     internal override float GetZPriority()

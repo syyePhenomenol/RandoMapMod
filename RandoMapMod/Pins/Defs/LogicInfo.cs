@@ -20,11 +20,11 @@ internal class LogicInfo
 
     internal void Update()
     {
-        if (_logic.CanGet(_pm))
+        if (_logic.CanGet(_pmNoSequenceBreak))
         {
             State = LogicState.Reachable;
         }
-        else if (_logic.CanGet(_pmNoSequenceBreak))
+        else if (_logic.CanGet(_pm))
         {
             State = LogicState.ReachableSequenceBreak;
         }
