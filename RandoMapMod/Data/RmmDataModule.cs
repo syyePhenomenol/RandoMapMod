@@ -58,18 +58,6 @@ internal class RmmDataModule : RmcDataModule
         RM
             .RS.Context.itemPlacements.Select(ip => new RandoPlacement(ip.Item, ip.Location))
             .Concat(RM.RS.Context.transitionPlacements.Select(tp => new RandoPlacement(tp.Target, tp.Source)));
-    public override IEnumerable<RandoPlacement> OolObtainedPlacements =>
-        RM
-            .RS.Context.itemPlacements.Where(ip =>
-                RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicObtainedItems.Contains(ip.Index)
-            )
-            .Select(ip => new RandoPlacement(ip.Item, ip.Location))
-            .Concat(
-                RM.RS.Context.transitionPlacements.Where(tp =>
-                        RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(tp.Source.Name)
-                    )
-                    .Select(tp => new RandoPlacement(tp.Target, tp.Source))
-            );
     public override IEnumerable<GeneralizedPlacement> VanillaPlacements => RM.RS.Context.Vanilla;
 
     public override void OnEnterGame()

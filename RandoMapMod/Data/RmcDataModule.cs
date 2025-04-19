@@ -33,7 +33,6 @@ public abstract class RmcDataModule : HookModule
 
     public abstract RandoContext Context { get; }
     public abstract IEnumerable<RandoPlacement> RandomizedPlacements { get; }
-    public abstract IEnumerable<RandoPlacement> OolObtainedPlacements { get; }
     public abstract IEnumerable<GeneralizedPlacement> VanillaPlacements { get; }
 
     public abstract string Localize(string text);

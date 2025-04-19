@@ -86,8 +86,11 @@ internal class ProgressHintPanel
     }
 
     // Randomly selects a reachable location or transition that unlocks further progression.
-    // If no further immediate progress is unlocked, selects a random inner sphere (Required) location/transition.
-    // Also avoids getting the same hint twice in a row if possible.
+    // Priority goes:
+    // 1. Random placement that leads to new reachable placements
+    // 2. Random placement that leads to new state terms
+    // 3. Random placement that leads to new non-state terms
+    // 4. Random placement of lowest inner sphere
     private void UpdateLocation()
     {
         RandoMapMod.Instance.LogFine("Update progress hint location");
@@ -133,18 +136,52 @@ internal class ProgressHintPanel
             )
             .OrderBy(h => h.RandoPlacement.Location.Name == _selectedHint?.RandoPlacement.Location?.Name);
 
+        PlacementProgressHint newStateTermHint = null;
+        PlacementProgressHint newNonStateTermHint = null;
+
         foreach (var h in relevantPlacements)
         {
-            if (updater.Test(h))
+            updater.Test(h);
+
+            if (updater.NewReachablePlacement)
             {
                 updater.StopUpdating();
+                RandoMapMod.Instance.LogFine($"New reachable placements from {h.RandoPlacement.Location.Name}");
                 _selectedHint = h;
                 _progressionUnlockingHint = true;
                 return;
             }
+
+            if (updater.NewStateTerms && newStateTermHint is null)
+            {
+                newStateTermHint = h;
+                continue;
+            }
+
+            if (updater.NewNonStateTerms && newNonStateTermHint is null)
+            {
+                newNonStateTermHint = h;
+            }
         }
 
         updater.StopUpdating();
+
+        if (newStateTermHint is not null)
+        {
+            RandoMapMod.Instance.LogFine($"New state terms from {newStateTermHint.RandoPlacement.Location.Name}");
+            _selectedHint = newStateTermHint;
+            _progressionUnlockingHint = true;
+            return;
+        }
+        else if (newNonStateTermHint is not null)
+        {
+            RandoMapMod.Instance.LogFine(
+                $"New non-state terms from {newNonStateTermHint.RandoPlacement.Location.Name}"
+            );
+            _selectedHint = newNonStateTermHint;
+            _progressionUnlockingHint = true;
+            return;
+        }
 
         // Make lower sphere locations higher priority
         _selectedHint = relevantPlacements

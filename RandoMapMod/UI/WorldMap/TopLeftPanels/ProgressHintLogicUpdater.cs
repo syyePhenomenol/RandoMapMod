@@ -8,8 +8,6 @@ internal class ProgressHintLogicUpdater : MainUpdater
 {
     private readonly ProgressionManager _pm;
     private readonly bool _initialized;
-    private bool _newReachablePlacement;
-    private HashSet<RandoPlacement> _oolObtainedPlacements = [];
 
     internal ProgressHintLogicUpdater(ProgressionManager pm)
         : base(pm.lm, pm)
@@ -45,16 +43,19 @@ internal class ProgressHintLogicUpdater : MainUpdater
         _initialized = true;
     }
 
-    internal bool Test(PlacementProgressHint hint)
+    internal bool NewReachablePlacement { get; private set; }
+    internal bool NewStateTerms { get; private set; }
+    internal bool NewNonStateTerms { get; private set; }
+
+    internal void Test(PlacementProgressHint hint)
     {
-        _newReachablePlacement = false;
-        _oolObtainedPlacements = new(RandoMapMod.Data.OolObtainedPlacements);
+        NewReachablePlacement = false;
+        NewStateTerms = false;
+        NewNonStateTerms = false;
 
         _pm.StartTemp();
         _pm.Add(hint.RandoPlacement.Item, hint.RandoPlacement.Location);
         _pm.RemoveTempItems();
-
-        return _newReachablePlacement;
     }
 
     private class TrackedStateUpdateEntry(ProgressHintLogicUpdater updater, Term term, StateLogicDef logic)
@@ -64,7 +65,7 @@ internal class ProgressHintLogicUpdater : MainUpdater
 
         public override void Update(ProgressionManager pm, int updateTerm)
         {
-            if (!updater._initialized)
+            if (!updater._initialized || updater.NewReachablePlacement)
             {
                 return;
             }
@@ -75,13 +76,14 @@ internal class ProgressHintLogicUpdater : MainUpdater
             {
                 stateSetter.value = newState;
                 pm.Add(stateSetter);
+                updater.NewStateTerms = true;
                 // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
             }
         }
 
         public override void Update(ProgressionManager pm)
         {
-            if (!updater._initialized)
+            if (!updater._initialized || updater.NewReachablePlacement)
             {
                 return;
             }
@@ -93,12 +95,14 @@ internal class ProgressHintLogicUpdater : MainUpdater
                 stateSetter.value = newState;
                 // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
                 pm.Add(stateSetter);
+                updater.NewStateTerms = true;
             }
             else if (state is null && logic.CanGet(pm))
             {
                 stateSetter.value = pm.lm.StateManager.Empty;
                 // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
                 pm.Add(stateSetter);
+                updater.NewStateTerms = true;
             }
         }
     }
@@ -108,7 +112,7 @@ internal class ProgressHintLogicUpdater : MainUpdater
     {
         public override void OnAdd(ProgressionManager pm)
         {
-            if (!updater._initialized)
+            if (!updater._initialized || updater.NewReachablePlacement)
             {
                 return;
             }
@@ -116,6 +120,7 @@ internal class ProgressHintLogicUpdater : MainUpdater
             if (pm.lm.Terms.IsTerm(location.Name) && pm.Get(location.Name) is 0)
             {
                 // RandoMapMod.Instance.LogFine($"Adding non-state term: {location.Name}");
+                updater.NewNonStateTerms = true;
             }
 
             base.OnAdd(pm);
@@ -135,15 +140,6 @@ internal class ProgressHintLogicUpdater : MainUpdater
         {
             return GP.Location.GetTerms();
         }
-
-        public override void OnAdd(ProgressionManager pm)
-        {
-            if (GP.Location is ILocationWaypoint ilw)
-            {
-                // RandoMapMod.Instance.LogFine($"Adding reachable effect: {GP.Location.Name}");
-                pm.Add(ilw.GetReachableEffect());
-            }
-        }
     }
 
     public class RandomizedPlacementUpdateEntry(ProgressHintLogicUpdater updater, RandoPlacement rp)
@@ -151,22 +147,15 @@ internal class ProgressHintLogicUpdater : MainUpdater
     {
         public override void OnAdd(ProgressionManager pm)
         {
-            if (!updater._initialized)
+            if (!updater._initialized || updater.NewReachablePlacement)
             {
                 return;
             }
 
-            base.OnAdd(pm);
-
             if (pm.lm.Terms.IsTerm(GP.Location.Name) && pm.Get(GP.Location.Name) is 0)
             {
-                RandoMapMod.Instance.LogFine($"New reachable placement {GP.Location.Name}");
-                updater._newReachablePlacement = true;
-            }
-            else if (updater._oolObtainedPlacements.Remove(new RandoPlacement(rp.Item, rp.Location)))
-            {
-                // RandoMapMod.Instance.LogFine($"Adding OOL placement: {rp.Location.Name}");
-                pm.Add(rp.Item, rp.Location);
+                // RandoMapMod.Instance.LogFine($"New reachable placement {GP.Location.Name}");
+                updater.NewReachablePlacement = true;
             }
         }
     }
@@ -176,15 +165,19 @@ internal class ProgressHintLogicUpdater : MainUpdater
     {
         public override void OnAdd(ProgressionManager pm)
         {
-            if (!updater._initialized)
+            if (!updater._initialized || updater.NewReachablePlacement)
             {
                 return;
             }
 
-            base.OnAdd(pm);
-
             // RandoMapMod.Instance.LogFine($"Adding vanilla placement: {GP.Location.Name}");
             pm.Add(GP.Item, GP.Location);
+
+            if (GP.Location is ILocationWaypoint ilw)
+            {
+                // RandoMapMod.Instance.LogFine($"Adding reachable effect: {GP.Location.Name}");
+                pm.Add(ilw.GetReachableEffect());
+            }
         }
     }
 }
