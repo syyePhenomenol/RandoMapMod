@@ -26,7 +26,7 @@ internal class PlacementCompassTarget : CompassTarget
 
         Placement = placement;
 
-        if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(placement.Name, out var ld))
+        if (RandoMapMod.Data.PM.lm.LogicLookup.TryGetValue(placement.Name, out var ld))
         {
             _logic = ld;
         }
@@ -64,10 +64,8 @@ internal class PlacementCompassTarget : CompassTarget
 
         _settingActive = RandoMapMod.GS.ItemCompassMode switch
         {
-            ItemCompassMode.Reachable => _logic.CanGet(
-                RandomizerMod.RandomizerMod.RS.TrackerDataWithoutSequenceBreaks.pm
-            ),
-            ItemCompassMode.ReachableOutOfLogic => _logic.CanGet(RandomizerMod.RandomizerMod.RS.TrackerData.pm),
+            ItemCompassMode.Reachable => _logic.CanGet(RandoMapMod.Data.PMNoSequenceBreak),
+            ItemCompassMode.ReachableOutOfLogic => _logic.CanGet(RandoMapMod.Data.PM),
             ItemCompassMode.All => true,
             _ => true,
         };

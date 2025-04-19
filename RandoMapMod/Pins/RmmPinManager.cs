@@ -3,12 +3,8 @@ using ItemChanger;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandoMapMod.Modes;
-using RandomizerCore.Logic;
-using RandomizerMod.IC;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using RD = RandomizerMod.RandomizerData;
-using RM = RandomizerMod.RandomizerMod;
 using SM = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins;
@@ -25,9 +21,6 @@ internal class RmmPinManager : HookModule
     private static Dictionary<string, List<RmmPin>> _tempPinGroups;
     private static HashSet<string> _tempPinNames;
 
-    internal static ProgressionManager PM => RM.RS.TrackerData.pm;
-    internal static ProgressionManager PMNoSequenceBreak => RM.RS.TrackerDataWithoutSequenceBreaks.pm;
-
     internal static DefaultPropertyManager Dpm { get; private set; }
     internal static PinSpriteManager Psm { get; private set; }
     internal static PinArranger PA { get; private set; }
@@ -42,14 +35,14 @@ internal class RmmPinManager : HookModule
         Psm = new();
         PA = new();
 
-        TrackerUpdate.OnFinishedUpdate += UpdateLogic;
+        Data.PlacementTracker.Update += UpdateLogic;
         MapChanger.Events.OnWorldMap += PA.ArrangeWorldMapPinGrid;
         MapChanger.Events.OnQuickMap += PA.ArrangeQuickMapPinGrid;
     }
 
     public override void OnQuitToMenu()
     {
-        TrackerUpdate.OnFinishedUpdate -= UpdateLogic;
+        Data.PlacementTracker.Update -= UpdateLogic;
         MapChanger.Events.OnWorldMap -= PA.ArrangeWorldMapPinGrid;
         MapChanger.Events.OnQuickMap -= PA.ArrangeQuickMapPinGrid;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= UpdatePersistentItems;
@@ -110,15 +103,15 @@ internal class RmmPinManager : HookModule
         }
 
         // GeneralizedPlacements are one-to-one, but some may share the same location (e.g. shops)
-        foreach (var placement in RM.RS.Context.Vanilla.Where(placement => RD.Data.IsLocation(placement.Location.Name)))
+        foreach (var vanillaLocation in RandoMapMod.Data.VanillaLocations.Values)
         {
-            if (placement.Location.Name == "Start")
+            if (vanillaLocation.Name == "Start")
             {
                 RandoMapMod.Instance.LogDebug($"Start vanilla placement detected - not including as a pin");
                 continue;
             }
 
-            TryAddPin(new VanillaPinDef(placement, PM, PMNoSequenceBreak));
+            TryAddPin(new VanillaPinDef(vanillaLocation, RandoMapMod.Data.PM, RandoMapMod.Data.PMNoSequenceBreak));
         }
 
         if (Interop.HasBenchwarp)
@@ -171,20 +164,20 @@ internal class RmmPinManager : HookModule
 
     private static ICPinDef GetICPinDef(AbstractPlacement placement)
     {
-        if (placement.HasTag<RandoPlacementTag>())
+        if (placement.IsRandomizedPlacement())
         {
             if (Interop.HasBenchwarp && BenchwarpInterop.BenchKeys.ContainsKey(placement.Name))
             {
-                return new RandomizedBenchPinDef(placement, PM, PMNoSequenceBreak);
+                return new RandomizedBenchPinDef(placement, RandoMapMod.Data.PM, RandoMapMod.Data.PMNoSequenceBreak);
             }
             else
             {
-                return new RandomizedPinDef(placement, PM, PMNoSequenceBreak);
+                return new RandomizedPinDef(placement, RandoMapMod.Data.PM, RandoMapMod.Data.PMNoSequenceBreak);
             }
         }
         else if (SM.Of(placement).Get(InteropProperties.MakeVanillaPin))
         {
-            return new VanillaICPinDef(placement, PM, PMNoSequenceBreak);
+            return new VanillaICPinDef(placement, RandoMapMod.Data.PM, RandoMapMod.Data.PMNoSequenceBreak);
         }
 
         return null;

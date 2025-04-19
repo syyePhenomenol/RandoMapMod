@@ -2,6 +2,7 @@
 using MapChanger;
 using MapChanger.Defs;
 using Modding;
+using RandoMapMod.Data;
 using RandoMapMod.Input;
 using RandoMapMod.Modes;
 using RandoMapMod.Pathfinder;
@@ -38,6 +39,8 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         new RouteCompass(),
     ];
 
+    private static readonly List<RmcDataModule> _dataModules = [];
+
     public RandoMapMod()
     {
         Instance = this;
@@ -48,6 +51,8 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
     internal static Assembly Assembly => Assembly.GetExecutingAssembly();
     internal static RandoMapMod Instance { get; private set; }
+
+    internal static RmcDataModule Data { get; private set; }
 
     public override string GetVersion()
     {
@@ -81,12 +86,12 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
     public override void Initialize()
     {
-        LogDebug($"Initializing");
-
         if (!Dependencies.HasAll())
         {
             return;
         }
+
+        LogDebug($"Initializing");
 
         Interop.FindInteropMods();
 
@@ -127,6 +132,15 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         Events.OnQuitToMenu += OnQuitToMenu;
 
         LogDebug($"Initialization complete.");
+
+        var data = new RmmDataModule();
+
+        AddDataModule(data);
+    }
+
+    public static void AddDataModule(RmcDataModule dataModule)
+    {
+        _dataModules.Add(dataModule);
     }
 
     internal static void ResetToDefaultSettings()
@@ -136,7 +150,12 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
     private static void OnEnterGame()
     {
-        if (!RandomizerMod.RandomizerMod.IsRandoSave)
+        if (_dataModules.FirstOrDefault(d => d.IsCorrectSaveType) is RmcDataModule data)
+        {
+            Data = data;
+            Data.OnEnterGame();
+        }
+        else
         {
             return;
         }
@@ -157,7 +176,7 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
 
     private static void OnQuitToMenu()
     {
-        if (!RandomizerMod.RandomizerMod.IsRandoSave)
+        if (Data is null)
         {
             return;
         }
@@ -173,6 +192,9 @@ public class RandoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<G
         {
             hookModule.OnQuitToMenu();
         }
+
+        Data.OnQuitToMenu();
+        Data = null;
     }
 
     private static void OnSetGameMap(GameObject goMap)

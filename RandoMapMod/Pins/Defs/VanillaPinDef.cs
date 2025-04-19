@@ -1,9 +1,9 @@
 using ConnectionMetadataInjector.Util;
 using MapChanger;
 using MapChanger.Defs;
+using RandoMapMod.Data;
 using RandoMapMod.Localization;
 using RandoMapMod.Settings;
-using RandomizerCore;
 using RandomizerCore.Logic;
 using UnityEngine;
 
@@ -13,19 +13,17 @@ internal sealed class VanillaPinDef : PinDef
 {
     private readonly string _locationPoolGroup;
 
-    internal VanillaPinDef(GeneralizedPlacement gp, ProgressionManager pm, ProgressionManager pmNoSequenceBreak)
+    internal VanillaPinDef(RmcLocationDef vanillaLocation, ProgressionManager pm, ProgressionManager pmNoSequenceBreak)
         : base()
     {
-        Name = gp.Location.Name;
+        Name = vanillaLocation.Name;
+        SceneName = vanillaLocation.SceneName ?? ItemChanger.Finder.GetLocation(vanillaLocation.Name)?.sceneName;
 
-        // TODO CHECK IF RD IS NEEDED
-        // RandomizerMod.RandomizerData.Data.GetLocationDef(Name)?.SceneName ??
-        SceneName = ItemChanger.Finder.GetLocation(Name)?.sceneName;
-
-        _locationPoolGroup = SubcategoryFinder.GetLocationPoolGroup(gp.Location.Name).FriendlyName();
+        _locationPoolGroup = SubcategoryFinder.GetLocationPoolGroup(vanillaLocation.Name).FriendlyName();
 
         LocationPoolGroups = [_locationPoolGroup];
         // TODO: SUPPORT MULTIPLE ITEMS FOR DEFAULT SHOPS
+        // For now, all placements at the same location are represented by one pin.
         ItemPoolGroups = [_locationPoolGroup];
 
         if (RmmPinManager.Dpm.GetDefaultMapPosition(Name) is MapRoomPosition mrp)

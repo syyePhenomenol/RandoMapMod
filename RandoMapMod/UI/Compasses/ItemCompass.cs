@@ -1,6 +1,5 @@
 ﻿using MapChanger;
 using MapChanger.MonoBehaviours;
-using RandomizerMod.IC;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,14 +20,14 @@ internal class ItemCompass : HookModule
 
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += EarlyUpdate;
         On.PlayMakerFSM.Start += LateUpdate;
-        TrackerUpdate.OnFinishedUpdate += Info.UpdateCurrentCompassTargets;
+        Data.PlacementTracker.Update += Info.UpdateCurrentCompassTargets;
     }
 
     public override void OnQuitToMenu()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= EarlyUpdate;
         On.PlayMakerFSM.Start -= LateUpdate;
-        TrackerUpdate.OnFinishedUpdate -= Info.UpdateCurrentCompassTargets;
+        Data.PlacementTracker.Update -= Info.UpdateCurrentCompassTargets;
 
         Destroy();
         Info = null;

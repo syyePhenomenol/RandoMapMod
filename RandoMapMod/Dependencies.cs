@@ -2,13 +2,7 @@ namespace RandoMapMod;
 
 internal static class Dependencies
 {
-    private static readonly string[] _dependencies =
-    [
-        "ConnectionMetadataInjector",
-        "MapChanger",
-        "RandomizerMod",
-        "RCPathfinder",
-    ];
+    private static readonly string[] _dependencies = ["ConnectionMetadataInjector", "MapChanger", "RCPathfinder"];
 
     internal static bool HasAll()
     {

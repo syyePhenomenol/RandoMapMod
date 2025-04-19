@@ -1,5 +1,4 @@
 ﻿using MapChanger;
-using RandoMapMod.Transition;
 
 namespace RandoMapMod.Modes;
 
@@ -15,7 +14,7 @@ internal class RmmMapMode : MapMode
 
     public override bool InitializeToThis()
     {
-        if (TransitionData.IsTransitionRando)
+        if (RandoMapMod.Data.RandomizedTransitions.Any())
         {
             return ModeName == RandoMapMod.GS.DefaultTransitionRandoMode.ToString().ToCleanName();
         }

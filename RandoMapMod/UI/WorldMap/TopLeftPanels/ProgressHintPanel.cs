@@ -4,12 +4,8 @@ using MagicUI.Graphics;
 using MapChanger;
 using RandoMapMod.Localization;
 using RandoMapMod.Settings;
-using RandomizerCore;
 using RandomizerCore.Extensions;
 using RandomizerCore.Logic;
-using RandomizerMod.Extensions;
-using RandomizerMod.RC;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.UI;
 
@@ -18,6 +14,7 @@ internal class ProgressHintPanel
     private readonly Panel _progressHintPanel;
     private readonly TextObject _progressHintText;
     private PlacementProgressHint _selectedHint;
+    private bool _progressionUnlockingHint;
 
     internal ProgressHintPanel(LayoutRoot layout, StackLayout panelStack)
     {
@@ -69,15 +66,15 @@ internal class ProgressHintPanel
             _progressHintPanel.Visibility = Visibility.Collapsed;
         }
 
-        if (_selectedHint is null || _selectedHint.IsPlacementObtained())
+        if (_selectedHint is not null && !_selectedHint.IsPlacementObtained())
         {
-            _selectedHint = null;
-            var bindingsText = ProgressHintInput.Instance.GetBindingsText();
-            _progressHintText.Text = $"{"Press".L()} {bindingsText} {"to reveal progress hint".L()}.";
+            UpdateHintText();
         }
         else
         {
-            UpdateHintText();
+            _selectedHint = null;
+            _progressHintText.Text =
+                $"{"Press".L()} {ProgressHintInput.Instance.GetBindingsText()} {"to reveal progress hint".L()}.";
         }
     }
 
@@ -95,117 +92,86 @@ internal class ProgressHintPanel
     {
         RandoMapMod.Instance.LogFine("Update progress hint location");
 
-        var td = RM.RS.TrackerData;
-        var lm = td.lm;
-        var ctx = RM.RS.Context;
-        ProgressionManager newPM = new(lm, ctx);
+        var lm = RandoMapMod.Data.PM.lm;
+        ProgressionManager pm = new(lm, RandoMapMod.Data.Context);
+        foreach (var term in lm.Terms)
+        {
+            switch (term.Type)
+            {
+                case TermType.State:
+                    pm.SetState(term, RandoMapMod.Data.PMNoSequenceBreak.GetState(term));
+                    break;
+                default:
+                    pm.Set(term, RandoMapMod.Data.PMNoSequenceBreak.Get(term));
+                    break;
+            }
+        }
 
-        var mu = new ProgressHintLogicUpdater(td, newPM);
+        var updater = new ProgressHintLogicUpdater(pm);
 
         Random rng = new();
 
-        // Item placements that are unchecked and reachable
-        var relevantItemPlacements = td
-            .uncheckedReachableLocations.Union(
-                td.previewedLocations.Where(l => td.lm.GetLogicDefStrict(l).CanGet(td.pm))
-            )
-            .SelectMany(l =>
-                ItemChanger.Internal.Ref.Settings.Placements[l].Items
-            // .Where(p => !p.HasTag<CostTag>() || p.GetTag<CostTag>().Cost.CanPay())
-            )
-            .Select(p => p.RandoPlacement())
-            // .Where(p => p.Item is not null && !td.obtainedItems.Contains(p.Index))
-            .Where(p => !td.obtainedItems.Contains(p.Index));
-
-        // Transition placements that are unchecked and reachable
-        var relevantTransitionPlacements = RM.RS.Context.transitionPlacements.Where(p =>
-            td.uncheckedReachableTransitions.Contains(p.Source.Name)
+        // Item placements that are reachable and haven't been obtained yet (without breaking logic)
+        var relevantItemPlacements = ItemChanger.Internal.Ref.Settings.Placements.Values.SelectMany(p =>
+            p.Items.Select(i => new ItemPlacementHint(RandoMapMod.Data.GetItemRandoPlacement(i), p, i))
+                .Where(h =>
+                    h.RandoPlacement != default && h.RandoPlacement.Location.CanGet(pm) && !h.IsPlacementObtained()
+                )
         );
 
+        // Transition placements that are unchecked and reachable (without breaking logic)
+        var relevantTransitionPlacements = RandoMapMod
+            .Data.RandomizedPlacements.Where(tp =>
+                RandoMapMod.Data.UncheckedReachableTransitionsNoSequenceBreak.Contains(tp.Location.Name)
+            )
+            .Select(tp => new TransitionPlacementHint(tp, RandoMapMod.Data.RandomizedTransitions[tp.Location.Name]))
+            .Where(tp => tp.RandoPlacement.Item is not null && tp.RandoPlacement.Location is not null);
+
+        // Make existing hint lowest in priority
         var relevantPlacements = rng.Permute(
-            relevantItemPlacements
-                .Select(p => new RandoPlacement(p.Item, p.Location))
-                .Concat(relevantTransitionPlacements.Select(p => new RandoPlacement(p.Target, p.Source)))
-        );
+                relevantItemPlacements.Select(ip => (PlacementProgressHint)ip).Concat(relevantTransitionPlacements)
+            )
+            .OrderBy(h => h.RandoPlacement.Location.Name == _selectedHint?.RandoPlacement.Location?.Name);
 
-        // Make selected placement the lowest priority
-        if (
-            _selectedHint?.RandoPlacement is RandoPlacement selectedPlacement
-            && relevantPlacements.Remove(selectedPlacement)
-        )
+        foreach (var h in relevantPlacements)
         {
-            relevantPlacements.Add(selectedPlacement);
-        }
-
-        var innerSpherePlacements = relevantPlacements.Where(p => p.Item.Required);
-
-        _selectedHint = default;
-
-        foreach (var rp in relevantPlacements)
-        {
-            // RandoMapMod.Instance.LogFine($"Checking placement: {rp.Item.Name} at {rp.Location.Name}");
-
-            newPM.StartTemp();
-
-            newPM.Add(rp.Item, rp.Location);
-
-            newPM.RemoveTempItems();
-
-            if (mu.NewProgressFound)
+            if (updater.Test(h))
             {
-                _selectedHint = GetPlacementProgressHint(rp);
-                RandoMapMod.Instance.LogFine($"New progress found - selected location is {rp.Location.Name}");
+                updater.StopUpdating();
+                _selectedHint = h;
+                _progressionUnlockingHint = true;
                 return;
             }
         }
 
-        _selectedHint = GetPlacementProgressHint(innerSpherePlacements.FirstOrDefault());
+        updater.StopUpdating();
 
-        if (_selectedHint is not null)
-        {
-            RandoMapMod.Instance.LogFine(
-                $"Selected random inner sphere location is {_selectedHint.RandoPlacement.Location.Name}"
-            );
-        }
-        else
-        {
-            RandoMapMod.Instance.LogFine($"No valid selected location");
-        }
-
-        PlacementProgressHint GetPlacementProgressHint(RandoPlacement rp)
-        {
-            if (
-                relevantItemPlacements.FirstOrDefault(p => p.Location == rp.Location) is ItemPlacement ip
-                && ip != default
-            )
-            {
-                return new ItemPlacementHint(ip);
-            }
-            else if (
-                relevantTransitionPlacements.FirstOrDefault(p => p.Source == rp.Location) is TransitionPlacement tp
-                && tp != default
-            )
-            {
-                return new TransitionPlacementHint(tp);
-            }
-
-            return null;
-        }
+        // Make lower sphere locations higher priority
+        _selectedHint = relevantPlacements
+            .OrderBy(h => h.RandoPlacement.Location.Name == _selectedHint?.RandoPlacement.Location?.Name)
+            .ThenBy(h => h.RandoPlacement.Location.Sphere)
+            .FirstOrDefault();
+        _progressionUnlockingHint = false;
     }
 
     private void UpdateHintText()
     {
-        if (_selectedHint is not null)
+        if (_selectedHint is null)
         {
-            var bindingsText = ProgressHintInput.Instance.GetBindingsText();
-            _progressHintText.Text =
-                $"{"You will find progress".L()}"
-                + _selectedHint.GetTextFragment()
-                + $".\n\n{"Press".L()} {bindingsText} {"to refresh hint".L()}.";
+            _progressHintText.Text = "Current reachable locations/transitions will not unlock any more progress.".L();
+            return;
+        }
+
+        var textFragment =
+            $"{_selectedHint.GetTextFragment()}.\n\n{"Press".L()} {ProgressHintInput.Instance.GetBindingsText()} {"to refresh hint".L()}.";
+
+        if (_progressionUnlockingHint)
+        {
+            _progressHintText.Text = $"{"You will find progress".L()}" + textFragment;
         }
         else
         {
-            _progressHintText.Text = "Current reachable locations/transitions will not unlock any more progress.".L();
+            _progressHintText.Text = $"{"You might find progress".L()}" + textFragment;
         }
     }
 }

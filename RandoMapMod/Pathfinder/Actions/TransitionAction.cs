@@ -38,7 +38,7 @@ internal class TransitionAction(Term sourceTerm, Term targetTerm, string compass
 
     private protected virtual bool IsInvalidTransition(Node node, ProgressionManager pm)
     {
-        return !TransitionData.IsVisitedTransition(node.Term.Name);
+        return !TransitionData.IsVisitedOrVanillaTransition(node.Term.Name);
     }
 
     string IInstruction.GetCompassObjectPath(string scene)

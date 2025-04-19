@@ -11,7 +11,7 @@ public static class Localization
     /// <param name="text"></param>
     public static string L(this string text)
     {
-        return RandomizerMod.Localization.Localize(text);
+        return RandoMapMod.Data.Localize(text);
     }
 
     /// <summary>

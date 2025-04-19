@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using MapChanger;
+using RandoMapMod.Data;
 using RandoMapMod.Modes;
 using RandoMapMod.Transition;
-using RandomizerMod.RandomizerData;
 using RCPathfinder;
 using RCPathfinder.Actions;
 using UnityEngine;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.Pathfinder;
 
@@ -26,12 +25,12 @@ internal class SceneLogicTracker
 
     internal ReadOnlyCollection<string> InLogicScenes => new([.. _inLogicScenes]);
 
-    internal void Events_OnQuickMap(GameMap arg1, GlobalEnums.MapZone arg2)
+    internal void Events_OnQuickMap(GameMap _0, GlobalEnums.MapZone _1)
     {
         Update();
     }
 
-    internal void Events_OnWorldMap(GameMap obj)
+    internal void Events_OnWorldMap(GameMap _)
     {
         Update();
     }
@@ -58,11 +57,11 @@ internal class SceneLogicTracker
         _inLogicAdjacentScenes = [.. GetVisitedAdjacentScenes(Utils.CurrentScene())];
 
         // Get scenes where there are unchecked reachable transitions
-        foreach (var transition in RM.RS.TrackerData.uncheckedReachableTransitions)
+        foreach (var transition in RandoMapMod.Data.UncheckedReachableTransitions)
         {
-            if (TransitionData.GetTransitionDef(transition) is TransitionDef td)
+            if (TransitionData.GetTransitionDef(transition) is RmcTransitionDef td)
             {
-                _ = _uncheckedReachableScenes.Add(td.SceneName);
+                _uncheckedReachableScenes.Add(td.SceneName);
             }
         }
     }

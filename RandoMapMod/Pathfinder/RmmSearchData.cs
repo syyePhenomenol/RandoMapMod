@@ -3,7 +3,6 @@ using RandoMapMod.Pathfinder.Actions;
 using RandoMapMod.Transition;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using RandomizerMod.RC;
 using RCPathfinder;
 using RCPathfinder.Actions;
 using JU = RandomizerCore.Json.JsonUtil;
@@ -131,14 +130,6 @@ internal class RmmSearchData : SearchData
     {
         lmb = base.MakeLocalLM(lmb);
 
-        if (
-            ReferencePM.ctx?.InitialProgression is not ProgressionInitializer pi
-            || pi.StartStateTerm is not Term startTerm
-        )
-        {
-            throw new NullReferenceException();
-        }
-
         // Inject new terms and custom logic
         foreach (
             var rld in JU.DeserializeFromEmbeddedResource<RawLogicDef[]>(
@@ -192,6 +183,8 @@ internal class RmmSearchData : SearchData
             }
         }
 
+        var startTerm = RandoMapMod.Data.StartTerm;
+
         // Remove Start_State from existing logic
         foreach (var term in lmb.Terms)
         {
@@ -202,7 +195,7 @@ internal class RmmSearchData : SearchData
         }
 
         // Link Start_State with start terms
-        foreach (var term in pi.StartStateLinkedTerms)
+        foreach (var term in RandoMapMod.Data.StartStateLinkedTerms)
         {
             if (lmb.LogicLookup.ContainsKey(term.Name))
             {
@@ -309,10 +302,7 @@ internal class RmmSearchData : SearchData
 
         if (Interop.HasBenchwarp)
         {
-            if (LocalPM.ctx?.InitialProgression is ProgressionInitializer pi && pi.StartStateTerm is Term startTerm)
-            {
-                actions.Add(new StartWarpAction(startTerm));
-            }
+            actions.Add(new StartWarpAction(RandoMapMod.Data.StartTerm));
 
             foreach (var kvp in BenchwarpInterop.BenchKeys)
             {

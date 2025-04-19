@@ -1,23 +1,22 @@
 using RandomizerCore;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using RandomizerMod.Settings;
-using static RandomizerMod.Settings.TrackerData;
 
 namespace RandoMapMod.UI;
 
 internal class ProgressHintLogicUpdater : MainUpdater
 {
-    private readonly bool _terminateOnNewProgress = false;
+    private readonly ProgressionManager _pm;
+    private readonly bool _initialized;
+    private bool _newReachablePlacement;
+    private HashSet<RandoPlacement> _oolObtainedPlacements = [];
 
-    public ProgressHintLogicUpdater(TrackerData td, ProgressionManager newPM)
-        : base(td.lm, newPM)
+    internal ProgressHintLogicUpdater(ProgressionManager pm)
+        : base(pm.lm, pm)
     {
-        // To avoid modifying TrackerData, keep a local copy to track what OOL stuff is added back in
-        HashSet<int> localOOLObtainedItems = new(td.outOfLogicObtainedItems);
-        HashSet<string> localOOLVisitedTransitions = new(td.outOfLogicVisitedTransitions);
+        _pm = pm;
 
-        foreach (var w in td.lm.Waypoints)
+        foreach (var w in pm.lm.Waypoints)
         {
             if (w.term.Type == TermType.State)
             {
@@ -29,7 +28,7 @@ internal class ProgressHintLogicUpdater : MainUpdater
             }
         }
 
-        foreach (var t in newPM.lm.TransitionLookup.Values)
+        foreach (var t in pm.lm.TransitionLookup.Values)
         {
             if (t.term.Type == TermType.State)
             {
@@ -37,186 +36,155 @@ internal class ProgressHintLogicUpdater : MainUpdater
             }
         }
 
-        AddEntries(
-            td.ctx.Vanilla.Select(v => new DelegateUpdateEntry(
-                v.Location,
-                pm =>
-                {
-                    pm.Add(v.Item, v.Location);
+        AddEntries(RandoMapMod.Data.RandomizedPlacements.Select(p => new RandomizedPlacementUpdateEntry(this, p)));
 
-                    if (v.Location is ILocationWaypoint ilw)
-                    {
-                        // RandoMapMod.Instance.LogDebug($"Adding vanilla reachable effect: {v.Location.Name}");
-                        pm.Add(ilw.GetReachableEffect());
-                    }
-                }
-            ))
-        );
-
-        AddEntries(
-            td.ctx.itemPlacements.Select(
-                (p, id) =>
-                    new DelegateUpdateEntry(
-                        p.Location.logic,
-                        (pm) =>
-                        {
-                            if (NewProgressFound)
-                                return;
-
-                            if (
-                                _terminateOnNewProgress
-                                && !td.clearedLocations.Contains(p.Location.Name)
-                                && !td.previewedLocations.Contains(p.Location.Name)
-                                && !td.uncheckedReachableLocations.Contains(p.Location.Name)
-                            )
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Unlocked new location: {p.Location.Name}");
-                                NewProgressFound = true;
-                                return;
-                            }
-
-                            (RandoItem item, RandoLocation location) = td.ctx.itemPlacements[id];
-                            if (location is ILocationWaypoint ilw)
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Adding reachable effect: {location.Name}");
-                                pm.Add(ilw.GetReachableEffect());
-                            }
-
-                            if (localOOLObtainedItems.Remove(id))
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Adding from OOL: {item.Name} at {location.Name}");
-                                pm.Add(item, location);
-                            }
-                        }
-                    )
-            )
-        );
-
-        AddEntries(
-            td.ctx.transitionPlacements.Select(
-                (p, id) =>
-                    new DelegateUpdateEntry(
-                        p.Source,
-                        (pm) =>
-                        {
-                            if (NewProgressFound)
-                            {
-                                return;
-                            }
-
-                            (RandoTransition target, RandoTransition source) = td.ctx.transitionPlacements[id];
-
-                            if (
-                                _terminateOnNewProgress
-                                && !td.visitedTransitions.ContainsKey(source.Name)
-                                && !td.uncheckedReachableTransitions.Contains(source.Name)
-                            )
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Unlocked new transition: {source.Name}");
-                                NewProgressFound = true;
-                                return;
-                            }
-
-                            if (!pm.Has(source.lt.term))
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Adding transition reachable effect: {target.Name} at {source.Name}");
-                                pm.Add(source.GetReachableEffect());
-                            }
-
-                            if (localOOLVisitedTransitions.Remove(source.Name))
-                            {
-                                // RandoMapMod.Instance.LogDebug($"Adding from OOL: {target.Name} at {source.Name}");
-                                pm.Add(target, source);
-                            }
-                        }
-                    )
-            )
-        );
+        AddEntries(RandoMapMod.Data.VanillaPlacements.Select(p => new VanillaPlacementUpdateEntry(this, p)));
 
         StartUpdating();
 
-        foreach (var i in td.obtainedItems)
-        {
-            if (localOOLObtainedItems.Contains(i))
-            {
-                continue;
-            }
-
-            (var item, var loc) = td.ctx.itemPlacements[i];
-            newPM.Add(item, loc);
-        }
-
-        foreach (var kvp in td.visitedTransitions)
-        {
-            if (localOOLVisitedTransitions.Contains(kvp.Key))
-            {
-                continue;
-            }
-
-            var tt = td.lm.GetTransitionStrict(kvp.Value);
-            var st = td.lm.GetTransitionStrict(kvp.Key);
-
-            if (!newPM.Has(st.term))
-            {
-                newPM.Add(st.GetReachableEffect());
-            }
-
-            newPM.Add(tt, st);
-        }
-
-        NewProgressFound = false;
-        _terminateOnNewProgress = true;
+        _initialized = true;
     }
 
-    public bool NewProgressFound { get; private set; } = false;
+    internal bool Test(PlacementProgressHint hint)
+    {
+        _newReachablePlacement = false;
+        _oolObtainedPlacements = new(RandoMapMod.Data.OolObtainedPlacements);
 
-    private class TrackedStateUpdateEntry(ProgressHintLogicUpdater mu, Term term, StateLogicDef logic)
+        _pm.StartTemp();
+        _pm.Add(hint.RandoPlacement.Item, hint.RandoPlacement.Location);
+        _pm.RemoveTempItems();
+
+        return _newReachablePlacement;
+    }
+
+    private class TrackedStateUpdateEntry(ProgressHintLogicUpdater updater, Term term, StateLogicDef logic)
         : StateUpdateEntry(term, logic)
     {
         private readonly List<State> _stateAccumulator = [];
 
         public override void Update(ProgressionManager pm, int updateTerm)
         {
+            if (!updater._initialized)
+            {
+                return;
+            }
+
             var state = pm.GetState(term);
             _stateAccumulator.Clear();
             if (logic.CheckForUpdatedState(pm, state, _stateAccumulator, updateTerm, out var newState))
             {
                 stateSetter.value = newState;
                 pm.Add(stateSetter);
-                mu.NewProgressFound = true;
+                // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
             }
         }
 
         public override void Update(ProgressionManager pm)
         {
+            if (!updater._initialized)
+            {
+                return;
+            }
+
             var state = pm.GetState(term);
             _stateAccumulator.Clear();
             if (logic.CheckForUpdatedState(pm, state, _stateAccumulator, out var newState))
             {
                 stateSetter.value = newState;
+                // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
                 pm.Add(stateSetter);
-                mu.NewProgressFound = true;
             }
             else if (state is null && logic.CanGet(pm))
             {
                 stateSetter.value = pm.lm.StateManager.Empty;
+                // RandoMapMod.Instance.LogFine($"Adding state term: {term}");
                 pm.Add(stateSetter);
-                mu.NewProgressFound = true;
             }
         }
     }
 
-    private class TrackedPreplacedItemUpdateEntry(ProgressHintLogicUpdater mu, ILogicItem item, ILogicDef location)
+    private class TrackedPreplacedItemUpdateEntry(ProgressHintLogicUpdater updater, ILogicItem item, ILogicDef location)
         : PrePlacedItemUpdateEntry(item, location)
     {
         public override void OnAdd(ProgressionManager pm)
         {
+            if (!updater._initialized)
+            {
+                return;
+            }
+
             if (pm.lm.Terms.IsTerm(location.Name) && pm.Get(location.Name) is 0)
             {
-                mu.NewProgressFound = true;
+                // RandoMapMod.Instance.LogFine($"Adding non-state term: {location.Name}");
             }
 
             base.OnAdd(pm);
+        }
+    }
+
+    public abstract class GeneralizedPlacementUpdateEntry(GeneralizedPlacement gp) : UpdateEntry
+    {
+        private protected GeneralizedPlacement GP { get; } = gp;
+
+        public override bool CanGet(ProgressionManager pm)
+        {
+            return GP.Location.CanGet(pm);
+        }
+
+        public override IEnumerable<Term> GetTerms()
+        {
+            return GP.Location.GetTerms();
+        }
+
+        public override void OnAdd(ProgressionManager pm)
+        {
+            if (GP.Location is ILocationWaypoint ilw)
+            {
+                // RandoMapMod.Instance.LogFine($"Adding reachable effect: {GP.Location.Name}");
+                pm.Add(ilw.GetReachableEffect());
+            }
+        }
+    }
+
+    public class RandomizedPlacementUpdateEntry(ProgressHintLogicUpdater updater, RandoPlacement rp)
+        : GeneralizedPlacementUpdateEntry(rp)
+    {
+        public override void OnAdd(ProgressionManager pm)
+        {
+            if (!updater._initialized)
+            {
+                return;
+            }
+
+            base.OnAdd(pm);
+
+            if (pm.lm.Terms.IsTerm(GP.Location.Name) && pm.Get(GP.Location.Name) is 0)
+            {
+                RandoMapMod.Instance.LogFine($"New reachable placement {GP.Location.Name}");
+                updater._newReachablePlacement = true;
+            }
+            else if (updater._oolObtainedPlacements.Remove(new RandoPlacement(rp.Item, rp.Location)))
+            {
+                // RandoMapMod.Instance.LogFine($"Adding OOL placement: {rp.Location.Name}");
+                pm.Add(rp.Item, rp.Location);
+            }
+        }
+    }
+
+    public class VanillaPlacementUpdateEntry(ProgressHintLogicUpdater updater, GeneralizedPlacement gp)
+        : GeneralizedPlacementUpdateEntry(gp)
+    {
+        public override void OnAdd(ProgressionManager pm)
+        {
+            if (!updater._initialized)
+            {
+                return;
+            }
+
+            base.OnAdd(pm);
+
+            // RandoMapMod.Instance.LogFine($"Adding vanilla placement: {GP.Location.Name}");
+            pm.Add(GP.Item, GP.Location);
         }
     }
 }

@@ -9,7 +9,7 @@ internal abstract class RmmWorldMapInput(string name, Func<PlayerAction> getPlay
 {
     public override bool UseCondition()
     {
-        return RandomizerMod.RandomizerMod.IsRandoSave;
+        return RandoMapMod.Data is not null && RandoMapMod.Data.IsCorrectSaveType;
     }
 
     public override bool ActiveCondition()

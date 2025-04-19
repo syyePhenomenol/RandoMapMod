@@ -1,6 +1,5 @@
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using RandomizerMod.RC.StateVariables;
 using RCPathfinder;
 using RCPathfinder.Actions;
 
@@ -24,10 +23,12 @@ internal class BenchwarpAction(Term term, RmmBenchKey benchKey) : StartJumpActio
         }
 
         List<State> states = [];
-        var benchVariable = (WarpToBenchResetVariable)pm.lm.GetVariableStrict(WarpToBenchResetVariable.Prefix);
-        foreach (var sb in node.Current.States.Select(s => new StateBuilder(s)))
+        if (RandoMapMod.Data.WarpToBenchReset is StateModifier benchVariable)
         {
-            states.AddRange(benchVariable.ModifyState(null, pm, new(sb)).Select(sb => sb.GetState()));
+            foreach (var sb in node.Current.States.Select(s => new StateBuilder(s)))
+            {
+                states.AddRange(benchVariable.ModifyState(null, pm, new(sb)).Select(sb => sb.GetState()));
+            }
         }
 
         satisfiableStates = new(states);

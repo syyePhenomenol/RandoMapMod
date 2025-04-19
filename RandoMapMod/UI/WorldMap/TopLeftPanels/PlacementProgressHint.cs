@@ -2,24 +2,22 @@ using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Extensions;
 using MapChanger.MonoBehaviours;
+using RandoMapMod.Data;
 using RandoMapMod.Localization;
 using RandoMapMod.Pathfinder;
 using RandoMapMod.Pins;
 using RandoMapMod.Rooms;
 using RandoMapMod.Settings;
 using RandomizerCore;
-using RandomizerMod.RandomizerData;
-using RandomizerMod.RC;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace RandoMapMod.UI;
 
-internal abstract class PlacementProgressHint
+internal abstract record PlacementProgressHint(RandoPlacement RandoPlacement)
 {
-    internal abstract RandoPlacement RandoPlacement { get; }
-
     internal abstract bool IsPlacementObtained();
+
     internal abstract string GetTextFragment();
+
     internal abstract void DoPanning();
 
     private protected static bool TryPanToArea(string area)
@@ -72,21 +70,15 @@ internal abstract class PlacementProgressHint
     }
 }
 
-internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
+internal record ItemPlacementHint(RandoPlacement RandoPlacement, AbstractPlacement AbstractPlacement, AbstractItem Item)
+    : PlacementProgressHint(RandoPlacement)
 {
-    private readonly ItemPlacement _ip = ip;
-    private readonly AbstractPlacement _ap = ItemChanger.Internal.Ref.Settings.Placements.GetOrDefault(
-        ip.Location.Name
-    );
-
     private string[] _scenes = [];
     private string[] _mapAreas = [];
 
-    internal override RandoPlacement RandoPlacement => new(_ip.Item, _ip.Location);
-
     internal override bool IsPlacementObtained()
     {
-        return RM.RS.TrackerData.obtainedItems.Contains(_ip.Index);
+        return Item.WasEverObtained();
     }
 
     internal override string GetTextFragment()
@@ -97,7 +89,7 @@ internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
 
         if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
         {
-            text += $"\n{"at".L()} {_ip.Location.Name.LC()}";
+            text += $"\n{"at".L()} {RandoPlacement.Location.Name.LC()}";
         }
 
         if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location or ProgressHintSetting.Room)
@@ -146,7 +138,7 @@ internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
 
                 break;
             case ProgressHintSetting.Location:
-                if (!TryPanToLocation(_ip.Location.Name) && !TryPanToMappedScene(scene))
+                if (!TryPanToLocation(RandoPlacement.Location.Name) && !TryPanToMappedScene(scene))
                 {
                     _ = TryPanToArea(mapArea);
                 }
@@ -164,34 +156,22 @@ internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
         List<string> scenes = [];
         List<string> mapAreas = [];
 
-        if (_ip.Location.LocationDef?.SceneName is string scene)
+        if (
+            SupplementalMetadata.Of(AbstractPlacement).Get(InteropProperties.HighlightScenes)
+            is string[] highlightScenes
+        )
+        {
+            var inLogicHighlightScenes = highlightScenes.Where(RmmPathfinder.Slt.IsInLogicScene);
+
+            scenes.AddRange(inLogicHighlightScenes);
+            mapAreas.AddRange(inLogicHighlightScenes.Select(RandoMapMod.Data.GetMapArea).OfType<string>());
+        }
+        else if (AbstractPlacement.GetScene() is string scene)
         {
             scenes.Add(scene);
-        }
-
-        if (_ip.Location.LocationDef?.MapArea is string mapArea)
-        {
-            mapAreas.Add(mapArea);
-        }
-
-        if (_ap is not null)
-        {
-            if (SupplementalMetadata.Of(_ap).Get(InteropProperties.HighlightScenes) is string[] highlightScenes)
+            if (RandoMapMod.Data.GetMapArea(scene) is string mapArea)
             {
-                var inLogicHighlightScenes = highlightScenes.Where(RmmPathfinder.Slt.IsInLogicScene);
-
-                scenes.AddRange(inLogicHighlightScenes);
-                mapAreas.AddRange(
-                    inLogicHighlightScenes.Select(s => Data.GetRoomDef(s)?.MapArea).Where(a => a is not null)
-                );
-            }
-            else if (_ap.GetScene() is string placementScene)
-            {
-                scenes.Add(placementScene);
-                if (Data.GetRoomDef(placementScene)?.MapArea is string apMapArea)
-                {
-                    mapAreas.Add(apMapArea);
-                }
+                mapAreas.Add(mapArea);
             }
         }
 
@@ -211,24 +191,12 @@ internal class ItemPlacementHint(ItemPlacement ip) : PlacementProgressHint
     }
 }
 
-internal class TransitionPlacementHint : PlacementProgressHint
+internal record TransitionPlacementHint(RandoPlacement RandoPlacement, RmcTransitionDef TransitionDef)
+    : PlacementProgressHint(RandoPlacement)
 {
-    private readonly TransitionPlacement _tp;
-    private readonly string _scene;
-    private readonly string _mapArea;
-
-    internal TransitionPlacementHint(TransitionPlacement tp)
-    {
-        _tp = tp;
-        _scene = tp.Source.TransitionDef.SceneName;
-        _mapArea = tp.Source.TransitionDef.MapArea;
-    }
-
-    internal override RandoPlacement RandoPlacement => new(_tp.Target, _tp.Source);
-
     internal override bool IsPlacementObtained()
     {
-        return RM.RS.TrackerData.visitedTransitions.ContainsKey(RandoPlacement.Location.Name);
+        return RandoMapMod.Data.VisitedTransitions.ContainsKey(RandoPlacement.Location.Name);
     }
 
     internal override string GetTextFragment()
@@ -237,19 +205,19 @@ internal class TransitionPlacementHint : PlacementProgressHint
 
         if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Location)
         {
-            text += $"\n{"through".L()} {_tp.Source.TransitionDef.Name.LT()}";
+            text += $"\n{"through".L()} {TransitionDef.Name.LT()}";
         }
 
         if (RandoMapMod.GS.ProgressHint is ProgressHintSetting.Room)
         {
-            text += $"\n{"in".L()} {_scene.L()}";
+            text += $"\n{"in".L()} {TransitionDef.SceneName.L()}";
         }
 
         text += $"\n{"in".L()} ";
 
-        if (_mapArea is not null)
+        if (TransitionDef.GetMapArea() is string mapArea)
         {
-            text += $"{_mapArea.L()}";
+            text += $"{mapArea.L()}";
         }
         else
         {
@@ -264,11 +232,11 @@ internal class TransitionPlacementHint : PlacementProgressHint
         switch (RandoMapMod.GS.ProgressHint)
         {
             case ProgressHintSetting.Area:
-                _ = TryPanToArea(_mapArea);
+                TryPanToArea(TransitionDef.GetMapArea());
                 break;
             case ProgressHintSetting.Room:
             case ProgressHintSetting.Location:
-                _ = TryPanToScene(_scene);
+                TryPanToScene(TransitionDef.SceneName);
                 break;
             case ProgressHintSetting.Off:
                 break;

@@ -1,6 +1,5 @@
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using RandomizerMod.RC.StateVariables;
 using RCPathfinder;
 
 namespace RandoMapMod.Pathfinder.Actions;
@@ -18,10 +17,13 @@ internal class StartWarpAction(Term term) : BenchwarpAction(term, BenchwarpInter
         }
 
         List<State> states = [];
-        var benchVariable = (WarpToStartResetVariable)pm.lm.GetVariableStrict(WarpToStartResetVariable.Prefix);
-        foreach (var sb in node.Current.States.Select(s => new StateBuilder(s)))
+
+        if (RandoMapMod.Data.WarpToStartReset is StateModifier startVariable)
         {
-            states.AddRange(benchVariable.ModifyState(null, pm, new(sb)).Select(sb => sb.GetState()));
+            foreach (var sb in node.Current.States.Select(s => new StateBuilder(s)))
+            {
+                states.AddRange(startVariable.ModifyState(null, pm, new(sb)).Select(sb => sb.GetState()));
+            }
         }
 
         satisfiableStates = new(states);

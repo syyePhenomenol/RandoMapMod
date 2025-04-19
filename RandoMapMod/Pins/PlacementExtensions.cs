@@ -1,13 +1,26 @@
 ﻿using ItemChanger;
-using static RandomizerMod.Extensions.ICExtensions;
 
 namespace RandoMapMod.Pins;
 
 internal static class PlacementExtensions
 {
+    internal static bool IsRandomizedPlacement(this AbstractPlacement placement)
+    {
+        return RandoMapMod.Data.RandomizedLocations.ContainsKey(placement.Name);
+    }
+
     internal static string GetScene(this AbstractPlacement placement)
     {
-        return placement.RandoLocation()?.LocationDef?.SceneName ?? Finder.GetLocation(placement.Name)?.sceneName;
+        if (
+            RandoMapMod.Data.RandomizedLocations.TryGetValue(placement.Name, out var ld)
+            && ld is not null
+            && ld.SceneName is not null
+        )
+        {
+            return ld.SceneName;
+        }
+
+        return Finder.GetLocation(placement.Name)?.sceneName;
     }
 
     internal static bool CanPreview(this TaggableObject taggable)

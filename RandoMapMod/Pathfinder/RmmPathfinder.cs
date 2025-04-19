@@ -12,7 +12,7 @@ public class RmmPathfinder : HookModule
 
     public override void OnEnterGame()
     {
-        SD = new(RandomizerMod.RandomizerMod.RS.TrackerData.pm);
+        SD = new(RandoMapMod.Data.PM);
         Dgt = new(SD);
         RM = new(SD);
         Slt = new(SD);
