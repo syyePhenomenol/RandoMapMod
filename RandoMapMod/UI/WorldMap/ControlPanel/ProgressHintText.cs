@@ -1,4 +1,5 @@
-﻿using RandoMapMod.Localization;
+﻿using RandoMapMod.Input;
+using RandoMapMod.Localization;
 using RandoMapMod.Settings;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ internal class ProgressHintText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{"Toggle progress hint".L()} {ProgressHintInput.Instance.GetBindingsText()}: "
+        return $"{"Toggle progress hint".L()} {ProgressHintPanelInput.Instance.GetBindingsText()}: "
             + RandoMapMod.GS.ProgressHint switch
             {
                 ProgressHintSetting.Area => "Area".L(),
