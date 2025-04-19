@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace RandoMapMod.Pins;
 
-internal sealed class VanillaPinDef : PinDef
+internal sealed class VanillaPinDef : PinDef, ILogicPinDef
 {
     private readonly string _locationPoolGroup;
 
@@ -54,10 +54,8 @@ internal sealed class VanillaPinDef : PinDef
             || _locationPoolGroup == PoolGroup.LoreTablets.FriendlyName();
     }
 
-    // NOT used for tracking. Only used to retrive the logic infix text.
-    internal LogicInfo Logic { get; }
-    internal HintInfo Hint { get; }
-
+    public LogicInfo Logic { get; init; }
+    public HintInfo Hint { get; init; }
     internal bool Persistent { get; }
 
     internal override bool ActiveByProgress()
@@ -77,12 +75,12 @@ internal sealed class VanillaPinDef : PinDef
 
     internal override bool ShrinkPin()
     {
-        return true;
+        return Logic?.IndicateUnreachable() ?? false;
     }
 
     internal override bool DarkenPin()
     {
-        return true;
+        return !Tracker.HasClearedLocation(Name) && (Logic?.IndicateUnreachable() ?? false);
     }
 
     internal override Color GetBorderColor()
@@ -91,7 +89,13 @@ internal sealed class VanillaPinDef : PinDef
         {
             return RmmColors.GetColor(RmmColorSetting.Pin_Cleared);
         }
-        else if (Persistent)
+
+        if (Logic?.State is LogicState.ReachableSequenceBreak)
+        {
+            return RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic);
+        }
+
+        if (Persistent)
         {
             return RmmColors.GetColor(RmmColorSetting.Pin_Persistent);
         }
@@ -99,9 +103,29 @@ internal sealed class VanillaPinDef : PinDef
         return RmmColors.GetColor(RmmColorSetting.Pin_Normal);
     }
 
+    internal override PinShape GetMixedPinShape()
+    {
+        if (Tracker.HasClearedLocation(Name))
+        {
+            return PinShape.Circle;
+        }
+
+        if (Logic?.State is LogicState.ReachableSequenceBreak)
+        {
+            return PinShape.Pentagon;
+        }
+
+        if (Persistent)
+        {
+            return PinShape.Hexagon;
+        }
+
+        return base.GetMixedPinShape();
+    }
+
     private protected override string GetStatusText()
     {
-        var text = $"{"Status".L()}: {"Not randomized".L()}, ";
+        var text = $"{"Status".L()}: {"Vanilla".L()}, ";
 
         if (Tracker.HasClearedLocation(Name))
         {
@@ -115,8 +139,10 @@ internal sealed class VanillaPinDef : PinDef
             }
             else
             {
-                text += "unchecked".L();
+                text += "not cleared".L();
             }
+
+            text += ", " + Logic?.GetStatusTextFragment() ?? "unknown logic";
         }
 
         return text;

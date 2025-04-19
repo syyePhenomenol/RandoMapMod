@@ -9,11 +9,6 @@ internal class RandomizedPinDef(
     ProgressionManager pmNoSequenceBreak
 ) : LogicICPinDef(placement, "Randomized", pm, pmNoSequenceBreak)
 {
-    internal override float GetZPriority()
-    {
-        return base.GetZPriority() + (10f * (int)Logic.State);
-    }
-
     private protected override string GetPreviewText()
     {
         return base.GetPreviewText()

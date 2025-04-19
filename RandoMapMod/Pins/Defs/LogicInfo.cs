@@ -3,7 +3,7 @@ using RandomizerCore.Logic;
 
 namespace RandoMapMod.Pins;
 
-internal class LogicInfo
+public class LogicInfo
 {
     private readonly LogicDef _logic;
     private readonly ProgressionManager _pm;
@@ -32,6 +32,22 @@ internal class LogicInfo
         {
             State = LogicState.Unreachable;
         }
+    }
+
+    internal bool IndicateUnreachable()
+    {
+        return RandoMapMod.GS.ReachablePins && State is LogicState.Unreachable;
+    }
+
+    internal string GetStatusTextFragment()
+    {
+        return State switch
+        {
+            LogicState.Reachable => "reachable".L(),
+            LogicState.ReachableSequenceBreak => "reachable through sequence break".L(),
+            LogicState.Unreachable => "unreachable".L(),
+            _ => "",
+        };
     }
 
     internal string GetLogicText()

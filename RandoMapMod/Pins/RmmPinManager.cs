@@ -200,9 +200,9 @@ internal class RmmPinManager : HookModule
                 is List<RmmPin> overlappingPins
             )
             {
-                RandoMapMod.Instance.LogFine(
-                    $"{normalPin} overlaps with {string.Join(", ", overlappingPins.Select(p => p.Name))}"
-                );
+                // RandoMapMod.Instance.LogFine(
+                //     $"{normalPin} overlaps with {string.Join(", ", overlappingPins.Select(p => p.Name))}"
+                // );
                 _tempPinGroups[overlappingPins.First().Name].Add(normalPin);
             }
             else
@@ -241,17 +241,10 @@ internal class RmmPinManager : HookModule
     {
         foreach (var pin in Pins.Values)
         {
-            switch (pin.Def)
+            if (pin.Def is ILogicPinDef ilpd)
             {
-                case LogicICPinDef licpd:
-                    licpd.Logic?.Update();
-                    licpd.Hint?.Update();
-                    break;
-                case VanillaPinDef vpd:
-                    vpd.Hint?.Update();
-                    break;
-                default:
-                    break;
+                ilpd.Logic?.Update();
+                ilpd.Hint?.Update();
             }
         }
     }

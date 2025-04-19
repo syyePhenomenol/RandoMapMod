@@ -5,7 +5,7 @@ using RandomizerCore.Logic;
 
 namespace RandoMapMod.Pins;
 
-internal class HintInfo
+public class HintInfo
 {
     private readonly ProgressionManager _pm;
     private readonly List<LogicDef> _logicDefs = [];

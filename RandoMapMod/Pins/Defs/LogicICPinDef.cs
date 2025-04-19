@@ -1,5 +1,4 @@
 using ItemChanger;
-using RandoMapMod.Localization;
 using RandoMapMod.Settings;
 using RandomizerCore.Logic;
 using UnityEngine;
@@ -7,7 +6,7 @@ using SM = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace RandoMapMod.Pins;
 
-internal abstract class LogicICPinDef : ICPinDef
+internal abstract class LogicICPinDef : ICPinDef, ILogicPinDef
 {
     internal LogicICPinDef(
         AbstractPlacement placement,
@@ -36,7 +35,7 @@ internal abstract class LogicICPinDef : ICPinDef
         }
         else
         {
-            RandoMapMod.Instance.LogFine($"No logic def found for placement {placement.Name}");
+            RandoMapMod.Instance.LogDebug($"No logic def found for placement {placement.Name}");
         }
 
         if (SM.Of(placement).Get(InteropProperties.LocationHints) is RawLogicDef[] hints)
@@ -46,42 +45,42 @@ internal abstract class LogicICPinDef : ICPinDef
         }
     }
 
-    internal LogicInfo Logic { get; }
-    internal HintInfo Hint { get; }
+    public LogicInfo Logic { get; init; }
+    public HintInfo Hint { get; init; }
 
     internal override bool ShrinkPin()
     {
-        return RandoMapMod.GS.ReachablePins && Logic.State is LogicState.Unreachable;
+        return Logic?.IndicateUnreachable() ?? false;
     }
 
     internal override bool DarkenPin()
     {
-        return State is not PlacementState.Cleared
-            && RandoMapMod.GS.ReachablePins
-            && Logic.State is LogicState.Unreachable;
+        return State is not PlacementState.Cleared && (Logic?.IndicateUnreachable() ?? false);
     }
 
     internal override Color GetBorderColor()
     {
-        return Logic.State switch
+        if (Logic?.State is LogicState.ReachableSequenceBreak)
         {
-            LogicState.ReachableSequenceBreak => RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic),
-            _ => base.GetBorderColor(),
-        };
+            return RmmColors.GetColor(RmmColorSetting.Pin_Out_of_logic);
+        }
+
+        return base.GetBorderColor();
     }
 
     internal override PinShape GetMixedPinShape()
     {
-        return Logic.State switch
+        if (Logic?.State is LogicState.ReachableSequenceBreak)
         {
-            LogicState.ReachableSequenceBreak => PinShape.Pentagon,
-            _ => base.GetMixedPinShape(),
-        };
+            return PinShape.Pentagon;
+        }
+
+        return base.GetMixedPinShape();
     }
 
     internal override float GetZPriority()
     {
-        return base.GetZPriority() + (10f * (int)Logic.State);
+        return base.GetZPriority() + (10f * (int)Logic?.State);
     }
 
     private protected override string GetStatusText()
@@ -91,13 +90,6 @@ internal abstract class LogicICPinDef : ICPinDef
             return base.GetStatusText();
         }
 
-        return $"{base.GetStatusText()}, "
-            + Logic.State switch
-            {
-                LogicState.Reachable => "reachable".L(),
-                LogicState.ReachableSequenceBreak => "reachable through sequence break".L(),
-                LogicState.Unreachable => "unreachable".L(),
-                _ => "",
-            };
+        return $"{base.GetStatusText()}, " + Logic?.GetStatusTextFragment() ?? "unknown logic";
     }
 }
