@@ -6,7 +6,7 @@ RandoMapMod is a Hollow Knight mod for Randomizer 4 that adds many new features 
 
 The mod helps with tracking both items and transitions, and is compatible with several existing connection mods.
 
-# Dependencies:
+Dependencies:
 - [Randomizer 4](https://github.com/homothetyhk/RandomizerMod) and all of its dependencies.
 - [RandoMapCore](https://github.com/syyePhenomenol/RandoMapCore) and all of its dependencies.
 
@@ -107,24 +107,20 @@ Optional and compatible:
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
 
 ## Customization
-- To customize map and UI colors, download the [template file](https://github.com/syyePhenomenol/RandoMapMod/releases/download/v3.0.0/colors.json) and copy it to the same folder that contains the mod file ``RandoMapMod.dll``. You only need to quit a save and re-enter one to reload the colors.
-    - For Steam + Scarab users on Windows, the default folder is `...\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\RandoMapMod`.
+- To customize map and UI colors, download the [template file](https://github.com/syyePhenomenol/RandoMapMod/releases/download/v3.0.0/colors.json) and copy it to the same folder that contains the mod file ``RandoMapCore.dll``. You only need to quit a save and re-enter one to reload the colors.
+    - For Steam + Scarab users on Windows, the default folder is `...\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\RandoMapCore`.
     - Colors will be interpreted in standard RGBA format ``[r, g, b, a]``.
     - If you want to keep the default color of something, delete the corresponding line in the file (or change ``[r, g, b, a]`` to ``[]``).
 - To override the default key/input binds, install DebugMod and set binds as you like in the Pause Menu.
 
 # How To Install
-Use Scarab: https://github.com/fifty-six/Scarab
-
-Or, you can install manually:
-1. Download the latest release of `RandoMapMod.zip`.
-2. Unzip and copy the folder 'RandoMapMod' to `...\hollow_knight_Data\Managed\Mods`.
+Download [Lumafly](https://themulhima.github.io/Lumafly/) and install the mod in the application.
 
 If you need any help, feel free to ask in any of the active Hollow Knight Discord servers.
 
 # For Developers
 - Pins are automatically generated for each connection-provided placement with "best-guess" behaviour for position/displayed sprite.
-- To override this default behaviour with your connection mod, see [here](https://github.com/syyePhenomenol/RandoMapCore/RandoMapCore/Pins/InteropProperties.cs).
+- To override this default behaviour with your connection mod, see [here](https://github.com/syyePhenomenol/RandoMapCore/blob/main/RandoMapCore/Pins/InteropProperties.cs).
 
 # Acknowledgements
 - Special thanks to Homothety, Flib and BadMagic for significant coding help
