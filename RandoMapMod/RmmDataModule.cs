@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
 using ItemChanger;
+using RandoMapCore;
+using RandoMapCore.Data;
 using RandomizerCore;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
@@ -11,7 +13,7 @@ using RandomizerMod.RC.StateVariables;
 using RD = RandomizerMod.RandomizerData.Data;
 using RM = RandomizerMod.RandomizerMod;
 
-namespace RandoMapMod.Data;
+namespace RandoMapMod;
 
 internal class RmmDataModule : RmcDataModule
 {
@@ -21,6 +23,8 @@ internal class RmmDataModule : RmcDataModule
     private static Dictionary<RmcTransitionDef, RmcTransitionDef> _vanillaTransitionPlacements;
     private static Dictionary<string, RmcLocationDef> _randomizedLocations;
     private static Dictionary<string, RmcLocationDef> _vanillaLocations;
+
+    public override string ModName => nameof(RandoMapMod);
 
     public override bool IsCorrectSaveType => RM.IsRandoSave;
 
@@ -174,5 +178,15 @@ internal class RmmDataModule : RmcDataModule
         }
 
         return new() { Name = ld.Name, SceneName = ld.SceneName };
+    }
+
+    public override IReadOnlyDictionary<RmcBenchKey, string> GetCustomBenches()
+    {
+        if (Interop.HasBenchRando && BenchRandoInterop.BenchRandoEnabled())
+        {
+            return BenchRandoInterop.GetBenches();
+        }
+
+        return null;
     }
 }

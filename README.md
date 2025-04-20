@@ -6,16 +6,9 @@ RandoMapMod is a Hollow Knight mod for Randomizer 4 that adds many new features 
 
 The mod helps with tracking both items and transitions, and is compatible with several existing connection mods.
 
-This version is the successor to MapModS, updated to work with the MapChanger library.
-
 # Dependencies:
 - [Randomizer 4](https://github.com/homothetyhk/RandomizerMod) and all of its dependencies.
-- [RCPathfinder](https://github.com/syyePhenomenol/RCPathfinder)
-- [MapChanger](https://github.com/syyePhenomenol/MapChanger)
-- [MagicUI](https://github.com/BadMagic100/HollowKnight.MagicUI)
-- [ConnectionMetadataInjector](https://github.com/BadMagic100/ConnectionMetadataInjector)
-
-Please make sure all of the above mods are installed and up to date.
+- [RandoMapCore](https://github.com/syyePhenomenol/RandoMapCore) and all of its dependencies.
 
 Optional and compatible:
 - [AdditionalMaps](https://github.com/SFGrenade/AdditionalMaps). Adds pins to white palace and godhome maps
@@ -24,6 +17,7 @@ Optional and compatible:
 - [BenchRando](https://github.com/homothetyhk/BenchRando/tree/master/BenchRando). Shows bench checks on map
 - [TheRealJournalRando](https://github.com/BadMagic100/TheRealJournalRando). Shows journal entry checks on map
 - Various other connection mods.
+- [DebugMod] (https://github.com/TheMulhima/HollowKnight.DebugMod/tree/master). Customize key binds
 
 # Screenshots
 <details>
@@ -43,7 +37,7 @@ Optional and compatible:
 # Features
 ## World Map / Quick Map
 - Big pins: Items are reachable according to Randomizer logic.
-- Small/grayed out pins: Items are not randomized or not reachable.
+- Small/grayed out pins: Items are not reachable.
 - Pins will disappear as you clear their locations. If item previews are enabled, it will show the corresponding previewed item.
 - Pin settings are displayed at the bottom. See [Pause Menu](#pause-menu) for more info on the toggles.
 - ``CTRL-H``: Expand/collapse the hotkey panel
@@ -57,8 +51,9 @@ Optional and compatible:
 - ``CTRL-C``: Toggle item compass on/off.
 - ``CTRL-P``: Toggle pin selection on/off.
     - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
+    - For overlapping pins, you can press the indicated key/controller bind to select buried pins.
     - For some locations, you can press the indicated key/controller bind to reveal a hint to find it.
-    - Press the indicated key/controller bind to lock and pan away from the current selection.
+    - For grid pins, press the indicated key/controller bind to lock selection and pan map. The rooms corresponding to the pin's locations will be highlighted. 
 - ``CTRL-W``: Toggle benchwarp pins on/off.
     - With pin selection on, you can press the indicated key/controller bind to warp to the selected bench.
 - ``CTRL-S``: Toggle selector reticles on/off.
@@ -91,6 +86,7 @@ Optional and compatible:
     - "Off Route": Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
 - "Misc. Options":
     - "Item Compass Mode": Toggle item compass between pointing to reachable items/reachable items with sequence break/all items
+    - "Quick Map Compass": When Quick Map is open in Transition Mode, show compasses pointing to reachable unchecked transitions only/all transitions in the current room.
     - "Show Area Names": Toggle showing area names on the world map
     - "Show Next Areas": Toggle showing names/arrows for adjacent map areas on the quick map
     - "Show Map Markers": Toggle showing map markers. You still need to buy the map markers to see them with this setting on.
@@ -115,6 +111,7 @@ Optional and compatible:
     - For Steam + Scarab users on Windows, the default folder is `...\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\RandoMapMod`.
     - Colors will be interpreted in standard RGBA format ``[r, g, b, a]``.
     - If you want to keep the default color of something, delete the corresponding line in the file (or change ``[r, g, b, a]`` to ``[]``).
+- To override the default key/input binds, install DebugMod and set binds as you like in the Pause Menu.
 
 # How To Install
 Use Scarab: https://github.com/fifty-six/Scarab
@@ -127,7 +124,7 @@ If you need any help, feel free to ask in any of the active Hollow Knight Discor
 
 # For Developers
 - Pins are automatically generated for each connection-provided placement with "best-guess" behaviour for position/displayed sprite.
-- To override this default behaviour with your connection mod, see [here](./RandoMapMod/Pins/InteropProperties.cs).
+- To override this default behaviour with your connection mod, see [here](https://github.com/syyePhenomenol/RandoMapCore/RandoMapCore/Pins/InteropProperties.cs).
 
 # Acknowledgements
 - Special thanks to Homothety, Flib and BadMagic for significant coding help

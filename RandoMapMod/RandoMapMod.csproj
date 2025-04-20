@@ -70,21 +70,7 @@
   	</Target>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\Compass\routeCompassOverrides.json" />
-		<EmbeddedResource Include="Resources\Compass\worldCoordinates.json" />
-		<EmbeddedResource Include="Resources\defaultBenches.json" />
-		<EmbeddedResource Include="Resources\extraTransitions.json" />
-		<EmbeddedResource Include="Resources\locationHints.json" />
 		<EmbeddedResource Include="Resources\locations.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\routeHints.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Data\waypointActions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\edits.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\substitutions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\transitions.json" />
-		<EmbeddedResource Include="Resources\Pathfinder\Logic\waypoints.json" />
-		<EmbeddedResource Include="Resources\quickMapGrids.json" />
-		<EmbeddedResource Include="Resources\roomTexts.json" />
-		<EmbeddedResource Include="Resources\roomTextsAM.json" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -94,17 +80,8 @@
 	  <Reference Include="BenchRando">
 	    <HintPath>$(HollowKnightRefs)\Mods\BenchRando\BenchRando.dll</HintPath>
 	  </Reference>
-	  <Reference Include="Benchwarp">
-	    <HintPath>$(HollowKnightRefs)\Mods\Benchwarp\Benchwarp.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ConnectionMetadataInjector">
-	    <HintPath>$(HollowKnightRefs)\Mods\ConnectionMetadataInjector\ConnectionMetadataInjector.dll</HintPath>
-	  </Reference>
 	  <Reference Include="ItemChanger">
 	    <HintPath>$(HollowKnightRefs)\Mods\ItemChanger\ItemChanger.dll</HintPath>
-	  </Reference>
-	  <Reference Include="MagicUI">
-	    <HintPath>$(HollowKnightRefs)\Mods\MagicUI\MagicUI.dll</HintPath>
 	  </Reference>
 	  <Reference Include="MapChanger">
 	    <HintPath>$(HollowKnightRefs)\Mods\MapChanger\MapChanger.dll</HintPath>
@@ -112,44 +89,17 @@
 	  <Reference Include="MenuChanger">
 	    <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
 	  </Reference>
-	  <Reference Include="MMHOOK_Assembly-CSharp">
-	    <HintPath>$(HollowKnightRefs)\MMHOOK_Assembly-CSharp.dll</HintPath>
-	  </Reference>
-	  <Reference Include="MMHOOK_PlayMaker">
-	    <HintPath>$(HollowKnightRefs)\MMHOOK_PlayMaker.dll</HintPath>
-	  </Reference>
 	  <Reference Include="Newtonsoft.Json">
 	    <HintPath>$(HollowKnightRefs)\Newtonsoft.Json.dll</HintPath>
 	  </Reference>
-	  <Reference Include="PlayMaker">
-	    <HintPath>$(HollowKnightRefs)\PlayMaker.dll</HintPath>
+	  <Reference Include="RandoMapCore">
+	    <HintPath>$(HollowKnightRefs)\Mods\RandoMapCore\RandoMapCore.dll</HintPath>
 	  </Reference>
 	  <Reference Include="RandomizerCore">
 	    <HintPath>$(HollowKnightRefs)\Mods\RandomizerCore\RandomizerCore.dll</HintPath>
 	  </Reference>
-	  <Reference Include="RandomizerCore.Json">
-	    <HintPath>$(HollowKnightRefs)\Mods\RandomizerCore.Json\RandomizerCore.Json.dll</HintPath>
-	  </Reference>
 	  <Reference Include="RandomizerMod">
 	    <HintPath>$(HollowKnightRefs)\Mods\Randomizer 4\RandomizerMod.dll</HintPath>
-	  </Reference>
-	  <Reference Include="RCPathfinder">
-	    <HintPath>$(HollowKnightRefs)\Mods\RCPathfinder\RCPathfinder.dll</HintPath>
-	  </Reference>
-	  <Reference Include="UnityEngine">
-	    <HintPath>$(HollowKnightRefs)\UnityEngine.dll</HintPath>
-	  </Reference>
-	  <Reference Include="UnityEngine.CoreModule">
-	    <HintPath>$(HollowKnightRefs)\UnityEngine.CoreModule.dll</HintPath>
-	  </Reference>
-	  <Reference Include="UnityEngine.InputLegacyModule">
-        <HintPath>$(HollowKnightRefs)/UnityEngine.InputLegacyModule.dll</HintPath>
-      </Reference>
-	  <Reference Include="UnityEngine.TextCoreModule">
-	    <HintPath>$(HollowKnightRefs)\UnityEngine.TextCoreModule.dll</HintPath>
-	  </Reference>
-	  <Reference Include="UnityEngine.TextRenderingModule">
-	    <HintPath>$(HollowKnightRefs)\UnityEngine.TextRenderingModule.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine.UI">
 	    <HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>
