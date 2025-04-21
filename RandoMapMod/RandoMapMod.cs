@@ -18,7 +18,7 @@ public class RandoMapMod : Mod
 
     public override string GetVersion()
     {
-        return "3.6.0";
+        return "3.6.1";
     }
 
     public override int LoadPriority()

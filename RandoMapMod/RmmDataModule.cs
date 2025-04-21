@@ -28,6 +28,8 @@ internal class RmmDataModule : RmcDataModule
 
     public override bool IsCorrectSaveType => RM.IsRandoSave;
 
+    public override bool EnableSpoilerToggle => true;
+
     public override IReadOnlyDictionary<string, RmcTransitionDef> RandomizedTransitions => _randomizedTransitions;
     public override IReadOnlyDictionary<string, RmcTransitionDef> VanillaTransitions => _vanillaTransitions;
     public override IReadOnlyDictionary<RmcTransitionDef, RmcTransitionDef> RandomizedTransitionPlacements =>
