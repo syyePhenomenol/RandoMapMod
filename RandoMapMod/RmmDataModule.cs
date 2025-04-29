@@ -3,6 +3,7 @@ using ItemChanger;
 using RandoMapCore;
 using RandoMapCore.Data;
 using RandomizerCore;
+using RandomizerCore.Extensions;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 using RandomizerMod.Extensions;
@@ -27,8 +28,16 @@ internal class RmmDataModule : RmcDataModule
     public override string ModName => nameof(RandoMapMod);
 
     public override bool IsCorrectSaveType => RM.IsRandoSave;
-
-    public override bool EnableSpoilerToggle => true;
+    public override bool EnableSpoilerToggle => RandoMapMod.LS.EnableSpoilerToggle;
+    public override bool EnablePinSelection => RandoMapMod.LS.EnablePinSelection;
+    public override bool EnableRoomSelection => RandoMapMod.LS.EnableRoomSelection;
+    public override bool EnableLocationHints => RandoMapMod.LS.EnableLocationHints;
+    public override bool EnableProgressionHints => RandoMapMod.LS.EnableProgressionHints;
+    public override bool EnableVisualCustomization => RandoMapMod.LS.EnableVisualCustomization;
+    public override bool EnableMapBenchwarp => RandoMapMod.LS.EnableMapBenchwarp;
+    public override bool EnablePathfinder => RandoMapMod.LS.EnablePathfinder;
+    public override bool EnableItemCompass => RandoMapMod.LS.EnableItemCompass;
+    public override string ForceMapMode => RandoMapMod.LS.ForceMapMode.ToString().FromCamelCase();
 
     public override IReadOnlyDictionary<string, RmcTransitionDef> RandomizedTransitions => _randomizedTransitions;
     public override IReadOnlyDictionary<string, RmcTransitionDef> VanillaTransitions => _vanillaTransitions;

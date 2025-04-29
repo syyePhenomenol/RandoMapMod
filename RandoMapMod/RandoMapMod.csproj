@@ -101,6 +101,12 @@
 	  <Reference Include="RandomizerMod">
 	    <HintPath>$(HollowKnightRefs)\Mods\Randomizer 4\RandomizerMod.dll</HintPath>
 	  </Reference>
+	  <Reference Include="RandoSettingsManager">
+	    <HintPath>$(HollowKnightRefs)\Mods\RandoSettingsManager\RandoSettingsManager.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>$(HollowKnightRefs)\UnityEngine.CoreModule.dll</HintPath>
+	  </Reference>
 	  <Reference Include="UnityEngine.UI">
 	    <HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>
 	  </Reference>
