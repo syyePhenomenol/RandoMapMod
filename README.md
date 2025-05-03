@@ -18,6 +18,7 @@ Optional and compatible:
 - [TheRealJournalRando](https://github.com/BadMagic100/TheRealJournalRando). Shows journal entry checks on map
 - Various other connection mods.
 - [DebugMod] (https://github.com/TheMulhima/HollowKnight.DebugMod/tree/master). Customize key binds
+- [RandoSettingsManager](https://github.com/BadMagic100/RandoSettingsManager). Share connection settings
 
 # Screenshots
 <details>
@@ -78,7 +79,7 @@ Optional and compatible:
     - "Group by": Toggle the pools to be grouped by location, or by item (spoiler).
 - "More Pin Options":
     - "Cleared Locations": Toggle showing pins between all cleared locations/persistent locations/neither.
-    - "Indicate Reachable": Toggle indicating (by shading and shrinking pins) if locations are reachable in logic or not
+    - "Reachable Pins": Toggle how pins for reachable locations are shown: by hiding unreachable/showing all but expanding reachable/showing and expanding all.
     - "Q Marks": Toggle between normal and question mark pins. Check out the [Map Legend](./MAPLEGEND.md) for more details on each style.
 - "Pathfinder Options":
     - "Route Compass": Toggle showing the route compass when a path is selected.
@@ -94,7 +95,6 @@ Optional and compatible:
     - "Def. Item Mode": Toggle which map mode is set by default for a new item rando save.
     - "Def. Transition Mode": Toggle which map mode is set by default for a new transition rando save.
     - "Reset Global Settings": Resets all global settings to default settings
-    
 
 ## Transition Mode
 - Check out the in-game map key (`CTRL-K`) or the [Map Legend](./MAPLEGEND.md) for what the colors/brightness of each room indicate.
@@ -112,6 +112,21 @@ Optional and compatible:
     - Colors will be interpreted in standard RGBA format ``[r, g, b, a]``.
     - If you want to keep the default color of something, delete the corresponding line in the file (or change ``[r, g, b, a]`` to ``[]``).
 - To override the default key/input binds, install DebugMod and set binds as you like in the Pause Menu.
+
+# Connections Menu
+- If you want to restrict RandoMapMod's functionality for an entire Randomizer run, you can enable/disable the following features in the connections menu:
+    - Spoilers
+    - Pin Selection
+    - Room Selection
+    - Location Hints
+    - Progression Hints
+    - Visual Customization
+    - Map Benchwarp
+    - Pathfinder
+    - Item Compass
+    - Map Mode: forces only one map mode to be available if enabled
+- Adding any feature restrictions will affect the randomization hash.
+- These settings can be shared through RandoSettingsManager.
 
 # How To Install
 Download [Lumafly](https://themulhima.github.io/Lumafly/) and install the mod in the application.
