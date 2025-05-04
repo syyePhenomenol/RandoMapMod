@@ -17,7 +17,7 @@ public class RmmMenuPage
     {
         _page = new MenuPage(Localize(nameof(RandoMapMod)), landingPage);
         Mef = new(_page, RandoMapMod.GS);
-        _vip = new(_page, new(0, 300), 75f, true, Mef.Elements);
+        _vip = new(_page, new(0, 350), 75f, true, Mef.Elements);
         Localize(Mef);
 
         var forceMapMode = (MenuItem)_vip.Items.Last();
