@@ -68,10 +68,6 @@
 			<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
 		</ItemGroup>
   	</Target>
-
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\locations.json" />
-	</ItemGroup>
 	
 	<ItemGroup>
 	  <Reference Include="Assembly-CSharp">

@@ -72,13 +72,6 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
             RandoSettingsManagerInterop.Hook();
         }
 
-        Finder.InjectLocations(
-            JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(
-                Assembly,
-                "RandoMapMod.Resources.locations.json"
-            )
-        );
-
         RandoMapCoreMod.AddDataModule(new RmmDataModule());
 
         LogDebug($"Initialization complete.");
