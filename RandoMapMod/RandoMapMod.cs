@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using MapChanger;
-using MapChanger.Defs;
 using Modding;
 using RandoMapCore;
 using RandomizerMod.Logging;
@@ -43,7 +41,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
 
     public override string GetVersion()
     {
-        return "3.6.2";
+        return "3.6.3";
     }
 
     public override int LoadPriority()
@@ -73,6 +71,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
         }
 
         RandoMapCoreMod.AddDataModule(new RmmDataModule());
+        Localization.AddLocalizer(Localize);
 
         LogDebug($"Initialization complete.");
     }
@@ -93,5 +92,17 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
         using Newtonsoft.Json.JsonTextWriter jtw = new(tw) { CloseOutput = false };
         RandomizerMod.RandomizerData.JsonUtil._js.Serialize(jtw, GS);
         tw.WriteLine();
+    }
+
+    private static string Localize(string text)
+    {
+        var localization = RandomizerMod.Localization.Localize(text);
+
+        if (localization == text)
+        {
+            return null;
+        }
+
+        return localization;
     }
 }

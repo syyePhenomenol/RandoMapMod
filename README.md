@@ -57,7 +57,6 @@ Optional and compatible:
     - For grid pins, press the indicated key/controller bind to lock selection and pan map. The rooms corresponding to the pin's locations will be highlighted. 
 - ``CTRL-W``: Toggle benchwarp pins on/off.
     - With pin selection on, you can press the indicated key/controller bind to warp to the selected bench.
-- ``CTRL-S``: Toggle selector reticles on/off.
 
 ## Pause Menu
 - "Map Mod Enabled/Disabled" `CTRL-M`: Toggle the mod on/off
@@ -76,7 +75,7 @@ Optional and compatible:
     - "Transition 3": Transition mode, showing all rooms.
 - "Customize Pools":
     - Toggle showing each pool of pins on/off.
-    - "Group by": Toggle the pools to be grouped by location, or by item (spoiler).
+    - "Group By": Toggle the pools to be grouped by location, or by item (spoiler).
 - "More Pin Options":
     - "Cleared Locations": Toggle showing pins between all cleared locations/persistent locations/neither.
     - "Reachable Pins": Toggle how pins for reachable locations are shown: by hiding unreachable/showing all but expanding reachable/showing and expanding all.
@@ -94,7 +93,9 @@ Optional and compatible:
     - "Always Have Quill": Fill in rooms even if you haven't picked up Quill. Doesn't affect Full Map or Transition modes.
     - "Def. Item Mode": Toggle which map mode is set by default for a new item rando save.
     - "Def. Transition Mode": Toggle which map mode is set by default for a new transition rando save.
+    - "UI Scale": Set the scaling of all UI elements from 1.0 × to 1.5 ×.
     - "Reset Global Settings": Resets all global settings to default settings
+- You can toggle the entire Pause Menu UI on/off in the Mod Menu.
 
 ## Transition Mode
 - Check out the in-game map key (`CTRL-K`) or the [Map Legend](./MAPLEGEND.md) for what the colors/brightness of each room indicate.

@@ -156,11 +156,6 @@ internal class RmmDataModule : RmcDataModule
         _vanillaLocations = null;
     }
 
-    public override string Localize(string text)
-    {
-        return RandomizerMod.Localization.Localize(text);
-    }
-
     public override string GetMapArea(string scene)
     {
         return RD.GetRoomDef(scene)?.MapArea;
