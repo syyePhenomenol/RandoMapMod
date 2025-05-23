@@ -17,7 +17,7 @@ Optional and compatible:
 - [BenchRando](https://github.com/homothetyhk/BenchRando/tree/master/BenchRando). Shows bench checks on map
 - [TheRealJournalRando](https://github.com/BadMagic100/TheRealJournalRando). Shows journal entry checks on map
 - Various other connection mods.
-- [DebugMod] (https://github.com/TheMulhima/HollowKnight.DebugMod/tree/master). Customize key binds
+- [DebugMod](https://github.com/TheMulhima/HollowKnight.DebugMod/tree/master). Customize key binds
 - [RandoSettingsManager](https://github.com/BadMagic100/RandoSettingsManager). Share connection settings
 
 # Screenshots
@@ -105,6 +105,8 @@ Optional and compatible:
     - If the first step in the route is to benchwarp, hold the indicated key/controller bind to do the benchwarp.
     - A compass arrow will point to the next transition you need to go to. The shown route gets updated after every transition.
     - The Quick Map also shows the list of unchecked/visited/vanilla transitions for the current room.
+- `CTRL-S`: Toggle including stags in the pathfinder on/off.
+- `CTRL-D`: Toggle including dreamgate in the pathfinder on/off.
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
 
 ## Customization

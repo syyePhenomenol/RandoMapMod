@@ -41,7 +41,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
 
     public override string GetVersion()
     {
-        return "3.6.3";
+        return "3.6.4";
     }
 
     public override int LoadPriority()
@@ -71,7 +71,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
         }
 
         RandoMapCoreMod.AddDataModule(new RmmDataModule());
-        Localization.AddLocalizer(Localize);
+        MapChanger.Localization.AddLocalizer(Localize);
 
         LogDebug($"Initialization complete.");
     }
