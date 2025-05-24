@@ -51,7 +51,7 @@ Optional and compatible:
     - You can press the bind again to randomly cycle through other available hints.
 - ``CTRL-C``: Toggle item compass on/off.
 - ``CTRL-P``: Toggle pin selection on/off.
-    - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on).
+    - Hover over any visible pin to display info about the name, room, status, logic requirements, previewed items (if any) and spoiler items (if Spoilers on). Tick/cross marks next to item costs indicate if you can currently afford to pay them.
     - For overlapping pins, you can press the indicated key/controller bind to select buried pins.
     - For some locations, you can press the indicated key/controller bind to reveal a hint to find it.
     - For grid pins, press the indicated key/controller bind to lock selection and pan map. The rooms corresponding to the pin's locations will be highlighted. 
