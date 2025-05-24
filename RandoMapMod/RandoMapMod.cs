@@ -16,8 +16,8 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
     internal static Assembly Assembly => Assembly.GetExecutingAssembly();
     internal static RandoMapMod Instance { get; private set; }
 
-    internal static RmmSettings GS { get; private set; }
-    internal static RmmSettings LS { get; private set; }
+    internal static RmmSettings GS { get; private set; } = new();
+    internal static RmmSettings LS { get; private set; } = new();
 
     public void OnLoadGlobal(RmmSettings s)
     {
@@ -41,7 +41,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
 
     public override string GetVersion()
     {
-        return "3.6.4";
+        return "3.6.5";
     }
 
     public override int LoadPriority()
