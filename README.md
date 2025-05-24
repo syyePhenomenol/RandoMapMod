@@ -81,6 +81,7 @@ Optional and compatible:
     - "Reachable Pins": Toggle how pins for reachable locations are shown: by hiding unreachable/showing all but expanding reachable/showing and expanding all.
     - "Q Marks": Toggle between normal and question mark pins. Check out the [Map Legend](./MAPLEGEND.md) for more details on each style.
 - "Pathfinder Options":
+    - "Pathfiner OOL": Allow for sequence breaks in pathfinder search.
     - "Route Compass": Toggle showing the route compass when a path is selected.
     - "Route Text": Toggle the route to be displayed in-game to full/next transition only/off.
     - "Off Route": Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
