@@ -82,6 +82,9 @@ Optional and compatible:
     - "Q Marks": Toggle between normal and question mark pins. Check out the [Map Legend](./MAPLEGEND.md) for more details on each style.
 - "Pathfinder Options":
     - "Pathfinder OOL": Allow for sequence breaks in pathfinder search.
+        - "Off": Exclude sequence breaks
+        - "On": Use sequence breaks recognized by Randomizer
+        - "Extra": Use extra sequence breaks recognized by RandoMapMod
     - "Route Compass": Toggle showing the route compass when a path is selected.
     - "Route Text": Toggle the route to be displayed in-game to full/next transition only/off.
     - "Off Route": Toggle behaviour when going off-route to keep route/cancel route/reevaluate route.
@@ -101,11 +104,12 @@ Optional and compatible:
 ## Transition Mode
 - Check out the in-game map key (`CTRL-K`) or the [Map Legend](./MAPLEGEND.md) for what the colors/brightness of each room indicate.
 - ``CTRL-R``: Toggle room selection on/off.
-    - Hover over a room and press the indicated key/controller bind to find a path.
+    - Hover over a room to see a list of transitions going out and into the room, sorted by randomized/vanilla and reachable/unreachable.
+    - Press the indicated key/controller bind to try find a path to the selected room, starting from where the player currently is.
     - If successful, the path route will be displayed. You can try again to change the start/final transition to what you want.
     - If the first step in the route is to benchwarp, hold the indicated key/controller bind to do the benchwarp.
-    - A compass arrow will point to the next transition you need to go to. The shown route gets updated after every transition.
-    - The Quick Map also shows the list of unchecked/visited/vanilla transitions for the current room.
+    - A compass arrow in-game will point to the next transition you need to go to. The shown route gets updated after every transition.
+    - The Quick Map also shows the list of transitions for the room the player is currently in.
 - `CTRL-S`: Toggle including stags in the pathfinder on/off.
 - `CTRL-D`: Toggle including dreamgate in the pathfinder on/off.
 - `CTRL-B`: Toggle including benchwarp in the pathfinder on/off.
