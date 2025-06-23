@@ -77,6 +77,25 @@ internal class RmmDataModule : RmcDataModule
 
     public override void OnEnterGame()
     {
+        Rebuild();
+
+        TrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
+    }
+
+    public override void OnQuitToMenu()
+    {
+        TrackerUpdate.OnFinishedUpdate -= PlacementTracker.OnUpdate;
+
+        _randomizedTransitions = null;
+        _vanillaTransitions = null;
+        _randomizedTransitionPlacements = null;
+        _vanillaTransitionPlacements = null;
+        _randomizedLocations = null;
+        _vanillaLocations = null;
+    }
+
+    public override void Rebuild()
+    {
         _randomizedTransitions = [];
         _vanillaTransitions = [];
         _randomizedTransitionPlacements = [];
@@ -140,20 +159,6 @@ internal class RmmDataModule : RmcDataModule
             rtd = default;
             return false;
         }
-
-        TrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
-    }
-
-    public override void OnQuitToMenu()
-    {
-        TrackerUpdate.OnFinishedUpdate -= PlacementTracker.OnUpdate;
-
-        _randomizedTransitions = null;
-        _vanillaTransitions = null;
-        _randomizedTransitionPlacements = null;
-        _vanillaTransitionPlacements = null;
-        _randomizedLocations = null;
-        _vanillaLocations = null;
     }
 
     public override string GetMapArea(string scene)
