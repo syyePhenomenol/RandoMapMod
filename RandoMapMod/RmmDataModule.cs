@@ -75,14 +75,16 @@ internal class RmmDataModule : RmcDataModule
             .Concat(RM.RS.Context.transitionPlacements.Select(tp => new RandoPlacement(tp.Target, tp.Source)));
     public override IEnumerable<GeneralizedPlacement> VanillaPlacements => RM.RS.Context.Vanilla;
 
-    public override void OnEnterGame()
+    internal static void Rebuild()
     {
-        _randomizedTransitions = [];
-        _vanillaTransitions = [];
-        _randomizedTransitionPlacements = [];
-        _vanillaTransitionPlacements = [];
-        _randomizedLocations = [];
-        _vanillaLocations = [];
+        if (_randomizedTransitions == null) return;  // Module is not active.
+
+        _randomizedTransitions.Clear();
+        _vanillaTransitions.Clear();
+        _randomizedTransitionPlacements.Clear();
+        _vanillaTransitionPlacements.Clear();
+        _randomizedLocations.Clear();
+        _vanillaLocations.Clear();
 
         foreach (var tp in RM.RS.Context.transitionPlacements)
         {
@@ -140,6 +142,19 @@ internal class RmmDataModule : RmcDataModule
             rtd = default;
             return false;
         }
+    }
+
+    public override void OnEnterGame()
+    {
+        // Set empty collections to mark module as active.
+        _randomizedTransitions = [];
+        _vanillaTransitions = [];
+        _randomizedTransitionPlacements = [];
+        _vanillaTransitionPlacements = [];
+        _randomizedLocations = [];
+        _vanillaLocations = [];
+
+        Rebuild();
 
         TrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
     }
