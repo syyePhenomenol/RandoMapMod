@@ -75,16 +75,33 @@ internal class RmmDataModule : RmcDataModule
             .Concat(RM.RS.Context.transitionPlacements.Select(tp => new RandoPlacement(tp.Target, tp.Source)));
     public override IEnumerable<GeneralizedPlacement> VanillaPlacements => RM.RS.Context.Vanilla;
 
-    internal static void Rebuild()
+    public override void OnEnterGame()
     {
-        if (_randomizedTransitions == null) return;  // Module is not active.
+        Rebuild();
 
-        _randomizedTransitions.Clear();
-        _vanillaTransitions.Clear();
-        _randomizedTransitionPlacements.Clear();
-        _vanillaTransitionPlacements.Clear();
-        _randomizedLocations.Clear();
-        _vanillaLocations.Clear();
+        TrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
+    }
+
+    public override void OnQuitToMenu()
+    {
+        TrackerUpdate.OnFinishedUpdate -= PlacementTracker.OnUpdate;
+
+        _randomizedTransitions = null;
+        _vanillaTransitions = null;
+        _randomizedTransitionPlacements = null;
+        _vanillaTransitionPlacements = null;
+        _randomizedLocations = null;
+        _vanillaLocations = null;
+    }
+
+    public override void Rebuild()
+    {
+        _randomizedTransitions = [];
+        _vanillaTransitions = [];
+        _randomizedTransitionPlacements = [];
+        _vanillaTransitionPlacements = [];
+        _randomizedLocations = [];
+        _vanillaLocations = [];
 
         foreach (var tp in RM.RS.Context.transitionPlacements)
         {
@@ -142,33 +159,6 @@ internal class RmmDataModule : RmcDataModule
             rtd = default;
             return false;
         }
-    }
-
-    public override void OnEnterGame()
-    {
-        // Set empty collections to mark module as active.
-        _randomizedTransitions = [];
-        _vanillaTransitions = [];
-        _randomizedTransitionPlacements = [];
-        _vanillaTransitionPlacements = [];
-        _randomizedLocations = [];
-        _vanillaLocations = [];
-
-        Rebuild();
-
-        TrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
-    }
-
-    public override void OnQuitToMenu()
-    {
-        TrackerUpdate.OnFinishedUpdate -= PlacementTracker.OnUpdate;
-
-        _randomizedTransitions = null;
-        _vanillaTransitions = null;
-        _randomizedTransitionPlacements = null;
-        _vanillaTransitionPlacements = null;
-        _randomizedLocations = null;
-        _vanillaLocations = null;
     }
 
     public override string GetMapArea(string scene)

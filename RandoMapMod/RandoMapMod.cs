@@ -76,10 +76,6 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
         LogDebug($"Initialization complete.");
     }
 
-    // Public API to rebuild internal indices of randomized map data.
-    // Must be invoked by mods that change randomized map data in active save files after they make changes.
-    public static void RebuildModules() => RmmDataModule.Rebuild();
-
     private static void InitializeLocalSettings(RandoController rc)
     {
         LS = GS.Clone();
