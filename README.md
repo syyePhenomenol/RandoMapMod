@@ -69,7 +69,7 @@ Optional and compatible:
     - "Full Map": Shows all pins and the full map regardless of map items obtained
     - "All Pins": Shows all pins, but only show map areas for obtained map items
     - "Pins Over Area": Only show pins for areas visible on the map (i.e. you have the map item for that area)
-    - "Pins Over Room": Only show pins for rooms that are visible on the map (i.e. you have the map item for that area, and you have visited the room with Quill or that room is visible by default)
+    - "Pins Over Room": Only show pins for mapped rooms (i.e. you have the map item for that area, and the room has been visited with Quill)
     - "Transition 1": Normal transition mode. See more info below.
     - "Transition 2": Transition mode, only showing visited rooms.
     - "Transition 3": Transition mode, showing all rooms.
