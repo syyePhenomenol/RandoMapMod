@@ -5,7 +5,7 @@ using static BenchRando.BRData;
 
 namespace RandoMapMod;
 
-internal class BenchRandoInterop
+internal static class BenchRandoInterop
 {
     internal static bool BenchRandoEnabled()
     {

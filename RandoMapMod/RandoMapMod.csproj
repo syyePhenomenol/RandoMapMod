@@ -85,6 +85,9 @@
 	  <Reference Include="MenuChanger">
 	    <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
 	  </Reference>
+	  <Reference Include="MoreStags">
+		<HintPath>$(HollowKnightRefs)\Mods\MoreStags\MoreStags.dll</HintPath>
+	  </Reference>
 	  <Reference Include="Newtonsoft.Json">
 	    <HintPath>$(HollowKnightRefs)\Newtonsoft.Json.dll</HintPath>
 	  </Reference>
