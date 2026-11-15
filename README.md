@@ -16,6 +16,7 @@ Optional and compatible:
 - [RandoPlus](https://github.com/flibber-hk/HollowKnight.RandoPlus). Shows Mr Mushroom and nail upgrade checks on map
 - [BenchRando](https://github.com/homothetyhk/BenchRando/tree/master/BenchRando). Shows bench checks on map
 - [TheRealJournalRando](https://github.com/BadMagic100/TheRealJournalRando). Shows journal entry checks on map
+- [MoreStags](https://github.com/TheMathGeek314/MoreStags). Shows custom stag checks on map
 - Various other connection mods.
 - [DebugMod](https://github.com/TheMulhima/HollowKnight.DebugMod/tree/master). Customize key binds
 - [RandoSettingsManager](https://github.com/BadMagic100/RandoSettingsManager). Share connection settings
@@ -80,6 +81,7 @@ Optional and compatible:
     - "Cleared Locations": Toggle showing pins between all cleared locations/persistent locations/neither.
     - "Reachable Pins": Toggle how pins for reachable locations are shown: by hiding unreachable/showing all but expanding reachable/showing and expanding all.
     - "Q Marks": Toggle between normal and question mark pins. Check out the [Map Legend](./MAPLEGEND.md) for more details on each style.
+    - "Custom Stags": Toggle always showing custom stags (from MoreStags).
 - "Pathfinder Options":
     - "Pathfinder OOL": Allow for sequence breaks in pathfinder search.
         - "Off": Exclude sequence breaks

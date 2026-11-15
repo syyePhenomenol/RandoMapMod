@@ -41,7 +41,7 @@ public class RandoMapMod : Mod, IGlobalSettings<RmmSettings>, ILocalSettings<Rmm
 
     public override string GetVersion()
     {
-        return "3.6.8";
+        return "3.6.9";
     }
 
     public override int LoadPriority()

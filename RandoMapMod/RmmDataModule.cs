@@ -200,4 +200,24 @@ internal class RmmDataModule : RmcDataModule
 
         return null;
     }
+
+    public override IReadOnlyCollection<string> GetCustomStags()
+    {
+        if (Interop.HasMoreStags && MoreStagsInterop.MoreStagsEnabled())
+        {
+            return MoreStagsInterop.GetStags();
+        }
+
+        return null;
+    }
+
+    public override bool IsOpenedCustomStag(string stagName)
+    {
+        if (Interop.HasMoreStags && MoreStagsInterop.MoreStagsEnabled())
+        {
+            return MoreStagsInterop.IsOpenedStag(stagName);
+        }
+
+        return false;
+    }
 }
